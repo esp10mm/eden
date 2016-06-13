@@ -53,7 +53,7 @@ const Service = React.createClass({
                 文具申請  
               </div>
               <div className='content'>
-                to be continued
+               未開放 
               </div>
 
               <div className="title">
