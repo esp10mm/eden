@@ -1,0 +1,171 @@
+import React from 'react'
+import { browserHistory } from 'react-router'
+
+const OrderRow = React.createClass({
+  toPage(path) {
+    // $('.main').transition('fade');
+
+    // setTimeout(()=>{
+    //     browserHistory.push(path);
+    // }, 500)
+    browserHistory.push(path);
+  },
+
+  convertTimezone(time) {
+    var hour = parseInt(time.split(':')[0]);
+    hour += 8;
+    if(hour > 23)
+      hour -= 24;
+    if(hour < 10)
+      return '0'+hour+':'+time.split(':')[1]+':'+time.split(':')[2];
+    else
+      return hour+':'+time.split(':')[1]+':'+time.split(':')[2];
+  },
+
+  pareseTime(timestamp) {
+    var date = timestamp.split('T')[0];
+    var time = timestamp.split('T')[1].split('.')[0];
+    return date+' '+this.convertTimezone(time);
+  },
+
+  render() {
+    var pareseTime = this.pareseTime;
+    var status = this.props.data.status=='FINISH'?'完成':'未完成';
+    var statusStyle = this.props.data.status=='FINISH'?{color:'green'}:{color:'red'};
+
+    return(
+      <tr>
+        <td><a onClick={ ()=>this.toPage('/admin/order/'+this.props.data.id) }>{pareseTime(this.props.data.order_time)}</a></td>
+        <td>{this.props.data.unit}</td>
+        <td><span style={statusStyle}>{status}</span></td>
+        <td>
+          <div className='ui order checkbox'>
+            <input type='checkbox' />
+            <label />
+          </div>
+        </td>
+      </tr>
+    )
+  }
+})
+
+const OrderManage = React.createClass({
+  componentDidMount() {
+    this.props.func.orderList(0);
+    $('.order.page').val('1');
+    $('.order.page').change(()=>{
+      var page = parseInt($('.order.page').val());
+      if(isNaN(page)) {
+        $('.order.page').val('1');
+        this.props.func.orderList(0);
+      }
+      else
+        this.props.func.orderList(page-1);
+    })
+  },
+
+  componentWillReceiveProps(newProps) {
+    if(newProps.manage.get('type') == 'ORDER_LIST_SUCCESSED') {
+    }
+    else if(newProps.manage.get('type') == 'FINISH_SEL_SUCCESSED') {
+      var page = parseInt($('.order.page').val());
+      if(isNaN(page)) {
+        $('.order.page').val('1');
+        this.props.func.orderList(0);
+      }
+      else
+        this.props.func.orderList(page-1);
+    }
+  },
+
+  tableGen() {
+    var win = window.open('/table/_', '_blank'); 
+    win.focus();
+  },
+
+  partTable() {
+    var checked = $('.order.checkbox').checkbox('is checked');
+    var orders = this.props.manage.get('orders');
+
+    var gen = '_';
+
+    for(var k in checked) {
+      if(checked[k])
+        gen += orders[k].id + '_';
+    }
+
+    var win = window.open(`/table/${gen}`, '_blank'); 
+    win.focus();
+  },
+
+  finishSel() {
+    var checked = $('.order.checkbox').checkbox('is checked');
+    var orders = this.props.manage.get('orders');
+
+    var gen = [];
+
+    for(var k in checked) {
+      if(checked[k])
+        gen.push(orders[k].id);
+    }
+    
+    this.props.func.finishSel(gen);
+  },
+
+  nextPage(next) {
+    var page = parseInt($('.order.page').val());
+    page = page + next;
+
+    if(page < 1)
+      page = 1;
+
+    $('.order.page').val(''+page);
+    this.props.func.orderList(page-1);
+  },
+
+  render() {
+    var style = {
+      pageInput: {
+        width: 70,
+        marginTop: '5px',
+      },
+      button: {
+        marginTop: '5px',
+      }
+    }
+    return(
+      <div className='content'>
+        <div className='ui button' style={style.button} onClick={()=>this.nextPage(-1)}>前一頁</div>
+        第&nbsp;
+        <div className='ui mini input' style={style.pageInput}>
+          <input type='text' className='order page'/>
+        </div>&nbsp;
+        <div className='ui button' style={style.button} onClick={()=>this.nextPage(1)}>下一頁</div>
+        <div className='ui button' style={style.button} onClick={()=>this.tableGen()}>產生所有出貨單</div>
+        <div className='ui button' style={style.button} onClick={()=>this.partTable()}>產生勾選的出貨單</div>
+
+        <div className='ui button' style={style.button} onClick={()=>this.finishSel()}>完成勾選的訂單</div>
+
+        <table className='ui striped table'>
+          <thead>
+            <tr>
+              <th>時間</th>
+              <th>單位</th>
+              <th>狀態</th>
+              <th>勾選</th>
+            </tr>
+          </thead>
+          <tbody>
+          {
+            this.props.manage.get('orders').map(function(order){
+              return <OrderRow key={order.id} data={order}/>
+            })
+          }
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+})
+
+module.exports = OrderManage;

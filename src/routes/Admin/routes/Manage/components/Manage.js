@@ -1,0 +1,93 @@
+import React from 'react'
+import ItemEdit from './ItemEdit'
+import ItemList from './ItemList'
+import OrderManage from './OrderManage'
+import Statistics from './Statistics'
+import Setting from './Setting'
+import * as Cookies from 'js-cookie'
+
+const Manage = React.createClass({
+  componentDidMount() {
+
+    $('.main').transition('fade');
+    this.props.func.itemList();
+
+    if(Cookies.get('admin_accor') === undefined)
+      Cookies.set('admin_accor', 0);
+
+    var accori = parseInt(Cookies.get('admin_accor'));
+    $('.ui.accordion').accordion('open', accori); 
+  },
+
+  accorClick(num) {
+    Cookies.set('admin_accor', num);
+  },
+
+  render() {
+    var style = {
+      container: {
+        maxWidth: '700px',
+        height: '100%',
+        margin: '0px auto',
+      },
+      mainSegment: {
+        width: '95%',
+        margin: '0px auto',
+      },
+      button: {
+        width: '200px',
+        height: '100px',
+        margin: '0px auto',
+        lineHeight: '40px',
+        fontSize: '30px',
+        textAlign: 'center',
+      },
+    };
+    return(
+      <div className='ui stackable three column grid' style={ style.container }>
+        <div className='row'/>
+        <div className='row'>
+          <div style={style.mainSegment}>
+            <div className="ui compact styled accordion">
+
+              <div className="title" onClick={ ()=>this.accorClick(0) }>
+                <i className="dropdown icon"></i>
+                項目編輯 
+              </div>
+              <ItemEdit manage={ this.props.manage } func={this.props.func}/>
+
+              <div className="title" onClick={ ()=>this.accorClick(1) }>
+                <i className="dropdown icon"></i>
+                項目清單 
+              </div>
+              <ItemList manage={ this.props.manage }/>
+
+              <div className="title" onClick={ ()=>this.accorClick(2) }>
+                <i className="dropdown icon"></i>
+                訂單管理 
+              </div>
+              <OrderManage manage={ this.props.manage } func={this.props.func}/>
+
+              <div className="title" onClick={ ()=>this.accorClick(3) }>
+                <i className="dropdown icon"></i>
+                統計資料 
+              </div>
+              <Statistics manage={ this.props.manage } func={this.props.func}/>
+
+              <div className="title" onClick={ ()=>this.accorClick(4) }>
+                <i className="dropdown icon"></i>
+                設定 
+              </div>
+              <Setting manage={ this.props.manage } func={this.props.func}/>
+
+            </div>
+          </div>
+        </div>
+        <div className='row'>
+        </div>
+      </div>
+    )
+  },
+})
+
+module.exports = Manage;
