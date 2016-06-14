@@ -263,6 +263,163 @@ ALTER TABLE ONLY warehouse ALTER COLUMN id SET DEFAULT nextval('warehouse_id_seq
 
 
 --
+-- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: eden
+--
+
+COPY orders (id, order_time, status, unit, customer) FROM stdin;
+\.
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: eden
+--
+
+SELECT pg_catalog.setval('orders_id_seq', 81, true);
+
+
+--
+-- Data for Name: orders_item; Type: TABLE DATA; Schema: public; Owner: eden
+--
+
+COPY orders_item (id, item, amount, export, export_dona) FROM stdin;
+\.
+
+
+--
+-- Data for Name: unit; Type: TABLE DATA; Schema: public; Owner: eden
+--
+
+COPY unit (name, id) FROM stdin;
+行政組                                               	2
+職重組                                               	3
+護理組                                               	4
+社工組                                               	5
+早療組                                               	6
+3樓                                                	7
+4樓                                                	8
+5樓                                                	9
+區長室                                               	10
+\.
+
+
+--
+-- Name: unit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: eden
+--
+
+SELECT pg_catalog.setval('unit_id_seq', 10, true);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: eden
+--
+
+COPY users (username, psw, user_type, id) FROM stdin;
+admin                                             	1234                                              	admin               	1
+\.
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: eden
+--
+
+SELECT pg_catalog.setval('users_id_seq', 1, true);
+
+
+--
+-- Data for Name: warehouse; Type: TABLE DATA; Schema: public; Owner: eden
+--
+
+COPY warehouse (id, name, amount, donation, price) FROM stdin;
+82	脫酯棉球	-50	0	0
+67	3x3紗布	-42	12	0
+80	食鹽水0.9%	-71	0	0
+66	2x2紗布	-58	0	0
+89	優碘	-51	0	0
+76	棉花棒	-51	0	0
+78	檢診手套M	-51	0	0
+79	檢診手套L	-51	0	0
+90	酒精75%	-51	0	0
+77	手扒雞手套	-51	0	0
+81	外科口罩	-51	0	0
+83	酒精棉片	-51	0	0
+84	沙威隆	-51	0	0
+85	餵食器	-51	0	0
+86	曼秀雷敦	-51	0	0
+87	凡士林	-51	0	0
+88	硫磺精	-51	0	0
+92	刮鬍刀	-51	0	0
+93	抽取式衛生紙	-51	0	0
+94	濕紙巾	-51	0	0
+95	餐巾紙	-51	0	0
+96	廚房紙巾	-51	0	0
+98	通樂	-51	0	0
+99	玻璃清潔劑	-51	0	0
+100	浴廁清潔劑	-51	0	0
+101	地板清潔劑	-51	0	0
+102	除油劑	-51	0	0
+103	洗碗精	-51	0	0
+104	洗寶	-51	0	0
+105	漂白水	-51	0	0
+106	50斤垃圾袋	-51	0	0
+107	垃圾袋大	-51	0	0
+108	垃圾袋中	-51	0	0
+109	垃圾袋小	-51	0	0
+110	洗髮精	-51	0	0
+68	4x4紗布	-43	0	0
+71	口腔棉棒	-42	0	0
+72	沖洗棉棒	-51	0	0
+75	尿袋	-51	0	0
+91	OK繃	-51	0	0
+111	沐浴乳	-51	0	0
+112	香皂	-51	0	0
+113	紙杯	-51	0	0
+114	衛生棉	-51	0	0
+115	牙膏	-51	0	0
+70	紙膠布	-49	0	0
+74	尿袋束帶	-49	0	0
+69	Y紗布	-47	0	0
+73	甘油球	-42	0	0
+116	尿布M	-95	-17	0
+117	尿片	-57	-9	0
+143	洗澡衣	-51	0	0
+144	菜瓜布	-51	0	0
+141	毛巾	-50	0	0
+142	牙刷	-50	0	0
+145	鐵刷	-50	0	0
+128	畚箕	-51	0	0
+129	拖把桶組	-51	0	0
+130	地刷	-51	0	0
+131	拖把棍	-51	0	0
+132	拖把頭圓	-51	0	0
+133	藍棉拖把	-51	0	0
+134	棉紗手套	-51	0	0
+135	電子手套	-51	0	0
+136	橡皮手套大	-51	0	0
+137	橡皮手套小	-51	0	0
+138	食物剪	-51	0	0
+120	洗衣粉	-51	0	0
+121	雨衣大	-51	0	0
+122	雨衣小	-51	0	0
+123	鋁箔紙	-51	0	0
+124	保鮮膜	-51	0	0
+125	殺蟲劑	-51	0	0
+126	舒體康	-51	0	0
+127	掃把	-51	0	0
+119	尿布L	-103	-18	0
+118	看護墊	-86	-8	0
+139	抹布大	-50	0	0
+140	衣架	-32	5	25
+\.
+
+
+--
+-- Name: warehouse_id_seq; Type: SEQUENCE SET; Schema: public; Owner: eden
+--
+
+SELECT pg_catalog.setval('warehouse_id_seq', 141, true);
+
+
+--
 -- Name: orders_pkey; Type: CONSTRAINT; Schema: public; Owner: eden; Tablespace: 
 --
 
