@@ -10,7 +10,8 @@ const auth = (state=initialState, action) => {
   switch (action.type) {
     case LOGIN_SUCCESS:
       Cookies.set('token', action.token);
-      Cookies.set('uid', action.uid);
+      if(action.uid !== undefined)
+        Cookies.set('uid', action.uid);
       return {login:true, token: action.token, msg: LOGIN_SUCCESS}
     case LOGIN_FAILED:
       Cookies.remove('token');
