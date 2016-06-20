@@ -1,2 +1,4 @@
 .DS_*
 *.zip
+*.hot-update.json
+*.hot-update.js
