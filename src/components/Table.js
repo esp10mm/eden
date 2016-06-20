@@ -34,17 +34,26 @@ const Table = React.createClass({
 
   render() {
     var parseTime = this.parseTime(this.props.data[0].order_time);
-    console.log(this.props.data);
+    var unit = (this.props.index+1)+'.'+this.props.data[0].unit.trim();
+    var customer = this.props.data[0].customer;
+
+    var spaceNum = 12-unit.length;
+    for(var i=0;i<spaceNum;i++)
+      unit += ' ';
+
+    spaceNum = 5-customer.length;
+    for(var i=0;i<spaceNum;i++)
+      customer += ' ';
 
     return(
       <table className='ui table'>
         <thead>
           <tr>
-            <th>
-              {`${this.props.index+1}.${this.props.data[0].unit}`}
+            <th style={{whiteSpace:'pre'}}>
+              {`${unit}`}
             </th>
             <th>{`申請時間: ${parseTime}`}</th>
-            <th>申請人:{ this.props.data[0].customer }</th>
+            <th style={{whiteSpace:'pre'}}>申請人:{ customer }</th>
             <th>簽收:</th>
           </tr>
           <tr>
