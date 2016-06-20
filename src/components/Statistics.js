@@ -10,7 +10,6 @@ const Statistic = React.createClass({
   },
 
   itemMonth(item, month) {
-    // console.log(item);
     if(item['months'][month] === undefined)
       return 0;
     else
@@ -34,18 +33,18 @@ const Statistic = React.createClass({
             <th>
               {`${this.props.index+1}.${this.props.data.statistic.name}`}
             </th>
-            <th> 1月</th>
-            <th> 2月</th>
-            <th> 3月</th>
-            <th> 4月</th>
-            <th> 5月</th>
-            <th> 6月</th>
-            <th> 7月</th>
-            <th> 8月</th>
-            <th> 9月</th>
-            <th>10月</th>
-            <th>11月</th>
-            <th>12月</th>
+            <th style={{'width':'7.5%'}}> 1月</th>
+            <th style={{'width':'7.5%'}}> 2月</th>
+            <th style={{'width':'7.5%'}}> 3月</th>
+            <th style={{'width':'7.5%'}}> 4月</th>
+            <th style={{'width':'7.5%'}}> 5月</th>
+            <th style={{'width':'7.5%'}}> 6月</th>
+            <th style={{'width':'7.5%'}}> 7月</th>
+            <th style={{'width':'7.5%'}}> 8月</th>
+            <th style={{'width':'7.5%'}}> 9月</th>
+            <th style={{'width':'7.5%'}}>10月</th>
+            <th style={{'width':'7.5%'}}>11月</th>
+            <th style={{'width':'7.5%'}}>12月</th>
           </tr>
         </thead>
         <tbody>
