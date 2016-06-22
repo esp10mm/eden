@@ -145,6 +145,9 @@ app.post('/api/:name', function(req, res){
     case 'ureset':
       ureset(obj, req.body, res);
       return;
+    case 'delSel':
+      delSel(obj, req.body, res);
+      return;
   }
 
   res.send(obj);
@@ -434,6 +437,23 @@ const ureset =(obj, body, res)=>{
   console.log(query);
   pgquery(query, (result)=>{
     obj.type = 'USER_SET_SUCCESS';
+    res.send(obj);
+  })
+}
+
+const delSel =(obj, body, res)=>{
+  var condition = ''
+  for(var i=0; i<body.ids.length; i++) {
+    if(i == body.ids.length-1)
+      condition += `id=${body.ids[i]}`;
+    else
+      condition += `id=${body.ids[i]} OR `;
+  }
+  var query = `delete from orders where ${condition};`;
+  query += `delete from orders_item where ${condition};`;
+
+  pgquery(query, (result)=>{
+    obj.type = 'ORDER_DELETE_SUCCESS';
     res.send(obj);
   })
 }

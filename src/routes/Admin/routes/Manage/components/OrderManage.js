@@ -1,4 +1,5 @@
 import React from 'react'
+import * as Cookies from 'js-cookie'
 import { browserHistory } from 'react-router'
 
 const OrderRow = React.createClass({
@@ -112,6 +113,35 @@ const OrderManage = React.createClass({
     this.props.func.finishSel(gen);
   },
 
+  delSel() {
+    var checked = $('.order.checkbox').checkbox('is checked');
+    var orders = this.props.manage.get('orders');
+
+    var gen = [];
+
+    for(var k in checked) {
+      if(checked[k])
+        gen.push(orders[k].id);
+    }
+
+    $.ajax({
+      url: '/api/delSel',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ids:gen, uid:Cookies.get('uid')}),
+    }) 
+    .done((res)=>{
+      alert('刪除訂單成功!');
+      var page = parseInt($('.order.page').val());
+      if(isNaN(page)) {
+        $('.order.page').val('1');
+        this.props.func.orderList(0);
+      }
+      else
+        this.props.func.orderList(page-1);
+    })
+  },
+
   nextPage(next) {
     var page = parseInt($('.order.page').val());
     page = page + next;
@@ -145,6 +175,8 @@ const OrderManage = React.createClass({
         <div className='ui button' style={style.button} onClick={()=>this.partTable()}>產生勾選的出貨單</div>
 
         <div className='ui button' style={style.button} onClick={()=>this.finishSel()}>完成勾選的訂單</div>
+
+        <div className='ui button' style={style.button} onClick={()=>this.delSel()}>刪除勾選的訂單</div>
 
         <table className='ui striped table'>
           <thead>
