@@ -21,6 +21,7 @@ const Statistic = React.createClass({
     var items = this.props.data.statistic.items;
     var itemMonth = this.itemMonth;
     var newItems = [];
+    var index = (this.props.len==1)?'':`${this.props.index+1}.`;
 
     for(var k in items) {
       newItems.push({months:items[k], name:this.itemName(k), id:k});
@@ -31,7 +32,7 @@ const Statistic = React.createClass({
         <thead>
           <tr>
             <th>
-              {`${this.props.index+1}.${this.props.data.statistic.name}`}
+              {`${index}${this.props.data.statistic.name}`}
             </th>
             <th style={{'width':'7.5%'}}> 1月</th>
             <th style={{'width':'7.5%'}}> 2月</th>
@@ -84,21 +85,56 @@ const Statistics = React.createClass({
 
   componentDidMount() {
     $('body').css('overflow', 'scroll');
+
+    var year = this.props.params.year.split('_')[0];
+    var unit = this.props.params.year.split('_')[1];
+
     $.ajax({
       url: '/api/statistics',
       type: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({token: Cookies.get('token'), year:this.props.params.year, uid: Cookies.get('uid')}),
+      data: JSON.stringify({
+        token: Cookies.get('token'), 
+        year:year, 
+        unit:unit, 
+        uid: Cookies.get('uid')
+      }),
     })
     .done((res)=>{
      
-      var obj = res.unit;
       var items = res.orders_item;
+      var obj = [];
 
-      for(var k in obj)
+      if(unit !== 'all' && unit !=='sum') {
+        for(var k in res.unit){
+          if(res.unit[k].id == unit)
+            obj.push(res.unit[k]);
+        }
+      }
+      else if(unit == 'sum') {
+        obj = [res.unit[0]];
+        obj[0].name = '總計';
+      }
+      else
+        obj = res.unit;
+
+      for(var k in obj){
         obj[k].items = {};
+      }
 
       for(var i in items) {
+        if(unit=='sum') {
+
+          if(obj[0]['items'][items[i].item]===undefined)
+            obj[0]['items'][items[i].item] = {};
+
+          if(obj[0]['items'][items[i].item][items[i].month]===undefined )
+            obj[0]['items'][items[i].item][items[i].month] = (items[i].export+items[i].export_dona);
+          else
+            obj[0]['items'][items[i].item][items[i].month] += (items[i].export+items[i].export_dona);
+          continue;   
+        }
+
         for(var j in obj) {
           if(obj[j].id == items[i].unit) {
 
@@ -109,12 +145,11 @@ const Statistics = React.createClass({
               obj[j]['items'][items[i].item][items[i].month] = (items[i].export+items[i].export_dona);
             else
               obj[j]['items'][items[i].item][items[i].month] += (items[i].export+items[i].export_dona);
-
             break;
           }
         }
       }
-      console.log(obj);
+
       this.setState({statistics:obj});
       this.setState({list:res.warehouse});
     })
@@ -122,12 +157,13 @@ const Statistics = React.createClass({
 
   render() {
     var list = this.state.list;
+    var len = this.state.statistics.length;
 
     return(
       <div>
       {
         this.state.statistics.map((statistic, index)=>{
-          return <Statistic key={index} data={{statistic:statistic, list:list}} index={index}/> 
+          return <Statistic key={index} data={{statistic:statistic, list:list}} index={index} len={len}/> 
         }) 
       }
       </div>
