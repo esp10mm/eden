@@ -3,11 +3,6 @@ import { browserHistory } from 'react-router'
 
 const OrderRow = React.createClass({
   toPage(path) {
-    // $('.main').transition('fade');
-
-    // setTimeout(()=>{
-    //     browserHistory.push(path);
-    // }, 500)
     browserHistory.push(path);
   },
 
@@ -61,6 +56,11 @@ const OrderManage = React.createClass({
       }
       else
         this.props.func.orderList(page-1);
+    })
+    $('.selectAll.checkbox').checkbox().first().checkbox({
+      onChange: ()=>{
+        $('.order.checkbox').checkbox('toggle');
+      } 
     })
   },
 
@@ -152,7 +152,12 @@ const OrderManage = React.createClass({
               <th>時間</th>
               <th>單位</th>
               <th>狀態</th>
-              <th>勾選</th>
+              <th>
+                <div className='ui selectAll checkbox'>
+                  <input type='checkbox' />
+                  <label />
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
