@@ -14,11 +14,6 @@ const Order = React.createClass({
   },
   
   toPage(path) {
-    // $('.main').transition('fade');
-
-    // setTimeout(()=>{
-    //     browserHistory.push(path);
-    // }, 500)
     browserHistory.push(path);
   },
 
@@ -70,6 +65,7 @@ const Order = React.createClass({
     let unit = '';
     let items = [];
     let status = '';
+    let statusView = '';
     let customer = '';
     let isFinished = false;
 
@@ -79,6 +75,7 @@ const Order = React.createClass({
     if(manage.results.order !== undefined) {
       unit = manage.results.order.unit;
       status = manage.results.order.status;
+      statusView = (status=='FINISH')?'已完成':'未完成';
       customer = manage.results.order.customer;
       $('.ui.checkbox').checkbox('set enabled');
 
@@ -102,7 +99,7 @@ const Order = React.createClass({
 
               <div style={style.title2}>申請單位:&nbsp;{ unit }</div><br/>
 
-              <div style={style.title2}>訂單狀態:&nbsp;{ status }</div><br/>
+              <div style={style.title2}>訂單狀態:&nbsp;{ statusView }</div><br/>
 
               <div style={style.title2}>申請人:&nbsp;{ customer }</div><br/>
 
