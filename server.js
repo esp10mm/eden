@@ -461,7 +461,8 @@ const delSel =(obj, body, res)=>{
 const pgquery = (query, cb)=> {
   pg.connect(conString, function(err, client, done) {
     if(err) {
-      cb(result);
+      var result = {rows:[]};
+      cd(result);
       return console.error('could not connect to postgres', err);
     }
     client.query(query, function(err, result) {
