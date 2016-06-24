@@ -469,6 +469,7 @@ const pgquery = (query, cb)=> {
       done();
 
       if(err) {
+        var result = {rows:[]};
         cb(result);
         return console.error('error running query', err);
       }
