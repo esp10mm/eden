@@ -26,10 +26,12 @@ const ItemSelect = React.createClass({
 
   render() {
     var itemlist = this.props.itemlist;
+
     return(
       <select className="ui fluid multiple itemSelect search dropdown" multiple=''>
       {itemlist.map(function(option){
-        return <SelectOption key={option.id} data={option} />
+        if(option.item_type !== 1)
+          return <SelectOption key={option.id} data={option} />
       })}
       </select>
     );
