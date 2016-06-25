@@ -283,7 +283,14 @@ const consumeableOrder = (obj, body, res)=>{
   var query = `INSERT INTO orders (unit, order_time, status, customer) VALUES ('${body.unit}', now(), 'PENDING', '${body.customer}');`;
 
   for(var item in body.order) {
-    query += `INSERT INTO orders_item (id, item, amount, export) SELECT max(id), '${item}', '${body.order[item]}', '${body.order[item]}' from orders;`
+    var msg = body.order[item].note;
+    var amount = body.order[item];
+    if(msg === undefined)
+      msg = '';
+    if(body.order[item].amount !== undefined)
+      amount = body.order[item].amount;
+
+    query += `INSERT INTO orders_item (id, item, amount, export, msg) SELECT max(id), '${item}', '${amount}', '${amount}', '${msg}' from orders;`
   }  
 
   obj = {

@@ -1,5 +1,6 @@
 import React from 'react'
 import Consumable from './Consumable'
+import Stationery from './Stationery'
 import Orders from './Orders'
 import { browserHistory } from 'react-router'
 
@@ -53,7 +54,7 @@ const Service = React.createClass({
                 文具申請  
               </div>
               <div className='content'>
-               未開放 
+                <Stationery func={this.props.func} manage={this.props.manage} service={ this.props.service }/>
               </div>
 
               <div className="title">
