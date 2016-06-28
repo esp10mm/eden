@@ -151,7 +151,7 @@ const Stationery = React.createClass({
           <tr>
             <th>品項</th>
             <th style={{width: '100px'}}>數量</th>
-            <th style={{width: '25%'}}>備註</th>
+            <th style={{width: '25%'}}>備註(說明)</th>
             <th>刪除</th>
           </tr>
           </thead>
