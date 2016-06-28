@@ -4,6 +4,7 @@ export const addItem = (obj)=>{
   return dispatch => {
     var req = {
       name: obj.name,
+      isStationery: obj.isStationery,
       token: Cookies.get('token'),
       uid: Cookies.get('uid'),
     };
@@ -26,7 +27,6 @@ export const delItem = (obj)=>{
       token: Cookies.get('token'),
       uid: Cookies.get('uid'),
     };
-    console.log(req);
     $.ajax({
       url: '/api/delItem',
       type: 'POST',

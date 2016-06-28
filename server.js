@@ -157,7 +157,10 @@ app.post('/api/:name', function(req, res){
 const addItem = (obj, body, res)=> {
   var query = '';
 
-  query = `INSERT INTO warehouse (name, amount) VALUES ('${body.name}','0');`
+  if(body.isStationery)
+    query = `INSERT INTO warehouse (name, amount, item_type) VALUES ('${body.name}', '0', '1');`
+  else
+    query = `INSERT INTO warehouse (name, amount, item_type) VALUES ('${body.name}', '0', '0');`
 
   pgquery(query, (result)=>{
     obj.type = 'ADDITEM_SUCCESSED';
