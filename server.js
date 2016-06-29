@@ -126,7 +126,6 @@ app.post('/api/:name', function(req, res){
     case 'finishSel':
       finishSel(obj, req.body, res);
       return;
-
     case 'getTable':
       getTable(obj, req.body, res);
       return;
@@ -141,6 +140,9 @@ app.post('/api/:name', function(req, res){
       return;
     case 'setPrice':
       setPrice(obj, req.body, res);
+      return;
+    case 'setOrder':
+      setOrder(obj, req.body, res);
       return;
     case 'ureset':
       ureset(obj, req.body, res);
@@ -181,7 +183,7 @@ const delItem = (obj, body, res)=> {
 }
 
 const itemList = (obj, body, res)=>{
-  var query = 'SELECT * FROM warehouse ORDER BY id ASC;'; 
+  var query = 'SELECT * FROM warehouse ORDER BY item_order ASC;'; 
 
   obj = {
     type: 'ITEM_LIST_SUCCESSED',
@@ -464,6 +466,15 @@ const delSel =(obj, body, res)=>{
 
   pgquery(query, (result)=>{
     obj.type = 'ORDER_DELETE_SUCCESS';
+    res.send(obj);
+  })
+}
+
+const setOrder =(obj, body, res)=>{
+  var query = `UPDATE warehouse set item_order = ${body.order} where id= ${body.item};`;
+
+  pgquery(query, (result)=>{
+    obj.type = 'SET_ORDER_SUCCESS';
     res.send(obj);
   })
 }

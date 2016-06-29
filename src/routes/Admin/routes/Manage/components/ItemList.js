@@ -1,24 +1,68 @@
 import React from 'react'
+import * as Cookies from 'js-cookie'
 import { browserHistory } from 'react-router'
 
-const ItemList = React.createClass({
-  componentDidMount() {
+const ItemRow = React.createClass({
+  getInitialState() {
+    return {order: this.props.data.item_order};
   },
 
-  componentWillReceiveProps(newProps) {
-   
-    if(newProps.manage.get('type') === 'ITEM_LIST_SUCCESSED') {
-      var html = '';
-      const results = newProps.manage.get('results');
-      for(var k in results){
-        html += `<tr><td><a class='tdname'>${results[k].name}</a></td><td>${results[k].amount}</td><td>${results[k].donation}</td></tr>`;
-      }
-      $('.itemList.tbody').html(html);
+  toPage() {
+    this.props.toPage(`/admin/item/${this.props.data.name}`);
+  },
 
-      $('.tdname').on('click', (e)=>{
-        this.toPage(`/admin/item/${$(e.target).text()}`);
-      })
+  orderChange(event) {
+    var newOrder = event.target.value; 
+
+    if(isNaN(parseInt(newOrder))){
+      alert('請輸入數字!');
+      this.setState({order: this.props.data.item_order});
+      return;
     }
+
+    this.setState({order: newOrder});
+  },
+
+  submitChange() {
+    var newOrder = this.state.order;
+    var item = this.props.data.id;
+
+    $.ajax({
+      url: '/api/setOrder',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        token: Cookies.get('token'), 
+        item: item,
+        order: newOrder,
+        uid: Cookies.get('uid')
+      }),
+    })
+    .done((res)=>{
+      // alert('變更順序成功!');
+    })
+
+  },
+
+  render() {
+    return(
+      <tr>
+        <td><a className='tdname' onClick={this.toPage}>{this.props.data.name}</a></td>
+        <td>{this.props.data.amount}</td>
+        <td>{this.props.data.donation}</td>
+        <td>
+          <div className='ui item_order input' style={{width:'100px'}} >
+            <input type='text' value={this.state.order} onChange={this.orderChange} onBlur={this.submitChange}/>
+          </div>
+        </td>
+      </tr>
+    )
+  }
+})
+
+const ItemList = React.createClass({
+  getInitialState() {
+    return {list: 'consumable'};
   },
 
   toPage(path) {
@@ -30,18 +74,56 @@ const ItemList = React.createClass({
     browserHistory.push(path);
   },
 
+  toggleList() {
+    var list = this.state.list;
+
+    if(list == 'stationery')
+      list = 'consumable';
+    else
+      list = 'stationery';
+
+    this.setState({list:list});
+  },
+
   render() {
+    var consumeableList = [];
+    var stationeryList = [];
+    var target = consumeableList;
+    
+    var items = this.props.manage.get('items');
+
+    if(items[0] !== undefined) {
+      for(var k in items) {
+        if(items[k].item_type == 0)
+          consumeableList.push(items[k]);
+        else 
+          stationeryList.push(items[k]);
+      }
+    }
+
+    if(this.state.list == 'stationery')
+      target = stationeryList;
+
     return(
       <div className='content'>
+        <div className='ui button' onClick={this.toggleList}>
+          耗材/文具
+        </div>
         <table className='ui striped table'>
           <thead>
             <tr>
               <th>項目名稱</th>
               <th>自購數量</th>
               <th>捐贈數量</th>
+              <th>順序</th>
             </tr>
           </thead>
           <tbody className='itemList tbody'>
+          {
+            target.map((item, i)=>{
+              return <ItemRow data={item} key={item.id} toPage={this.toPage}/>
+            })
+          }
           </tbody>
         </table>
       </div>
