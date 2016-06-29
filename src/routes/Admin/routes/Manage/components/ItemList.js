@@ -75,6 +75,8 @@ const ItemList = React.createClass({
   },
 
   toggleList() {
+    this.props.func.itemList();
+
     var list = this.state.list;
 
     if(list == 'stationery')

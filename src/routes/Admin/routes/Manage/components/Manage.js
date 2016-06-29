@@ -60,7 +60,7 @@ const Manage = React.createClass({
                 <i className="dropdown icon"></i>
                 項目清單 
               </div>
-              <ItemList manage={ this.props.manage }/>
+              <ItemList manage={ this.props.manage } func={this.props.func}/>
 
               <div className="title" onClick={ ()=>this.accorClick(2) }>
                 <i className="dropdown icon"></i>
