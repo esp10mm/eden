@@ -285,7 +285,15 @@ const orderInfo = (obj, body, res)=>{
 }
 
 const consumeableOrder = (obj, body, res)=>{
-  var query = `INSERT INTO orders (unit, order_time, status, customer) VALUES ('${body.unit}', now(), 'PENDING', '${body.customer}');`;
+  var order_type = 'consumable';
+
+  for(var k in body.order){
+    if(body.order[k].note !== undefined)
+      order_type = 'stationery'; 
+    break;
+  }
+
+  var query = `INSERT INTO orders (unit, order_time, status, customer, order_type) VALUES ('${body.unit}', now(), 'PENDING', '${body.customer}', '${order_type}');`;
 
   for(var item in body.order) {
     var msg = body.order[item].note;
@@ -381,7 +389,7 @@ const getTable = (obj, body, res)=>{
 
   if(ids_str.length > 0) {
     ids_str = ids_str.slice(0, -1);
-    query = `select a.customer, d.name, c.name as unit, b.amount, a.id, a.order_time from orders a, orders_item b, unit c, warehouse d where d.id=b.item and b.id=a.id and a.status='PENDING' and c.id=a.unit and a.id in (${ids_str});`;
+    query = `select a.customer, d.name, c.name as unit, b.amount, a.id, a.order_type, a.order_time from orders a, orders_item b, unit c, warehouse d where d.id=b.item and b.id=a.id and a.status='PENDING' and c.id=a.unit and a.id in (${ids_str});`;
   }
 
   else
