@@ -68,24 +68,24 @@ const Table = React.createClass({
     if(this.props.data[0].order_type == 'stationery') {
       return(
         <tr>
-          <th style={{'width':'25%'}}>{parseTime}</th>
+          <th style={{'width':'23%'}}>{parseTime}</th>
           <th style={{'width':'10%'}}>{unit}</th>
-          <th style={{'width':'15%'}}>{customer}</th>
-          <th style={{'width':'25%'}}/>
+          <th style={{'width':'16%'}}>{customer}</th>
+          <th style={{'width':'23%'}}/>
           <th style={{'width':'10%'}}>簽收:</th>
-          <th style={{'width':'15%'}}/>
+          <th style={{'width':'16%'}}/>
         </tr>
       )
     }
     else {
       return(
         <tr>
-          <th style={{'width':'25%'}}>{parseTime}</th>
+          <th style={{'width':'23%'}}>{parseTime}</th>
           <th style={{'width':'10%'}}>{unit}</th>
-          <th style={{'width':'15%'}}>{customer}</th>
-          <th style={{'width':'25%'}}/>
+          <th style={{'width':'16%'}}>{customer}</th>
+          <th style={{'width':'23%'}}/>
           <th style={{'width':'10%'}}>簽收:</th>
-          <th style={{'width':'15%'}}/>
+          <th style={{'width':'16%'}}/>
         </tr>
       )
     }
