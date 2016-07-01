@@ -28,11 +28,13 @@ const OrderRow = React.createClass({
     var pareseTime = this.pareseTime;
     var status = this.props.data.status=='FINISH'?'完成':'未完成';
     var statusStyle = this.props.data.status=='FINISH'?{color:'green'}:{color:'red'};
+    var type = this.props.data.order_type=='consumable'?'耗材':'文具';
 
     return(
       <tr>
         <td><a onClick={ ()=>this.toPage('/admin/order/'+this.props.data.id) }>{pareseTime(this.props.data.order_time)}</a></td>
         <td>{this.props.data.unit}</td>
+        <td>{type}</td>
         <td><span style={statusStyle}>{status}</span></td>
         <td>
           <div className='ui order checkbox'>
@@ -183,6 +185,7 @@ const OrderManage = React.createClass({
             <tr>
               <th>時間</th>
               <th>單位</th>
+              <th>類別</th>
               <th>狀態</th>
               <th>
                 <div className='ui selectAll checkbox'>
