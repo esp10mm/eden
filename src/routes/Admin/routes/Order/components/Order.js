@@ -67,6 +67,8 @@ const Order = React.createClass({
     let status = '';
     let statusView = '';
     let customer = '';
+    let order_type = '';
+
     let isFinished = false;
 
     let finishBTNClass = 'ui button green';
@@ -77,6 +79,8 @@ const Order = React.createClass({
       status = manage.results.order.status;
       statusView = (status=='FINISH')?'已完成':'未完成';
       customer = manage.results.order.customer;
+      order_type = manage.results.order.order_type;
+
       $('.ui.checkbox').checkbox('set enabled');
 
       if(status == 'FINISH') {
@@ -85,6 +89,7 @@ const Order = React.createClass({
         isFinished = true;
         $('.ui.checkbox').checkbox('set disabled');
       }
+
     }
 
     if(manage.results.items !== undefined)
@@ -104,7 +109,8 @@ const Order = React.createClass({
               <div style={style.title2}>申請人:&nbsp;{ customer }</div><br/>
 
               <div style={style.title2}>申請項目:&nbsp;</div><br/>
-              <ItemList items={items} isFinished={isFinished}/><br/>
+
+              <ItemList items={items} isFinished={isFinished} order_type={order_type}/><br/>
 
               <div className='ui button' onClick={ ()=>this.toPage('/admin') }>回管理頁面</div>
               <div className={finishBTNClass} onClick={ ()=>this.finishOrder(status) }>{finishBTNText}</div>

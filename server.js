@@ -265,7 +265,7 @@ const itemInfo = (obj, body, res)=>{
 }
 
 const orderInfo = (obj, body, res)=>{
-  var query = `select a.item, a.amount as desired, a.export, a.export_dona, a.id, b.name, b.amount, b.donation from orders_item a, warehouse b where a.id = '${body.oid}' and a.item = b.id;`
+  var query = `select a.item, a.msg, a.amount as desired, a.export, a.export_dona, a.id, b.name, b.amount, b.donation from orders_item a, warehouse b where a.id = '${body.oid}' and a.item = b.id;`
   obj = {
     type: 'ORDER_INFO_SUCCESSED',
     results: {},
@@ -274,7 +274,7 @@ const orderInfo = (obj, body, res)=>{
 
     obj.results.items = result.rows;
 
-    query = `select orders.id, orders.order_time, orders.customer, orders.status, unit.name unit ` +
+    query = `select orders.id, orders.order_type, orders.order_time, orders.customer, orders.status, unit.name unit ` +
       `from orders, unit where orders.unit = unit.id AND orders.id='${body.oid}'`;
     pgquery(query, (result)=>{
     

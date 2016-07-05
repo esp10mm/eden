@@ -24,12 +24,19 @@ const ItemRow = React.createClass({
     }
 
     var disabled = this.props.isFinished? 'disabled':'';
-    
+
+    const msg = ()=>{
+      if(this.props.order_type == 'stationery'){
+        return <td>{this.props.item.msg}</td>;
+      }
+    }
+
     return(
       <tr>
         <td><a onClick={ ()=>this.toPage('/admin/item/'+this.props.item.name)}>{this.props.item.name}</a></td>
         <td>{this.props.item.desired}</td>
         <td>{this.props.item.amount + this.props.item.donation}</td>
+        { msg() }
         <td>
           <div className={`ui ${disabled} export input `} style={style.input}>
             <input type='text' defaultValue={this.props.item.export} />
@@ -52,9 +59,22 @@ const ItemList = React.createClass({
   componentWillReceiveProps(newProps) {
   },
 
+  tableHead(){
+    if(this.props.order_type == 'stationery'){
+      return(
+        <th>備註(說明)</th>
+      );
+    }
+    else{
+      return;
+    }
+  },
+
   render() {
     let isFinished = this.props.isFinished;
-
+    let orderTypeHead = '';
+    let order_type = this.props.order_type;
+    
     return(
       <table className='ui striped table'>
         <thead>
@@ -62,6 +82,7 @@ const ItemList = React.createClass({
             <th>項目名稱</th>
             <th>申請數量</th>
             <th>庫存總量</th>
+            { this.tableHead() }
             <th>自購出貨量</th>
             <th>捐物出貨量</th>
           </tr>
@@ -69,7 +90,7 @@ const ItemList = React.createClass({
         <tbody>
         {
           this.props.items.map(function(item, i){
-            return <ItemRow key={item.item} item={item} index={i} isFinished={isFinished}/> 
+            return <ItemRow key={item.item} item={item} index={i} isFinished={isFinished} order_type={order_type}/> 
           })
         }
         </tbody>
