@@ -2,6 +2,7 @@ import React from 'react'
 import ImportExport from './ImportExport'
 import Price from './Price'
 import { browserHistory } from 'react-router'
+import * as Cookies from 'js-cookie'
 
 const Item = React.createClass({
   componentDidMount() {
@@ -22,6 +23,25 @@ const Item = React.createClass({
     //     browserHistory.push(path);
     // }, 500)
     browserHistory.push(path);
+  },
+
+  adminRender(){
+    if(Cookies.get('type') != 'admin')
+      return;
+    else{
+      var style = {
+        title2: {
+          fontSize: '20px',
+          display: 'inline-block',
+        },
+      }
+      return(
+        <div>
+          <div style={style.title2}>項目進出:&nbsp;</div><br/>
+          <ImportExport manage={ this.props.manage } func={this.props.func} name={ this.props.params.name }/>
+        </div>
+      )
+    }
   },
 
   render() {
@@ -72,9 +92,7 @@ const Item = React.createClass({
               <div className='item donation' style={style.title2}/>
               <br/><br/>
 
-              <div style={style.title2}>項目進出:&nbsp;</div><br/>
-              <ImportExport manage={ this.props.manage } func={this.props.func} name={ this.props.params.name }/>
-
+              {this.adminRender()}
 
               <Price manage={ this.props.manage } func={ this.props.func } /><br/><br/>
 

@@ -1,11 +1,8 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
+import * as Cookies from 'js-cookie'
 
 const ItemRow = React.createClass({
-  componentDidMount() {
-
-  },
-
   toPage(path) {
     // $('.main').transition('fade');
 
@@ -13,6 +10,41 @@ const ItemRow = React.createClass({
     //     browserHistory.push(path);
     // }, 500)
     browserHistory.push(path);
+  },
+
+  adminRender(num){
+    if(Cookies.get('type')=='admin' && num==0){
+      return(
+        <td>
+          <div className={`ui ${disabled} export input `} style={style.input}>
+            <input type='text' defaultValue={this.props.item.export} />
+          </div>
+        </td>
+      )
+    }
+    else if(num == 0){
+      return(
+        <td>
+          {this.props.item.export}
+        </td>
+      )
+    }
+    else if(Cookies.get('type')=='admin' && num==1){
+      return(
+        <td>
+          <div className={`ui ${disabled} export_dona input `} style={style.input}>
+            <input type='text' defaultValue={this.props.item.export_dona} />
+          </div>
+        </td>
+      )
+    }  
+    else if(num == 1){
+      return(
+        <td>
+          {this.props.item.export_dona}
+        </td>
+      )
+    }
   },
 
   render() {
@@ -37,16 +69,8 @@ const ItemRow = React.createClass({
         <td>{this.props.item.desired}</td>
         <td>{this.props.item.amount + this.props.item.donation}</td>
         { msg() }
-        <td>
-          <div className={`ui ${disabled} export input `} style={style.input}>
-            <input type='text' defaultValue={this.props.item.export} />
-          </div>
-        </td>
-        <td>
-          <div className={`ui ${disabled} export_dona input `} style={style.input}>
-            <input type='text' defaultValue={this.props.item.export_dona} />
-          </div>
-        </td>
+        {this.adminRender(0)}
+        {this.adminRender(1)}
       </tr>
     )
   }

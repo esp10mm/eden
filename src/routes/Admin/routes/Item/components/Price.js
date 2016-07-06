@@ -38,6 +38,33 @@ const Price = React.createClass({
     }
   },
 
+  adminRender(){
+    var style = {
+      inoutInput: {
+        width: '90px',
+      },
+      title2: {
+        fontSize: '20px',
+        display: 'inline-block',
+      },
+    }
+    if(Cookies.get('type') != 'admin'){
+      return (
+        <div style={style.title2}>項目單價:&nbsp;{this.state.price}</div>
+      )
+    }
+    else{
+      return(
+        <div>
+          <div style={style.title2}>項目單價:&nbsp;</div>
+          <div className='ui input price' style={ style.inoutInput }>
+            <input type='text' defaultValue='0' onBlur={ this.priceOnChange }/>
+          </div>
+        </div>
+      )
+    }
+  },
+
   render() {
     var style = {
       inoutInput: {
@@ -51,10 +78,7 @@ const Price = React.createClass({
 
     return(
       <div>
-        <div style={style.title2}>項目單價:&nbsp;</div>
-        <div className='ui input price' style={ style.inoutInput }>
-          <input type='text' defaultValue='0' onBlur={ this.priceOnChange }/>
-        </div>&nbsp;
+        {this.adminRender()}
       </div>
     )
   }

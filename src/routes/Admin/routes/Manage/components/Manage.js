@@ -23,6 +23,33 @@ const Manage = React.createClass({
     Cookies.set('admin_accor', num);
   },
 
+  adminRender(num){
+    if(Cookies.get('type') != 'admin') 
+      return;
+    else if(num == 0){
+      return(
+        <div>
+          <div className="title" onClick={ ()=>this.accorClick(0) }>
+            <i className="dropdown icon"></i>
+            項目編輯 
+          </div>
+          <ItemEdit manage={ this.props.manage } func={this.props.func}/>
+        </div>
+      )
+    }
+    else if(num == 1){
+      return(
+        <div>
+          <div className="title" onClick={ ()=>this.accorClick(4) }>
+            <i className="dropdown icon"></i>
+            設定 
+          </div>
+          <Setting manage={ this.props.manage } func={this.props.func}/>
+        </div>
+      )
+    }
+  },
+
   render() {
     var style = {
       container: {
@@ -50,11 +77,7 @@ const Manage = React.createClass({
           <div style={style.mainSegment}>
             <div className="ui compact styled accordion">
 
-              <div className="title" onClick={ ()=>this.accorClick(0) }>
-                <i className="dropdown icon"></i>
-                項目編輯 
-              </div>
-              <ItemEdit manage={ this.props.manage } func={this.props.func}/>
+              {this.adminRender(0)}
 
               <div className="title" onClick={ ()=>this.accorClick(1) }>
                 <i className="dropdown icon"></i>
@@ -74,11 +97,7 @@ const Manage = React.createClass({
               </div>
               <Statistics manage={ this.props.manage } func={this.props.func}/>
 
-              <div className="title" onClick={ ()=>this.accorClick(4) }>
-                <i className="dropdown icon"></i>
-                設定 
-              </div>
-              <Setting manage={ this.props.manage } func={this.props.func}/>
+              {this.adminRender(1)}
 
             </div>
           </div>

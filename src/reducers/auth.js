@@ -10,12 +10,15 @@ const auth = (state=initialState, action) => {
   switch (action.type) {
     case LOGIN_SUCCESS:
       Cookies.set('token', action.token);
-      if(action.uid !== undefined)
+      if(action.uid !== undefined) {
         Cookies.set('uid', action.uid);
+        Cookies.set('type', action.userType);
+      }
       return {login:true, token: action.token, msg: LOGIN_SUCCESS}
     case LOGIN_FAILED:
       Cookies.remove('token');
       Cookies.remove('uid');
+      Cookies.remove('type');
       return {login:false, token: action.token, msg: LOGIN_FAILED}
     case USER_SET_SUCCESS:
       alert('更改帳號密碼成功!');

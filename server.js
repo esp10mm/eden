@@ -38,9 +38,10 @@ app.post('/login', (req, res)=>{
   var obj = {
     type: 'LOGIN_FAILED',
     token: tokenGen(),
+    userType: 'normal',
   }
 
-  var query = `select id from users where username='${req.body.account}' and psw='${req.body.password}'`;
+  var query = `select id, user_type from users where username='${req.body.account}' and psw='${req.body.password}'`;
 
   pgquery(query, (result)=>{
     if(result.rows.length == 1) {
@@ -51,6 +52,7 @@ app.post('/login', (req, res)=>{
         loginList[obj.uid] = [];  
 
       loginList[obj.uid].push(obj.token);
+      obj.userType = result.rows[0].user_type.trim();
     }
     res.send(obj);
   })

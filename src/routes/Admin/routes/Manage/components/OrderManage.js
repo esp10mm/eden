@@ -155,6 +155,19 @@ const OrderManage = React.createClass({
     this.props.func.orderList(page-1);
   },
 
+  adminRender(num){
+    if(Cookies.get('type') != 'admin') 
+      return;
+    else if(num == 0){
+      return(
+        <div className='ui button' style={style.button} onClick={()=>this.finishSel()}>完成勾選的訂單</div>
+      )
+    }
+    else if(num == 1){
+        <div className='ui button' style={style.button} onClick={()=>this.delSel()}>刪除勾選的訂單</div>
+    }
+  },
+
   render() {
     var style = {
       pageInput: {
@@ -176,9 +189,9 @@ const OrderManage = React.createClass({
         <div className='ui button' style={style.button} onClick={()=>this.tableGen()}>產生所有出貨單</div>
         <div className='ui button' style={style.button} onClick={()=>this.partTable()}>產生勾選的出貨單</div>
 
-        <div className='ui button' style={style.button} onClick={()=>this.finishSel()}>完成勾選的訂單</div>
+        {this.adminRender(0)}
 
-        <div className='ui button' style={style.button} onClick={()=>this.delSel()}>刪除勾選的訂單</div>
+        {this.adminRender(1)}
 
         <table className='ui striped table'>
           <thead>

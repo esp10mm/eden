@@ -41,7 +41,20 @@ const ItemRow = React.createClass({
     .done((res)=>{
       // alert('變更順序成功!');
     })
+  },
 
+  adminRender() {
+    if(Cookies.get('type') != 'admin') 
+      return;
+    else{
+      return(
+        <td>
+          <div className='ui item_order input' style={{width:'100px'}} >
+            <input type='text' value={this.state.order} onChange={this.orderChange} onBlur={this.submitChange}/>
+          </div>
+        </td>
+      )
+    }
   },
 
   render() {
@@ -50,11 +63,7 @@ const ItemRow = React.createClass({
         <td><a className='tdname' onClick={this.toPage}>{this.props.data.name}</a></td>
         <td>{this.props.data.amount}</td>
         <td>{this.props.data.donation}</td>
-        <td>
-          <div className='ui item_order input' style={{width:'100px'}} >
-            <input type='text' value={this.state.order} onChange={this.orderChange} onBlur={this.submitChange}/>
-          </div>
-        </td>
+        {this.adminRender()}
       </tr>
     )
   }
@@ -87,6 +96,16 @@ const ItemList = React.createClass({
     this.setState({list:list});
   },
 
+  adminRender(){
+    if(Cookies.get('type') != 'admin') 
+      return;
+    else{
+      return(
+        <th>順序</th>
+      )
+    }
+  },
+
   render() {
     var consumeableList = [];
     var stationeryList = [];
@@ -117,7 +136,7 @@ const ItemList = React.createClass({
               <th>項目名稱</th>
               <th>自購數量</th>
               <th>捐贈數量</th>
-              <th>順序</th>
+              {this.adminRender()}
             </tr>
           </thead>
           <tbody className='itemList tbody'>

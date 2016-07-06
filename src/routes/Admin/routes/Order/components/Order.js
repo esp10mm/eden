@@ -1,5 +1,6 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
+import * as Cookies from 'js-cookie'
 import ItemList from './ItemList'
 
 const Order = React.createClass({
@@ -29,6 +30,16 @@ const Order = React.createClass({
     })
 
     this.props.func.finishOrder(this.props.params.id, status, items);
+  },
+
+  adminRender(data){
+    if(Cookies.get('type') != 'admin') 
+      return;
+    else{
+      return(
+              <div className={data.finishBTNClass} onClick={ ()=>this.finishOrder(status) }>{data.finishBTNText}</div>
+      )
+    }
   },
 
   render() {
@@ -113,7 +124,8 @@ const Order = React.createClass({
               <ItemList items={items} isFinished={isFinished} order_type={order_type}/><br/>
 
               <div className='ui button' onClick={ ()=>this.toPage('/admin') }>回管理頁面</div>
-              <div className={finishBTNClass} onClick={ ()=>this.finishOrder(status) }>{finishBTNText}</div>
+
+              {this.adminRender({finishBTNText:finishBTNText, finishBTNClass:finishBTNClass})}
             </div>
           </div>
         </div>
