@@ -2,6 +2,14 @@ import React from 'react'
 import { browserHistory } from 'react-router'
 
 const ItemRow = React.createClass({
+  componentDidMount() {
+    $(`.oed.${this.props.item.key}`).dropdown({
+      onChange: (value, text)=>{
+        this.props.itemSet(this.props.item.key, 'item', value);
+      }
+    });
+  },
+
   toPage(path) {
     // $('.main').transition('fade');
 
@@ -11,14 +19,57 @@ const ItemRow = React.createClass({
     browserHistory.push(path);
   },
 
+  noteOnBlur(e) {
+    this.props.itemSet(this.props.item.key, 'msg', e.target.value);
+  },
+
+  amountOnBlur(e) {
+    this.props.itemSet(this.props.item.key, 'desired', e.target.value);
+  },
+
+  noteTd() {
+    if(this.props.item.item_type == 1) {
+      return(
+        <td>
+          <div className='ui mini input'>
+            <input type='text' className='item note input' data-iid={this.props.item.item} defaultValue={this.props.item.msg.trim()} onBlur={this.noteOnBlur}/>
+          </div>
+        </td>
+      )
+    }
+  },
+
+  removeItem() {
+    this.props.removeItem(this.props.item.key);
+  },
+
   render() {
     return(
       <tr>
-        <td><a>{this.props.item.name}</a></td>
+        <td>
+          <div className={`ui selection dropdown ${this.props.item.key} oed`}>
+            <input type='hidden' value={this.props.item.item}/>
+            <i className='dropdown icon'/>
+            <div className='default text'>{this.props.item.name}</div>
+            <div className='menu'>
+            {
+              this.props.list.map((litem)=>{
+                return(
+                  <div className='item' data-value={litem.id} key={litem.id}>{litem.name}</div>
+                )
+              })
+            }
+            </div>
+          </div>
+        </td>
         <td>
           <div className='ui mini input'>
-            <input type='text'className='item amount input' data-iid={this.props.item.item} defaultValue={this.props.item.desired}/>
+            <input type='text'className='item amount input' data-iid={this.props.item.item} defaultValue={this.props.item.desired} onBlur={this.amountOnBlur}/>
           </div>
+        </td>
+        {this.noteTd()}
+        <td>
+          <i className='ui remove red icon' onClick={this.removeItem}/>
         </td>
       </tr>
     )
@@ -33,19 +84,45 @@ const ItemList = React.createClass({
   componentWillReceiveProps(newProps) {
   },
 
+  tableHead() {
+    if(this.props.items[0] === undefined)
+      return
+    if(this.props.items[0].item_type == 0){
+      return(
+        <tr>
+          <th>項目名稱</th>
+          <th>申請數量</th>
+          <th>刪除</th>
+        </tr>
+      )
+    }
+    else{
+      return(
+        <tr>
+          <th>項目名稱</th>
+          <th>申請數量</th>
+          <th>備註(說明)</th>
+          <th>刪除</th>
+        </tr>
+      )
+    }
+
+  },
+
   render() {
+    let itemSet = this.props.itemSet;
+    let list = this.props.list;
+    let removeItem = this.props.removeItem;
+
     return(
       <table className='ui striped table'>
         <thead>
-          <tr>
-            <th>項目名稱</th>
-            <th>申請數量</th>
-          </tr>
+        {this.tableHead()}
         </thead>
         <tbody>
         {
           this.props.items.map(function(item){
-            return <ItemRow key={item.item} item={item}/> 
+            return <ItemRow list={list} key={item.key} item={item} itemSet={itemSet} removeItem={removeItem}/> 
           })
         }
         </tbody>

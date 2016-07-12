@@ -267,7 +267,7 @@ const itemInfo = (obj, body, res)=>{
 }
 
 const orderInfo = (obj, body, res)=>{
-  var query = `select a.item, a.msg, a.amount as desired, a.export, a.export_dona, a.id, b.name, b.amount, b.donation from orders_item a, warehouse b where a.id = '${body.oid}' and a.item = b.id;`
+  var query = `select a.item, a.msg, a.amount as desired, a.export, a.export_dona, a.id, b.name, b.amount, b.donation, b.item_type from orders_item a, warehouse b where a.id = '${body.oid}' and a.item = b.id;`
   obj = {
     type: 'ORDER_INFO_SUCCESSED',
     results: {},
@@ -318,11 +318,15 @@ const consumeableOrder = (obj, body, res)=>{
 }
 
 const updateOrder = (obj, body, res)=>{
-  var query = ``;
+  var query = `delete from orders_item WHERE id=${body.oid};`;
 
-  for(var item in body.amount) {
-    query += `UPDATE orders_item set amount=${body.amount[item]} WHERE item=${item} AND id=${body.oid};`;
-  }
+  console.log(body.items);
+  for(var item in body.items) {
+    var msg = body.items[item].msg;
+    var amount = body.items[item].desired;
+
+    query += `INSERT INTO orders_item (id, item, amount, export, msg) SELECT max(id), '${body.items[item].item}', '${amount}', '${amount}', '${msg}' from orders;`
+  }  
 
   obj = {
     type: 'UPDATE_ORDER_SUCCESSED',

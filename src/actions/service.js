@@ -35,11 +35,11 @@ export const consumeableOrder = (unit, order, customer)=>{
   } 
 }
 
-export const updateOrder = (amount, oid)=>{
+export const updateOrder = (items, oid)=>{
   return dispatch => {
     var req = {
       oid: oid,
-      amount: amount,
+      items: items,
     };
     $.ajax({
       url: '/api/updateOrder',

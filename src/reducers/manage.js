@@ -1,6 +1,6 @@
 import Immutable from 'immutable'
 
-const initialState = Immutable.fromJS({results: [], type: null, unit:[], orders:[], items:[]});
+const initialState = Immutable.fromJS({results: [], type: null, unit:[], orders:[], order:{}, items:[]});
 
 const ADDITEM_SUCCESSED = 'ADDITEM_SUCCESSED'
 const ADDITEM_FAILED= 'ADDITEM_FAILED'
@@ -59,6 +59,7 @@ const manage = (state=initialState, action) => {
       return state.withMutations((ctx)=>{
         ctx.set('type', ORDER_INFO_SUCCESSED);
         ctx.set('results', action.results);
+        ctx.set('order', action.results);
       })
     case ORDER_LIST_SUCCESSED:
       return state.withMutations((ctx)=>{

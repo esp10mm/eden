@@ -3,13 +3,31 @@ import { browserHistory } from 'react-router'
 import ItemList from './ItemList'
 
 const Order = React.createClass({
+  getInitialState() {
+    return {order:{}, items:[], lastKey:0, list:[], prototype:{}}
+  },
+
   componentDidMount() {
+    this.props.func.itemList();
     this.props.func.orderInfo(this.props.params.id);
   },
 
   componentWillReceiveProps(newProps) {
-    if(newProps.service.get('type') === 'ORDER_INFO_SUCCESSED') {
+    if(newProps.manage.get('type') === 'ORDER_INFO_SUCCESSED') {
       // $('.item.amount').text(newProps.manage.get('results')[0].amount);
+      var order = newProps.manage.get('results').order;
+      var items = newProps.manage.get('results').items;
+
+      for(var k=0; k<items.length; k++) {
+        items[k].key = k;
+      }
+      
+      this.setState({
+        order:order,
+        items:items,
+        lastKey:items.length-1,
+        prototype: items[0],
+      })
     }
     else if(newProps.service.get('type') === 'UPDATE_ORDER_SUCCESSED') {
       alert('修改訂單成功!');
@@ -26,12 +44,46 @@ const Order = React.createClass({
   },
 
   updateOrder() {
-    var amount = {};
-    $('.item.amount.input').each((i, e)=>{
-      var iid = $(e).attr('data-iid');
-      amount[iid] = $(e).val();
-    });    
-    this.props.func.updateOrder(amount, this.props.params.id);
+    this.props.func.updateOrder(this.state.items, this.props.params.id);
+  },
+
+  itemSet(key, cate, value, val2) {
+    var items = this.state.items;
+    var order = this.state.order;
+    var lastKey = this.state.lastKey;
+
+    var index = items.findIndex((c)=>{
+      return c.key == key;
+    })
+
+    if(cate == 'item') {
+      items[index][cate] = parseInt(value);
+    }
+    else
+      items[index][cate] = value;
+
+    this.setState({items:items, order:order, lastKey:lastKey});
+  },
+
+  itemAdd() {
+    var state = this.state;
+    var newobj = jQuery.extend({}, this.state.prototype)
+    newobj.key = state.lastKey + 1; 
+    newobj.desired = 1;
+    newobj.msg = '';
+    state.items.push(newobj);
+    state.lastKey = newobj.key;
+
+    this.setState(state);
+  },
+
+  removeItem(key) {
+    var state = this.state;
+    var index = state.items.findIndex((c)=>{
+      return c.key == key;
+    })
+    state.items.splice(index, 1);
+    this.setState(state);
   },
 
   render() {
@@ -65,19 +117,23 @@ const Order = React.createClass({
     }
 
     let manage = this.props.manage.toObject();
-    let unit = '';
     let items = [];
     let status = '';
-    let customer = '';
+    let type = '';
+    let typeNum = 0;
+    let list = [];
 
-    if(manage.results.order !== undefined) {
-      unit = manage.results.order.unit;
-      status = manage.results.order.status;
-      customer = manage.results.order.customer;
+    status = this.state.order.status;
+    status = status=='PENDING'?'未出貨':'已出貨'; 
+    type = this.state.order_type=='stationery'?'文具':'耗材';
+    typeNum = this.state.order.order_type=='stationery'?1:0;
+
+    if(manage.items[0] !== undefined){
+      for(var k in manage.items) {
+        if(manage.items[k].item_type == typeNum)
+          list.push(manage.items[k]);
+      }
     }
-
-    if(manage.results.items !== undefined)
-      items = manage.results.items;
 
     return(
       <div className='ui stackable three column grid' style={ style.container }>
@@ -86,19 +142,23 @@ const Order = React.createClass({
           <div style={style.mainSegment}>
             <div className='ui segment'>
 
-              <div style={style.title2}>申請單位:&nbsp;{ unit }</div><br/>
+              <div style={style.title2}>申請單位:&nbsp;{ this.state.order.unit }</div><br/>
 
               <div style={style.title2}>訂單狀態:&nbsp;{ status }</div><br/>
 
-              <div style={style.title2}>申請人:&nbsp;{ customer }</div><br/>
+              <div style={style.title2}>訂單類別:&nbsp;{ type }</div><br/>
+
+              <div style={style.title2}>申請人:&nbsp;{ this.state.order.customer }</div><br/>
 
               <div style={style.title2}>申請項目:&nbsp;</div><br/>
 
-              <ItemList items={items}/><br/>
+              <ItemList items={this.state.items} itemSet={this.itemSet} list={list} removeItem={this.removeItem}/><br/>
+
+              <span style={{color:'red'}}>*修改訂單後記得按 [修改訂單] 按鈕!</span><br/><br/>
 
               <div className='ui button' onClick={ ()=>this.toPage('/service') }>回申請頁面</div>
+              <div className='ui button' onClick={ this.itemAdd }>增加一項</div>
               <div className='ui button' onClick={ this.updateOrder }>修改訂單</div>
-
             </div>
           </div>
         </div>
