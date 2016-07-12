@@ -156,6 +156,15 @@ const OrderManage = React.createClass({
   },
 
   adminRender(num){
+    var style = {
+      pageInput: {
+        width: 70,
+        marginTop: '5px',
+      },
+      button: {
+        marginTop: '5px',
+      }
+    }
     if(Cookies.get('type') != 'admin') 
       return;
     else if(num == 0){
