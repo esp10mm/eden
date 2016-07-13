@@ -29,8 +29,7 @@ const Order = React.createClass({
         prototype: items[0],
       })
     }
-    else if(newProps.service.get('type') === 'UPDATE_ORDER_SUCCESSED') {
-      alert('修改訂單成功!');
+    if(newProps.service.get('type') === 'UPDATE_ORDER_SUCCESSED') {
     }
   },
   
@@ -159,6 +158,7 @@ const Order = React.createClass({
               <div className='ui button' onClick={ ()=>this.toPage('/service') }>回申請頁面</div>
               <div className='ui button' onClick={ this.itemAdd }>增加一項</div>
               <div className='ui button' onClick={ this.updateOrder }>修改訂單</div>
+              
             </div>
           </div>
         </div>

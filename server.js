@@ -320,7 +320,6 @@ const consumeableOrder = (obj, body, res)=>{
 const updateOrder = (obj, body, res)=>{
   var query = `delete from orders_item WHERE id=${body.oid};`;
 
-  console.log(body.items);
   for(var item in body.items) {
     var msg = body.items[item].msg;
     var amount = body.items[item].desired;
@@ -494,6 +493,7 @@ const setOrder =(obj, body, res)=>{
 }
 
 const pgquery = (query, cb)=> {
+  console.log('query:'+query);
   pg.connect(conString, function(err, client, done) {
     if(err) {
       var result = {rows:[]};

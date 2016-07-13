@@ -28,6 +28,7 @@ const service = (state=initialState, action) => {
     case CLEAR_SELECTED:
       return initialState.set('type', CLEAR_SELECTED);
     case UPDATE_ORDER_SUCCESSED:
+      alert('修改訂單成功!');
       return state.set('type', UPDATE_ORDER_SUCCESSED);
     default:
       return state
