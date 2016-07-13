@@ -1,6 +1,7 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
 import ItemList from './ItemList'
+import * as Cookies from 'js-cookie'
 
 const Order = React.createClass({
   getInitialState() {
@@ -28,6 +29,9 @@ const Order = React.createClass({
         lastKey:items.length-1,
         prototype: items[0],
       })
+    }
+    else if(newProps.manage.get('type') === 'FINISH_ORDER_SUCCESSED') {
+      this.props.func.orderInfo(this.props.params.id);
     }
     if(newProps.service.get('type') === 'UPDATE_ORDER_SUCCESSED') {
     }
@@ -62,6 +66,33 @@ const Order = React.createClass({
       items[index][cate] = value;
 
     this.setState({items:items, order:order, lastKey:lastKey});
+  },
+
+  finishOrder(status) {
+    var items = this.state.items;
+    var obj = [];
+    for(var k in items) {
+      var item = items[k];
+      item.export = item.desired;
+      obj.push(item);
+    }
+
+    this.props.func.finishOrder(this.props.params.id, this.state.order.status, obj);
+  },
+
+  finishBtn() {
+    if(Cookies.get('type') == 'admin') {
+      let status = this.state.order.status;
+      let finishBTNClass = 'ui button green';
+      let finishBTNText = '完成訂單';
+      if(status !== 'PENDING'){
+        finishBTNClass = 'ui button red';
+        finishBTNText = '取消完成訂單';
+      }
+      return(
+        <div className={finishBTNClass} onClick={ ()=>this.finishOrder(status) }>{finishBTNText}</div>
+      )
+    }  
   },
 
   itemAdd() {
@@ -158,6 +189,7 @@ const Order = React.createClass({
               <div className='ui button' onClick={ ()=>this.toPage('/service') }>回申請頁面</div>
               <div className='ui button' onClick={ this.itemAdd }>增加一項</div>
               <div className='ui button' onClick={ this.updateOrder }>修改訂單</div>
+              { this.finishBtn() }
               
             </div>
           </div>
