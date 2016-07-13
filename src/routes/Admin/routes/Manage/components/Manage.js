@@ -5,6 +5,7 @@ import OrderManage from './OrderManage'
 import Statistics from './Statistics'
 import Setting from './Setting'
 import * as Cookies from 'js-cookie'
+import { browserHistory } from 'react-router'
 
 const Manage = React.createClass({
   componentDidMount() {
@@ -17,6 +18,19 @@ const Manage = React.createClass({
 
     var accori = parseInt(Cookies.get('admin_accor'));
     $('.ui.accordion').accordion('open', accori); 
+  },
+
+  logOut() {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i];
+      var eqPos = cookie.indexOf("=");
+      var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    } 
+
+    browserHistory.push('/');
   },
 
   accorClick(num) {
@@ -100,6 +114,8 @@ const Manage = React.createClass({
               {this.adminRender(1)}
 
             </div>
+            <br/>
+            <div className='ui red button' onClick={this.logOut}>登出</div>
           </div>
         </div>
         <div className='row'>

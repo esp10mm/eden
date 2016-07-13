@@ -349,10 +349,20 @@ const finishOrder = (obj, body, res)=>{
     op = '+';
   }
 
+  
+
   for(var k in body.items) {
-    query += `UPDATE warehouse set amount=amount${op}${body.items[k].export} WHERE id=${body.items[k].item};`; 
-    query += `UPDATE warehouse set donation=donation${op}${body.items[k].export_dona} WHERE id=${body.items[k].item};`; 
-    query += `UPDATE orders_item set export=${body.items[k].export}, export_dona=${body.items[k].export_dona} WHERE item=${body.items[k].item} and id=${body.oid};`;
+    var itemexport = body.items[k].export;
+    var itemexport_dona = body.items[k].export_dona;
+
+    if(itemexport === undefined)
+      itemexport = 0;
+    if(itemexport_dona === undefined)
+      itemexport_dona = 0;
+
+    query += `UPDATE warehouse set amount=amount${op}${itemexport} WHERE id=${body.items[k].item};`; 
+    query += `UPDATE warehouse set donation=donation${op}${itemexport_dona} WHERE id=${body.items[k].item};`; 
+    query += `UPDATE orders_item set export=${itemexport}, export_dona=${itemexport_dona} WHERE item=${body.items[k].item} and id=${body.oid};`;
   }
 
   query += `UPDATE orders set status='${status}' WHERE id=${body.oid};`;
@@ -496,9 +506,9 @@ const setOrder =(obj, body, res)=>{
 }
 
 const pgquery = (query, cb)=> {
-  console.log('query:'+query);
   pg.connect(conString, function(err, client, done) {
     if(err) {
+      console.log('query:'+query);
       var result = {rows:[]};
       cd(result);
       return console.error('could not connect to postgres', err);
@@ -507,6 +517,7 @@ const pgquery = (query, cb)=> {
       done();
 
       if(err) {
+        console.log('query:'+query);
         var result = {rows:[]};
         cb(result);
         return console.error('error running query', err);
