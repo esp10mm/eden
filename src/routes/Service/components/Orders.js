@@ -30,10 +30,13 @@ const OrderRow = React.createClass({
 
   render() {
     var pareseTime = this.pareseTime;
+    let order_type = this.props.data.order_type=='consumable'?'耗材':'文具';
     return(
       <tr>
         <td><a onClick={ ()=>this.toPage('/order/'+this.props.data.id)}>{pareseTime(this.props.data.order_time)}</a></td>
+        <td>{order_type}</td>
         <td>{this.props.data.unit}</td>
+        <td>{this.props.data.customer}</td>
       </tr>
     )
   }
@@ -65,7 +68,9 @@ const Orders = React.createClass({
           <thead>
             <tr>
               <th>時間</th>
+              <th>類別</th>
               <th>單位</th>
+              <th>申請人</th>
             </tr>
           </thead>
           <tbody>

@@ -214,11 +214,14 @@ const unitList = (obj, body, res)=>{
 
 const orderList = (obj, body, res)=> {
   var limit = '';
-  if(body.limit == 1)
+  var limit2 = 'limit 10';
+  if(body.limit == 1){
     limit = `AND orders.status='PENDING' `
+    limit2 = '';
+  }
   var query = `select orders.id, orders.order_time, orders.status, orders.order_type, orders.customer, unit.name unit ` +
     `from orders, unit where orders.unit = unit.id ${limit}` +
-    `ORDER BY order_time DESC limit 10 offset ${body.page*10}`;
+    `ORDER BY order_time DESC ${limit2} offset ${body.page*10}`;
 
   obj = {
     type: 'ORDER_LIST_SUCCESSED',

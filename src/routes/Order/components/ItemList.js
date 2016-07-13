@@ -28,7 +28,7 @@ const ItemRow = React.createClass({
   },
 
   noteTd() {
-    if(this.props.item.item_type == 1) {
+    if(this.props.type == '文具') {
       return(
         <td>
           <div className='ui mini input'>
@@ -111,6 +111,7 @@ const ItemList = React.createClass({
     let itemSet = this.props.itemSet;
     let list = this.props.list;
     let removeItem = this.props.removeItem;
+    let type = this.props.type;
 
     return(
       <table className='ui striped table'>
@@ -120,7 +121,7 @@ const ItemList = React.createClass({
         <tbody>
         {
           this.props.items.map(function(item){
-            return <ItemRow list={list} key={item.key} item={item} itemSet={itemSet} removeItem={removeItem}/> 
+            return <ItemRow list={list} key={item.key} item={item} type={type} itemSet={itemSet} removeItem={removeItem}/> 
           })
         }
         </tbody>

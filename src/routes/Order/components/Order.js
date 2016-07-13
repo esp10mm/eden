@@ -155,7 +155,7 @@ const Order = React.createClass({
 
     status = this.state.order.status;
     status = status=='PENDING'?'未出貨':'已出貨'; 
-    type = this.state.order_type=='stationery'?'文具':'耗材';
+    type = this.state.order.order_type=='stationery'?'文具':'耗材';
     typeNum = this.state.order.order_type=='stationery'?1:0;
 
     if(manage.items[0] !== undefined){
