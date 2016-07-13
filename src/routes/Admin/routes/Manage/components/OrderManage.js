@@ -32,8 +32,9 @@ const OrderRow = React.createClass({
 
     return(
       <tr>
-        <td><a onClick={ ()=>this.toPage('/admin/order/'+this.props.data.id) }>{pareseTime(this.props.data.order_time)}</a></td>
+        <td><a onClick={ ()=>this.toPage('/order/'+this.props.data.id) }>{pareseTime(this.props.data.order_time)}</a></td>
         <td>{this.props.data.unit}</td>
+        <td>{this.props.data.customer}</td>
         <td>{type}</td>
         <td><span style={statusStyle}>{status}</span></td>
         <td>
@@ -207,6 +208,7 @@ const OrderManage = React.createClass({
             <tr>
               <th>時間</th>
               <th>單位</th>
+              <th>申請人</th>
               <th>類別</th>
               <th>狀態</th>
               <th>

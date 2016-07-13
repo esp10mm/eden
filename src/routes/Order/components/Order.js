@@ -46,6 +46,10 @@ const Order = React.createClass({
     browserHistory.push(path);
   },
 
+  goBack() {
+    browserHistory.goBack();
+  },
+
   updateOrder() {
     this.props.func.updateOrder(this.state.items, this.props.params.id);
   },
@@ -186,7 +190,7 @@ const Order = React.createClass({
 
               <span style={{color:'red'}}>*修改訂單後記得按 [修改訂單] 按鈕!</span><br/><br/>
 
-              <div className='ui button' onClick={ ()=>this.toPage('/service') }>回申請頁面</div>
+              <div className='ui button' onClick={ ()=>this.goBack() }>回上一頁</div>
               <div className='ui button' onClick={ this.itemAdd }>增加一項</div>
               <div className='ui button' onClick={ this.updateOrder }>修改訂單</div>
               { this.finishBtn() }
