@@ -182,7 +182,7 @@ const Order = React.createClass({
 
               <div style={style.title2}>申請項目:&nbsp;</div><br/>
 
-              <ItemList items={this.state.items} itemSet={this.itemSet} list={list} removeItem={this.removeItem}/><br/>
+              <ItemList items={this.state.items} itemSet={this.itemSet} list={list} type={type} removeItem={this.removeItem}/><br/>
 
               <span style={{color:'red'}}>*修改訂單後記得按 [修改訂單] 按鈕!</span><br/><br/>
 

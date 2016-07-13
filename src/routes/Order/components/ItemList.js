@@ -85,9 +85,7 @@ const ItemList = React.createClass({
   },
 
   tableHead() {
-    if(this.props.items[0] === undefined)
-      return
-    if(this.props.items[0].item_type == 0){
+    if(this.props.type == '耗材'){
       return(
         <tr>
           <th>項目名稱</th>
@@ -96,7 +94,7 @@ const ItemList = React.createClass({
         </tr>
       )
     }
-    else{
+    else if(this.props.type == '文具'){
       return(
         <tr>
           <th>項目名稱</th>

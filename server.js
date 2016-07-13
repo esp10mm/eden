@@ -324,7 +324,7 @@ const updateOrder = (obj, body, res)=>{
     var msg = body.items[item].msg;
     var amount = body.items[item].desired;
 
-    query += `INSERT INTO orders_item (id, item, amount, export, msg) SELECT max(id), '${body.items[item].item}', '${amount}', '${amount}', '${msg}' from orders;`
+    query += `INSERT INTO orders_item (id, item, amount, export, msg) values('${body.oid}', '${body.items[item].item}', '${amount}', '${amount}', '${msg}');`
   }  
 
   obj = {
