@@ -12,6 +12,8 @@ app.use(bodyParser.json());
 var pg = require('pg');
 var conString = "postgres://eden:526752@localhost/eden";
 
+var method = {};
+
 
 app.get('/code', function(req, res) {
   res.sendFile(`${__dirname}/code.zip`); 
@@ -48,10 +50,13 @@ app.post('/login', (req, res)=>{
       obj.type = 'LOGIN_SUCCESS'; 
       obj.uid = result.rows[0].id;
 
-      if(loginList[obj.uid] === undefined)
-        loginList[obj.uid] = [];  
+      if(loginList[obj.token] === undefined){
+        loginList[obj.token] = {
+          uid:result.rows[0].id,
+          user_type:result.rows[0].user_type.trim(),
+        };  
+      }
 
-      loginList[obj.uid].push(obj.token);
       obj.userType = result.rows[0].user_type.trim();
     }
     res.send(obj);
@@ -67,7 +72,7 @@ app.post('/api/:name', function(req, res){
     token: req.body.token,
   }
 
-  var apiWhitelist = [
+  var apiNormal = [
     'itemList',
     'unitList',
     'orderList',
@@ -77,88 +82,67 @@ app.post('/api/:name', function(req, res){
     'getRecent',
   ]
 
-  // obj.type = 'LOGIN_SUCCESS'; 
-  if(req.body.uid !== undefined) {
-    if(loginList[req.body.uid] === undefined)
-      loginList[req.body.uid] = [];
-    if(loginList[req.body.uid].indexOf(req.body.token) != -1)
-      obj.type = 'LOGIN_SUCCESS'; 
+  var apiUser = [
+    'checkToken',
+  ]
+
+  var apiAdmin = [
+    'addItem', 
+    'delItem', 
+    'inout', 
+    'finishOrder',
+    'finishSel',
+    'setPrice',
+    'setOrder',
+    'delSel',
+  ];
+
+  var apiSuper = [
+    'itemInfo',
+    'getTable',
+    'getYearRange',
+    'statistics',
+    'ureset',
+  ];
+  
+  if(apiNormal.indexOf(api) != -1){
+    obj.type = 'LOGIN_SUCCESS'; 
   }
-  else if(apiWhitelist.indexOf(api) == -1) {
+  else if(loginList[req.body.token] !== undefined) {
+    if(apiUser.indexOf(api)!=-1){
+      obj.type = 'LOGIN_SUCCESS'; 
+    }
+    else if(loginList[req.body.token].user_type!='user' && apiSuper.indexOf(api)!=-1){
+      obj.type = 'LOGIN_SUCCESS'; 
+    }
+    else if(loginList[req.body.token].user_type=='admin' && apiAdmin.indexOf(api)!=-1){
+      obj.type = 'LOGIN_SUCCESS'; 
+    }
+    else{
+      console.log('unknown');
+      console.log(api);
+      res.send(obj);
+      return;
+    }
+  }
+  else{
+    console.log('no token');
+    //   console.log(obj);
+    console.log(api);
     res.send(obj);
     return;
   }
+  // console.log(api);
+  method[api](obj, req.body, res);
 
-  switch(api) {
-    case 'addItem': 
-      addItem(obj, req.body, res);
-      return;
-    case 'delItem': 
-      delItem(obj, req.body, res);
-      return;
-    case 'itemList': 
-      itemList(obj, req.body, res);
-      return;
-    case 'unitList': 
-      unitList(obj, req.body, res);
-      return;
-    case 'inout': 
-      inout(obj, req.body, res);
-      return;
-
-    case 'itemInfo': 
-      itemInfo(obj, req.body, res);
-      return;
-    case 'orderInfo': 
-      orderInfo(obj, req.body, res);
-      return;
-
-    case 'consumeableOrder': 
-      consumeableOrder(obj, req.body, res);
-      return;
-    case 'updateOrder': 
-      updateOrder(obj, req.body, res);
-      return;
-    case 'orderList':
-      orderList(obj, req.body, res);
-      return;
-    case 'finishOrder':
-      finishOrder(obj, req.body, res);
-      return;
-    case 'finishSel':
-      finishSel(obj, req.body, res);
-      return;
-    case 'getTable':
-      getTable(obj, req.body, res);
-      return;
-    case 'getYearRange':
-      getYearRange(obj, req.body, res);
-      return;
-    case 'statistics':
-      statistics(obj, req.body, res);
-      return;
-    case 'getRecent':
-      getRecent(obj, req.body, res);
-      return;
-    case 'setPrice':
-      setPrice(obj, req.body, res);
-      return;
-    case 'setOrder':
-      setOrder(obj, req.body, res);
-      return;
-    case 'ureset':
-      ureset(obj, req.body, res);
-      return;
-    case 'delSel':
-      delSel(obj, req.body, res);
-      return;
-  }
-
-  res.send(obj);
   return;
 }); 
 
-const addItem = (obj, body, res)=> {
+method.checkToken = (obj, body, res)=>{
+  res.send(obj);
+}
+
+method.addItem = (obj, body, res)=> {
   var query = '';
 
   if(body.isStationery)
@@ -172,7 +156,7 @@ const addItem = (obj, body, res)=> {
   })
 }
 
-const delItem = (obj, body, res)=> {
+method.delItem = (obj, body, res)=> {
   var query = '';
 
   query = `DELETE FROM warehouse WHERE name = '${body.name}';`
@@ -184,7 +168,7 @@ const delItem = (obj, body, res)=> {
   })
 }
 
-const itemList = (obj, body, res)=>{
+method.itemList = (obj, body, res)=>{
   var query = 'SELECT * FROM warehouse ORDER BY item_order ASC;'; 
 
   obj = {
@@ -198,7 +182,7 @@ const itemList = (obj, body, res)=>{
   })
 }
 
-const unitList = (obj, body, res)=>{
+method.unitList = (obj, body, res)=>{
   var query = 'SELECT * FROM unit;'; 
 
   obj = {
@@ -212,7 +196,7 @@ const unitList = (obj, body, res)=>{
   })
 }
 
-const orderList = (obj, body, res)=> {
+method.orderList = (obj, body, res)=> {
   var limit = '';
   var limit2 = 'limit 10';
   if(body.limit == 1){
@@ -234,7 +218,7 @@ const orderList = (obj, body, res)=> {
   })
 }
 
-const inout = (obj, body, res)=>{
+method.inout = (obj, body, res)=>{
   var query = `UPDATE warehouse `;
   
   if(body.method == 'in' && body.donation)
@@ -258,7 +242,7 @@ const inout = (obj, body, res)=>{
   })
 }
 
-const itemInfo = (obj, body, res)=>{
+method.itemInfo = (obj, body, res)=>{
   var query = `SELECT * FROM warehouse WHERE name='${body.name}'`;
   obj = {
     type: 'ITEM_INFO_SUCCESSED',
@@ -269,7 +253,7 @@ const itemInfo = (obj, body, res)=>{
   })
 }
 
-const orderInfo = (obj, body, res)=>{
+method.orderInfo = (obj, body, res)=>{
   var query = `select a.item, a.msg, a.amount as desired, a.export, a.export_dona, a.id, b.name, b.amount, b.donation, b.item_type from orders_item a, warehouse b where a.id = '${body.oid}' and a.item = b.id;`
   obj = {
     type: 'ORDER_INFO_SUCCESSED',
@@ -289,7 +273,7 @@ const orderInfo = (obj, body, res)=>{
   })
 }
 
-const consumeableOrder = (obj, body, res)=>{
+method.consumeableOrder = (obj, body, res)=>{
   var order_type = 'consumable';
 
   for(var k in body.order){
@@ -320,7 +304,7 @@ const consumeableOrder = (obj, body, res)=>{
   })
 }
 
-const updateOrder = (obj, body, res)=>{
+method.updateOrder = (obj, body, res)=>{
   var query = `delete from orders_item WHERE id=${body.oid};`;
 
   for(var item in body.items) {
@@ -339,7 +323,7 @@ const updateOrder = (obj, body, res)=>{
   })
 }
 
-const finishOrder = (obj, body, res)=>{
+method.finishOrder = (obj, body, res)=>{
   var status = 'FINISH';
   var query = ``;
   var op = '-';
@@ -376,7 +360,7 @@ const finishOrder = (obj, body, res)=>{
   })
 }
 
-const finishSel = (obj, body, res)=>{
+method.finishSel = (obj, body, res)=>{
   
   var query = ``;
 
@@ -394,7 +378,7 @@ const finishSel = (obj, body, res)=>{
   })
 }
 
-const getTable = (obj, body, res)=>{
+method.getTable = (obj, body, res)=>{
   var ids_str = '';
 
   for(var k in body.ids) {
@@ -419,7 +403,7 @@ const getTable = (obj, body, res)=>{
   })
 }
 
-const getYearRange = (obj, body, res)=>{
+method.getYearRange = (obj, body, res)=>{
   var query = `select to_char(min(orders.order_time),'YYYY') as year_min, to_char(max(orders.order_time),'YYYY') as year_max  from orders;`;  
 
   pgquery(query, (result)=>{
@@ -429,7 +413,7 @@ const getYearRange = (obj, body, res)=>{
   })
 }
 
-const statistics = (obj, body, res)=>{
+method.statistics = (obj, body, res)=>{
   var unit = `and a.unit=${body.unit} `;
   
   if(body.unit == 'all' || body.unit == 'sum')
@@ -453,14 +437,14 @@ const statistics = (obj, body, res)=>{
   })
 }
 
-const setPrice = (obj, body, res)=>{
+method.setPrice = (obj, body, res)=>{
   var query = `update warehouse set price=${body.price} where id=${body.item}`;
   pgquery(query, (result)=>{
     res.send(obj);
   })
 }
 
-const getRecent =(obj, body, res)=>{
+method.getRecent =(obj, body, res)=>{
   var query=`select b.item from orders_item b, orders a where a.id=b.id and a.order_time=(select max(order_time) from orders where unit=${body.unit});`;
 
   pgquery(query, (result)=>{
@@ -469,7 +453,7 @@ const getRecent =(obj, body, res)=>{
   })
 }
 
-const ureset =(obj, body, res)=>{
+method.ureset =(obj, body, res)=>{
   var query = `update users set username='${body.username}', psw='${body.pwd}' where id=${body.uid};`;
 
   console.log(query);
@@ -479,7 +463,7 @@ const ureset =(obj, body, res)=>{
   })
 }
 
-const delSel =(obj, body, res)=>{
+method.delSel =(obj, body, res)=>{
   var condition = ''
   for(var i=0; i<body.ids.length; i++) {
     if(i == body.ids.length-1)
@@ -496,7 +480,7 @@ const delSel =(obj, body, res)=>{
   })
 }
 
-const setOrder =(obj, body, res)=>{
+method.setOrder =(obj, body, res)=>{
   var query = `UPDATE warehouse set item_order = ${body.order} where id= ${body.item};`;
 
   pgquery(query, (result)=>{
