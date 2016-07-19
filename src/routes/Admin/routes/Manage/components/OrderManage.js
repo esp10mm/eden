@@ -174,7 +174,9 @@ const OrderManage = React.createClass({
       )
     }
     else if(num == 1){
+      return(
         <div className='ui button' style={style.button} onClick={()=>this.delSel()}>刪除勾選的訂單</div>
+      )
     }
   },
 
