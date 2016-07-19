@@ -7,5 +7,6 @@
 /* alter table orders add order_type char(10) default 'consumable'; */
 /* alter table orders_item add msg char(50) default ''; */
 /* alter table warehouse add item_type int default 0; */
-ALTER TABLE warehouse ADD item_order int NOT NULL DEFAULT (0);
-Update warehouse SET item_order = id Where item_order = 0;
+/* ALTER TABLE warehouse ADD item_order int NOT NULL DEFAULT (0); */
+/* Update warehouse SET item_order = id Where item_order = 0; */
+alter table users add name char(10); 
