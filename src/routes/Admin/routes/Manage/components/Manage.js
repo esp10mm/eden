@@ -4,6 +4,7 @@ import ItemList from './ItemList'
 import OrderManage from './OrderManage'
 import Statistics from './Statistics'
 import Setting from './Setting'
+import UserManage from './UserManage'
 import * as Cookies from 'js-cookie'
 import { browserHistory } from 'react-router'
 
@@ -51,14 +52,25 @@ const Manage = React.createClass({
         </div>
       )
     }
+    else if(num == 2){
+      return(
+        <div>
+          <div className="title" onClick={ ()=>this.accorClick(5) }>
+            <i className="dropdown icon"></i>
+            設定 
+          </div>
+          <Setting manage={ this.props.manage } func={this.props.func}/>
+        </div>
+      )
+    }
     else if(num == 1){
       return(
         <div>
           <div className="title" onClick={ ()=>this.accorClick(4) }>
             <i className="dropdown icon"></i>
-            設定 
+            用戶管理 
           </div>
-          <Setting manage={ this.props.manage } func={this.props.func}/>
+          <UserManage manage={ this.props.manage } func={this.props.func}/>
         </div>
       )
     }
@@ -112,6 +124,8 @@ const Manage = React.createClass({
               <Statistics manage={ this.props.manage } func={this.props.func}/>
 
               {this.adminRender(1)}
+
+              {this.adminRender(2)}
 
             </div>
             <br/>
