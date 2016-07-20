@@ -131,7 +131,7 @@ const OrderManage = React.createClass({
       url: '/api/delSel',
       type: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({ids:gen, uid:Cookies.get('uid')}),
+      data: JSON.stringify({ids:gen, uid:Cookies.get('uid'), token:Cookies.get('token')}),
     }) 
     .done((res)=>{
       alert('刪除訂單成功!');
