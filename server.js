@@ -95,6 +95,9 @@ app.post('/api/:name', function(req, res){
     'setPrice',
     'setOrder',
     'delSel',
+    'userList',
+    'addUser',
+    'delUser',
   ];
 
   var apiSuper = [
@@ -485,6 +488,27 @@ method.setOrder =(obj, body, res)=>{
 
   pgquery(query, (result)=>{
     obj.type = 'SET_ORDER_SUCCESS';
+    res.send(obj);
+  })
+}
+
+method.userList = (obj, body, res)=>{
+  var query = `select username, user_type, unit, users.name, users.id , unit.name as unit_name from users, unit where users.unit=unit.id`;
+
+ pgquery(query, (result)=>{
+   obj.type = 'USER_LIST_SUCCESS';
+   obj.result = result.rows;
+   res.send(obj);
+ })
+}
+
+method.addUser = (obj, body, res)=>{
+  var newusername = `new_${parseInt(Math.random()*10000)}`;
+  var query = `INSERT INTO users (username, psw, user_type, name, unit) select '${newusername}', '0000', 'user', '新用戶', FIRST(id) from unit ;`
+
+  pgquery(query, (result)=>{
+    obj.type = 'ADD_USER_SUCCESS';
+    obj.result = result.rows;
     res.send(obj);
   })
 }

@@ -79,13 +79,16 @@ const Manage = React.createClass({
   render() {
     var style = {
       container: {
-        maxWidth: '700px',
+        maxWidth: '900px',
         height: '100%',
         margin: '0px auto',
       },
       mainSegment: {
         width: '95%',
         margin: '0px auto',
+      },
+      accordion:{
+        width: '100%',
       },
       button: {
         width: '200px',
@@ -101,7 +104,7 @@ const Manage = React.createClass({
         <div className='row'/>
         <div className='row'>
           <div style={style.mainSegment}>
-            <div className="ui compact styled accordion">
+            <div className="ui styled accordion" style={style.accordion}>
 
               {this.adminRender(0)}
 
