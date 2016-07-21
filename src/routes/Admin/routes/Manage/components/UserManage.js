@@ -4,12 +4,32 @@ import { browserHistory } from 'react-router'
 
 const UserRow = React.createClass({
   componentDidMount(){
-    $('.utd.dropdown').dropdown();
-    $('.uud.dropdown').dropdown();
+    $(`.utd.dropdown.${this.props.user.id}`).dropdown({
+      onChange:(val, text)=>{this.updateType(val)}
+    });
+    $(`.uud.dropdown.${this.props.user.id}`).dropdown({
+      onChange:(val, text)=>{this.updateUnit(val)}
+    });
   },
 
   removeUser(){
     this.props.removeUser(this.props.user.id);
+  },
+
+  updateUsername(e){
+    this.props.updateState(this.props.user.id, `username`, e.target.value);
+  },
+
+  updateName(e){
+    this.props.updateState(this.props.user.id, `name`, e.target.value);
+  },
+
+  updateUnit(value){
+    this.props.updateState(this.props.user.id, `unit`, value);
+  },
+
+  updateType(value){
+    this.props.updateState(this.props.user.id, `user_type`, value);
   },
 
   render(){
@@ -32,12 +52,12 @@ const UserRow = React.createClass({
       <tr>
         <td>
           <div className='ui input' style={style.input}>
-            <input type='text' defaultValue={this.props.user.username.trim()}/>
+            <input type='text' defaultValue={this.props.user.username.trim()} onBlur={this.updateUsername}/>
           </div>
         </td>
         <td>
           <div className='ui input' style={style.input}>
-            <input type='text' defaultValue={this.props.user.name.trim()}/>
+            <input type='text' defaultValue={this.props.user.name.trim()} onBlur={this.updateName}/>
           </div>
         </td>
         <td>
@@ -93,7 +113,7 @@ const UserList = React.createClass({
         {
           this.props.users.map((user)=>{
             return(
-              <UserRow user={user} key={user.id} unit={this.props.unit} removeUser={this.props.removeUser}/>
+              <UserRow user={user} key={user.id} unit={this.props.unit} removeUser={this.props.removeUser} updateState={this.props.updateState}/>
               )
           })
         }
@@ -142,8 +162,16 @@ const UserManage = React.createClass({
     })
   },
 
+  updateState(id, prop, value){
+    let state = this.state;
+    let index = state.users.findIndex((c)=>{
+      return c.id == id;
+    });
+    state.users[index][prop] = value;
+    this.setState(state);
+  },
+
   removeUser(id){
-    console.log(id);
     $.ajax({
       url: '/api/removeUser',
       type: 'POST',
@@ -158,6 +186,22 @@ const UserManage = React.createClass({
     })
   },
 
+  saveChange(){
+    $.ajax({
+      url: '/api/editUser',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        token: Cookies.get('token'), 
+        users: this.state.users,
+      }),
+    })
+    .done((res)=>{
+      alert('儲存變更成功!');
+      this.userList();
+    })
+  },
+
   render() {
     let unit = [];
 
@@ -166,8 +210,9 @@ const UserManage = React.createClass({
 
     return(
       <div className='content'>
-        <UserList users={this.state.users} unit={unit} removeUser={this.removeUser}/>
+        <UserList users={this.state.users} unit={unit} removeUser={this.removeUser} updateState={this.updateState}/>
         <div className='ui button' onClick={this.addUser}>新增用戶</div>
+        <div className='ui button' onClick={this.saveChange}>儲存變更</div>
       </div>
     )
   }

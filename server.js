@@ -98,6 +98,7 @@ app.post('/api/:name', function(req, res){
     'userList',
     'addUser',
     'removeUser',
+    'editUser',
   ];
 
   var apiSuper = [
@@ -518,6 +519,20 @@ method.removeUser = (obj, body, res)=>{
 
   pgquery(query, (result)=>{
     obj.type = 'REMOVE_USER_SUCCESS';
+    res.send(obj);
+  })
+}
+
+method.editUser = (obj, body, res)=>{
+  var query = ``; 
+
+  for(var k in body.users){
+    var user = body.users[k];
+    query += `update users set user_type='${user.user_type}', username='${user.username}', name='${user.name}', unit=${user.unit} where id=${user.id};`;
+  }
+
+  pgquery(query, (result)=>{
+    obj.type = 'EDIT_USER_SUCCESS';
     res.send(obj);
   })
 }
