@@ -8,20 +8,10 @@ const Admin = React.createClass({
   },
 
   componentWillMount() {
-    if(!this.props.auth.login){
-      this.props.func.checkToken();
-    }
-    else if(Cookies.get('type')=='user'){
+    if(Cookies.get('type')=='user'){
       alert('權限不足');
       browserHistory.push('/');
     }
-  },
-
-  componentWillReceiveProps(newProps) {
-    if(newProps.auth.login)
-      this.render();
-    else
-      browserHistory.push('/login');
   },
 
   childProps(name) {
@@ -38,16 +28,11 @@ const Admin = React.createClass({
       return React.cloneElement(child, this.childProps(child.type.displayName));
     })
 
-    if(!this.props.auth.login)
-      return(
-        <LoadingPage/>
-      )
-    else
-      return(
-        <div>
-          { childrenWithProps }
-        </div>
-      )
+    return(
+      <div>
+        { childrenWithProps }
+      </div>
+    )
   }
 })
 

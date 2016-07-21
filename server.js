@@ -43,17 +43,19 @@ app.post('/login', (req, res)=>{
     userType: 'normal',
   }
 
-  var query = `select id, user_type from users where username='${req.body.account}' and psw='${req.body.password}'`;
+  var query = `select id, user_type, unit from users where username='${req.body.account}' and psw='${req.body.password}'`;
 
   pgquery(query, (result)=>{
     if(result.rows.length == 1) {
       obj.type = 'LOGIN_SUCCESS'; 
       obj.uid = result.rows[0].id;
+      obj.unit = result.rows[0].unit;
 
       if(loginList[obj.token] === undefined){
         loginList[obj.token] = {
           uid:result.rows[0].id,
           user_type:result.rows[0].user_type.trim(),
+          unit: result.rows[0].unit,
         };  
       }
 
@@ -143,6 +145,8 @@ app.post('/api/:name', function(req, res){
 }); 
 
 method.checkToken = (obj, body, res)=>{
+  if(loginList[body.token] !== undefined)
+    obj.user = loginList[body.token];
   res.send(obj);
 }
 

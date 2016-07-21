@@ -2,8 +2,10 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect  } from 'react-redux'
 import { Link, IndexLink } from 'react-router'
+import { browserHistory } from 'react-router'
 
 import * as Actions from '../actions/index'
+import LoadingPage from './LoadingPage'
 
 function mapStateToProps(state) {
   return state;
@@ -16,6 +18,15 @@ function mapDispatchToProps(dispatch) {
 
 const App = React.createClass({
   componentDidMount() {
+  },
+
+  componentWillMount(){
+    this.props.checkToken();
+  },
+
+  componentWillReceiveProps(newProps){
+    if(newProps.auth.msg == 'LOGIN_FAILED' && this.props.location.pathname !=='/login') 
+      browserHistory.push('/login');
   },
 
   childProps(name) {
@@ -53,6 +64,7 @@ const App = React.createClass({
   },
 
   render() {
+
     var childrenWithProps = React.Children.map(this.props.children, (child) => {
       return React.cloneElement(child, this.childProps(child.type.displayName));
     })
@@ -68,12 +80,18 @@ const App = React.createClass({
         height: '100%',
       }
     }
-
-    return (
-      <div style={ style.app }>
-        { childrenWithProps }
-      </div>
-    )
+    if(!this.props.auth.login && this.props.location.pathname !== '/login')
+      return(
+        <div style={ style.app }>
+          <LoadingPage/>
+        </div>
+      )
+    else
+      return (
+        <div style={ style.app }>
+          { childrenWithProps }
+        </div>
+      )
   }
 })
 

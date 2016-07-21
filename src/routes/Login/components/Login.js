@@ -26,16 +26,6 @@ const Login = React.createClass({
         browserHistory.push('/home');
       }, 500)
     }
-
-    else {
-      $('.icon.input').addClass('error');
-
-      switch(newProps.auth.msg) {
-        case 'LOGIN_FAILED':
-          $('.account, .password').attr('placeholder', '帳號或密碼錯誤');
-          break;
-      }
-    }
   },
 
   loginSubmit() {

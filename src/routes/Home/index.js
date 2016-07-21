@@ -20,16 +20,6 @@ const button = (pos) => {
 }
 
 const Home = React.createClass({
-  componentWillMount() {
-    this.props.func.checkToken(); 
-  },
-
-  componentWillReceiveProps(newProps) {
-    if(newProps.auth.login)
-      this.render();
-    else
-      browserHistory.push('/login');
-  },
 
   componentDidMount() {
     $('.inverted.segment').on('mouseover',(e)=>{$(e.target).addClass('secondary')})
@@ -56,10 +46,6 @@ const Home = React.createClass({
   },
 
   render() {
-    // if(!this.props.auth.login)
-    //   return(
-    //     <LoadingPage/>
-    //   )
 
     var style = {
       container: {

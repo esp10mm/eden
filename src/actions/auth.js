@@ -16,6 +16,7 @@ export const login = (account, password)=>{
 } 
 
 export const checkToken = ()=>{
+  console.log('check');
   return dispatch => {
     var req = {token: Cookies.get('token'), uid: Cookies.get('uid')};
     $.ajax({
