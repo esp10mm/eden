@@ -60,6 +60,7 @@ app.post('/login', (req, res)=>{
       }
 
       obj.userType = result.rows[0].user_type.trim();
+      obj.user = loginList[obj.token];
     }
     res.send(obj);
   })
@@ -86,6 +87,7 @@ app.post('/api/:name', function(req, res){
 
   var apiUser = [
     'checkToken',
+    'ureset',
   ]
 
   var apiAdmin = [
@@ -108,7 +110,6 @@ app.post('/api/:name', function(req, res){
     'getTable',
     'getYearRange',
     'statistics',
-    'ureset',
   ];
   
   if(apiNormal.indexOf(api) != -1){
@@ -125,16 +126,16 @@ app.post('/api/:name', function(req, res){
       obj.type = 'LOGIN_SUCCESS'; 
     }
     else{
-      console.log('unknown');
-      console.log(api);
+      // console.log('unknown');
+      // console.log(api);
       res.send(obj);
       return;
     }
   }
   else{
-    console.log('no token');
+    // console.log('no token');
     //   console.log(obj);
-    console.log(api);
+    // console.log(api);
     res.send(obj);
     return;
   }
@@ -462,7 +463,7 @@ method.getRecent =(obj, body, res)=>{
 }
 
 method.ureset =(obj, body, res)=>{
-  var query = `update users set username='${body.username}', psw='${body.pwd}' where id=${body.uid};`;
+  var query = `update users set psw='${body.pwd}' where id=${body.uid};`;
 
   console.log(query);
   pgquery(query, (result)=>{

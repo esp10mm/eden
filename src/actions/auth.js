@@ -31,12 +31,12 @@ export const checkToken = ()=>{
   }
 }
 
-export const ureset = (username, pwd)=>{
+export const ureset = (pwd)=>{
   return dispatch => {
     var req = {
       token: Cookies.get('token'), 
       uid: Cookies.get('uid'),
-      username: username,
+      username: '',
       pwd: pwd, 
     };
     $.ajax({

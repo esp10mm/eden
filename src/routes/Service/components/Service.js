@@ -1,6 +1,7 @@
 import React from 'react'
 import Consumable from './Consumable'
 import Stationery from './Stationery'
+import Setting from './Setting'
 import Orders from './Orders'
 import { browserHistory } from 'react-router'
 
@@ -11,6 +12,11 @@ const Service = React.createClass({
   },
 
   componentWillMount() {
+  },
+
+  toPage(path) {
+    $('.main').transition('fade');
+    browserHistory.push(path);
   },
 
   componentWillReceiveProps(newProps) {
@@ -65,11 +71,22 @@ const Service = React.createClass({
                 <Orders func={this.props.func} manage={this.props.manage} service={this.props.service}/> 
               </div>
 
+              <div className="title">
+                <i className="dropdown icon"></i>
+                設定 
+              </div>
+              <Setting manage={ this.props.manage } func={this.props.func}/>
+
             </div>
+
+            <br/>
+            <div className='ui button' onClick={()=>{this.toPage('/')}}>返回主頁</div>
+
           </div>
         </div>
-
-        <div className='row'/>
+        
+        <div className='row'>
+        </div>
       </div>
     )
   }
