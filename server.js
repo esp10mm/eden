@@ -97,7 +97,7 @@ app.post('/api/:name', function(req, res){
     'delSel',
     'userList',
     'addUser',
-    'delUser',
+    'removeUser',
   ];
 
   var apiSuper = [
@@ -509,6 +509,15 @@ method.addUser = (obj, body, res)=>{
   pgquery(query, (result)=>{
     obj.type = 'ADD_USER_SUCCESS';
     obj.result = result.rows;
+    res.send(obj);
+  })
+}
+
+method.removeUser = (obj, body, res)=>{
+  var query = `DELETE FROM users WHERE id=${body.id}`;
+
+  pgquery(query, (result)=>{
+    obj.type = 'REMOVE_USER_SUCCESS';
     res.send(obj);
   })
 }

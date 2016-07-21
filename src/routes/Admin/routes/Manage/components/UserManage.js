@@ -9,7 +9,7 @@ const UserRow = React.createClass({
   },
 
   removeUser(){
-
+    this.props.removeUser(this.props.user.id);
   },
 
   render(){
@@ -93,7 +93,7 @@ const UserList = React.createClass({
         {
           this.props.users.map((user)=>{
             return(
-              <UserRow user={user} key={user.id} unit={this.props.unit}/>
+              <UserRow user={user} key={user.id} unit={this.props.unit} removeUser={this.props.removeUser}/>
               )
           })
         }
@@ -135,7 +135,22 @@ const UserManage = React.createClass({
       contentType: 'application/json',
       data: JSON.stringify({
         token: Cookies.get('token'), 
-        uid: Cookies.get('uid'),
+      }),
+    })
+    .done((res)=>{
+      this.userList();
+    })
+  },
+
+  removeUser(id){
+    console.log(id);
+    $.ajax({
+      url: '/api/removeUser',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        token: Cookies.get('token'), 
+        id: id,
       }),
     })
     .done((res)=>{
@@ -151,7 +166,7 @@ const UserManage = React.createClass({
 
     return(
       <div className='content'>
-        <UserList users={this.state.users} unit={unit}/>
+        <UserList users={this.state.users} unit={unit} removeUser={this.removeUser}/>
         <div className='ui button' onClick={this.addUser}>新增用戶</div>
       </div>
     )
