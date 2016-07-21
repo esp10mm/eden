@@ -43,7 +43,7 @@ app.post('/login', (req, res)=>{
     userType: 'normal',
   }
 
-  var query = `select id, user_type, unit from users where username='${req.body.account}' and psw='${req.body.password}'`;
+  var query = `select users.id, users.user_type, users.unit, unit.name from users, unit where username='${req.body.account}' and psw='${req.body.password}' and users.unit=unit.id`;
 
   pgquery(query, (result)=>{
     if(result.rows.length == 1) {
@@ -61,6 +61,7 @@ app.post('/login', (req, res)=>{
 
       obj.userType = result.rows[0].user_type.trim();
       obj.user = loginList[obj.token];
+      obj.user.unitName = result.rows[0].name;
     }
     res.send(obj);
   })

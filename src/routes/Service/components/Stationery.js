@@ -64,7 +64,7 @@ const Stationery = React.createClass({
   },
 
   sunbmitOrder() {
-    var unit = $('.sunit.dropdown').dropdown('get value');
+    var unit = this.props.user.unitName;
     var customer = $('.scustomer.input input').val();
     var buffer = this.state.buffer;
     var obj = {};
@@ -128,18 +128,7 @@ const Stationery = React.createClass({
 
         <div className='ui basic segment' style={ style.section }>
 
-          <div className="ui sunit selection dropdown">
-            <input type="hidden" name="unit"/>
-            <i className="dropdown icon"/>
-            <div className="default text">選擇組別</div>
-            <div className="menu">
-            {
-              this.props.manage.get('unit').map(function(u){
-                return <div className='item' key={u.id} data-value={u.id}>{u.name}</div> 
-              })
-            } 
-            </div>
-          </div><br/><br/>
+          <div style={style.title}>{this.props.auth.user.unitName}</div><br/><br/>
 
           <div style={ style.title }>申請人姓名&nbsp;:</div>&nbsp;<br/>
           <div className='ui scustomer input'>

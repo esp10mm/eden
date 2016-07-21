@@ -53,14 +53,14 @@ const Service = React.createClass({
                 <i className="dropdown icon"></i>
                 耗材申請 
               </div>
-              <Consumable func={this.props.func} manage={this.props.manage} service={ this.props.service }/>
+              <Consumable func={this.props.func} manage={this.props.manage} service={ this.props.service } auth={this.props.auth}/>
 
               <div className="title">
                 <i className="dropdown icon"></i>
                 文具申請  
               </div>
               <div className='content'>
-                <Stationery func={this.props.func} manage={this.props.manage} service={ this.props.service }/>
+                <Stationery func={this.props.func} manage={this.props.manage} service={ this.props.service} auth={this.props.auth}/>
               </div>
 
               <div className="title">

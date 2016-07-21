@@ -48,7 +48,7 @@ const Consumable = React.createClass({
   },
 
   sunbmitOrder() {
-    var unit = $('.unit.dropdown').dropdown('get value');
+    var unit = this.props.auth.user.unit;
     var items = $('.itemSelect.dropdown').dropdown('get value');
     var customer = $('.customer.input input').val();
     var obj = {};
@@ -95,18 +95,7 @@ const Consumable = React.createClass({
 
         <div className='ui basic segment' style={ style.section }>
 
-          <div className="ui unit selection dropdown">
-            <input type="hidden" name="unit"/>
-            <i className="dropdown icon"/>
-            <div className="default text">選擇組別</div>
-            <div className="menu">
-            {
-              this.props.manage.get('unit').map(function(u){
-                return <div className='item' key={u.id} data-value={u.id}>{u.name}</div> 
-              })
-            } 
-            </div>
-          </div><br/><br/>
+          <div style={style.title}>{this.props.auth.user.unitName}</div><br/><br/>
 
           <div style={ style.title }>申請人姓名&nbsp;:</div>&nbsp;<br/>
           <div className='ui customer input'>
