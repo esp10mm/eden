@@ -1,4 +1,5 @@
 import React from 'react'
+import LoadingPage from '../../components/LoadingPage'
 import { browserHistory } from 'react-router'
 
 const button = (pos) => {
@@ -22,6 +23,13 @@ const Home = React.createClass({
     this.props.func.checkToken(); 
   },
 
+  componentWillReceiveProps(newProps) {
+    if(newProps.auth.login)
+      this.render();
+    else
+      browserHistory.push('/login');
+  },
+
   componentDidMount() {
     $('.inverted.segment').on('mouseover',(e)=>{$(e.target).addClass('secondary')})
     $('.inverted.segment').on('mouseleave',(e)=>{$(e.target).removeClass('secondary')})
@@ -30,20 +38,15 @@ const Home = React.createClass({
 
   toPage(path) {
     $('.main').transition('fade');
-
-    if(path == '/admin') {
-      setTimeout(()=>{
-        if(!this.props.auth.login)
-          browserHistory.push('/login');
-        else
-          browserHistory.push('/admin');
-      }, 500)
-    }
-    else
-      browserHistory.push(path);
+    browserHistory.push(path);
   },
 
   render() {
+    // if(!this.props.auth.login)
+    //   return(
+    //     <LoadingPage/>
+    //   )
+
     var style = {
       container: {
         maxWidth: '700px',

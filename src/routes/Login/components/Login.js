@@ -23,7 +23,7 @@ const Login = React.createClass({
       $('.main').transition('fade');
 
       setTimeout(()=>{
-        browserHistory.push('/admin');
+        browserHistory.push('/home');
       }, 500)
     }
 
@@ -118,9 +118,6 @@ const Login = React.createClass({
             </div>
             <div className='ui login button' style={ style.button } onClick={ this.loginSubmit }>
               登入
-            </div>
-            <div className='ui home button' style={ style.button } onClick={ this.toHomePage }>
-              回主頁  
             </div>
           </div>
         </div>

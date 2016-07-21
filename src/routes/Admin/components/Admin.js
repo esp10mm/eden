@@ -1,6 +1,7 @@
 import React from 'react'
 import LoadingPage from '../../../components/LoadingPage'
 import { browserHistory } from 'react-router'
+import * as Cookies from 'js-cookie'
 
 const Admin = React.createClass({
   componentDidMount() {
@@ -9,6 +10,10 @@ const Admin = React.createClass({
   componentWillMount() {
     if(!this.props.auth.login){
       this.props.func.checkToken();
+    }
+    else if(Cookies.get('type')=='user'){
+      alert('權限不足');
+      browserHistory.push('/');
     }
   },
 
