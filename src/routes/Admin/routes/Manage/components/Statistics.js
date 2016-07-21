@@ -42,11 +42,13 @@ const Statistics = React.createClass({
     var year = $('.years.dropdown').dropdown('get value');
     var unit = $('.unit.dropdown').dropdown('get value');
 
-    console.log(year);
-    console.log(unit);
-
     if(year.length == 0) {
       alert('請選擇年分!');
+      return;
+    }
+
+    if(unit.length == 0) {
+      alert('請選擇組別!');
       return;
     }
 
@@ -77,7 +79,7 @@ const Statistics = React.createClass({
         <div className="ui unit selection dropdown">
           <input type="hidden" name="unit"/>
           <i className="dropdown icon"/>
-          <div className="default text">全部組別</div>
+          <div className="default text">選擇組別</div>
           <div className="menu">
             <div className='item' key={-1} data-value='all'>全部組別</div>
             <div className='item' key={-2} data-value='sum'>總計</div>
