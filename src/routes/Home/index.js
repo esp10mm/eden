@@ -1,6 +1,7 @@
 import React from 'react'
 import LoadingPage from '../../components/LoadingPage'
 import { browserHistory } from 'react-router'
+import * as Cookies from 'js-cookie'
 
 const button = (pos) => {
   var style = {
@@ -39,6 +40,19 @@ const Home = React.createClass({
   toPage(path) {
     $('.main').transition('fade');
     browserHistory.push(path);
+  },
+
+  logout() {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i];
+      var eqPos = cookie.indexOf("=");
+      var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    } 
+
+    browserHistory.push('/login');
   },
 
   render() {
@@ -89,6 +103,9 @@ const Home = React.createClass({
         <div className='row'>
           <div className='ui main center segment' onClick={()=>this.toPage('/admin')} style={ style.buttonSmall }> 
             管理者 
+          </div>
+          <div className='ui main center segment' onClick={this.logout} style={ style.buttonSmall }> 
+            登出 
           </div>
         </div>
       </div>

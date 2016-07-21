@@ -21,17 +21,9 @@ const Manage = React.createClass({
     $('.ui.accordion').accordion('open', accori); 
   },
 
-  logOut() {
-    var cookies = document.cookie.split(";");
-
-    for (var i = 0; i < cookies.length; i++) {
-      var cookie = cookies[i];
-      var eqPos = cookie.indexOf("=");
-      var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    } 
-
-    browserHistory.push('/');
+  toPage(path) {
+    $('.main').transition('fade');
+    browserHistory.push(path);
   },
 
   accorClick(num) {
@@ -132,7 +124,7 @@ const Manage = React.createClass({
 
             </div>
             <br/>
-            <div className='ui red button' onClick={this.logOut}>登出</div>
+            <div className='ui button' onClick={()=>{this.toPage('/')}}>返回主頁</div>
           </div>
         </div>
         <div className='row'>
