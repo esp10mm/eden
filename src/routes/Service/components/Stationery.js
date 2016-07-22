@@ -64,7 +64,7 @@ const Stationery = React.createClass({
   },
 
   sunbmitOrder() {
-    var unit = this.props.auth.user.unitName;
+    var unit = this.props.auth.user.unit;
     var customer = $('.scustomer.input input').val();
     var buffer = this.state.buffer;
     var obj = {};
