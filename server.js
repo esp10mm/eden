@@ -209,12 +209,17 @@ method.unitList = (obj, body, res)=>{
 method.orderList = (obj, body, res)=> {
   var limit = '';
   var limit2 = 'limit 10';
+  var unit = '';
+
   if(body.limit == 1){
     limit = `AND orders.status='PENDING' `
     limit2 = '';
   }
+  if(body.unit !== undefined)
+    unit = `and orders.unit=${body.unit} `
+
   var query = `select orders.id, orders.order_time, orders.status, orders.order_type, orders.customer, unit.name unit ` +
-    `from orders, unit where orders.unit = unit.id ${limit}` +
+    `from orders, unit where orders.unit = unit.id ${unit} ${limit}` +
     `ORDER BY order_time DESC ${limit2} offset ${body.page*10}`;
 
   obj = {

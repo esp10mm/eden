@@ -73,12 +73,13 @@ export const itemList = ()=>{
   } 
 }
 
-export const orderList = (page, limit)=>{
+export const orderList = (page, limit, unit)=>{
   return dispatch => {
     var req = {
       token: Cookies.get('token'),
       page: page,
       limit: limit,
+      unit: unit,
     };
     $.ajax({
       url: '/api/orderList',

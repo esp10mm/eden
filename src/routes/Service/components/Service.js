@@ -68,7 +68,7 @@ const Service = React.createClass({
                 申請單查詢  
               </div>
               <div className='content'>
-                <Orders func={this.props.func} manage={this.props.manage} service={this.props.service}/> 
+                <Orders func={this.props.func} manage={this.props.manage} service={this.props.service} auth={this.props.auth}/> 
               </div>
 
               <div className="title">

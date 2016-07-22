@@ -44,7 +44,7 @@ const OrderRow = React.createClass({
 
 const Orders = React.createClass({
   componentDidMount() {
-    this.props.func.orderList(0, 1);
+    this.props.func.orderList(0, 1, this.props.auth.user.unit);
   },
 
   render() {
