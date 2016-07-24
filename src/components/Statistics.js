@@ -9,6 +9,13 @@ const Statistic = React.createClass({
     }
   },
 
+  itemPrice(id) {
+    for(var k in this.props.data.list) {
+      if(this.props.data.list[k].id == id)
+        return this.props.data.list[k].price;
+    }
+  },
+
   itemMonth(item, month) {
     if(item['months'][month] === undefined)
       return 0;
@@ -24,50 +31,75 @@ const Statistic = React.createClass({
     var index = (this.props.len==1)?'':`${this.props.index+1}.`;
 
     for(var k in items) {
-      newItems.push({months:items[k], name:this.itemName(k), id:k});
+      newItems.push({months:items[k], name:this.itemName(k), id:k, price:this.itemPrice(k)});
     }
 
     return(
       <table className='ui table'>
         <thead>
           <tr>
-            <th>
+            <th style={{'width':'4%'}}>
               {`${index}${this.props.data.statistic.name}`}
             </th>
-            <th style={{'width':'7.5%'}}> 1月</th>
-            <th style={{'width':'7.5%'}}> 2月</th>
-            <th style={{'width':'7.5%'}}> 3月</th>
-            <th style={{'width':'7.5%'}}> 4月</th>
-            <th style={{'width':'7.5%'}}> 5月</th>
-            <th style={{'width':'7.5%'}}> 6月</th>
-            <th style={{'width':'7.5%'}}> 7月</th>
-            <th style={{'width':'7.5%'}}> 8月</th>
-            <th style={{'width':'7.5%'}}> 9月</th>
-            <th style={{'width':'7.5%'}}>10月</th>
-            <th style={{'width':'7.5%'}}>11月</th>
-            <th style={{'width':'7.5%'}}>12月</th>
+            <th style={{'width':'3%'}}> 1月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}> 2月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}> 3月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}> 4月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}> 5月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}> 6月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}> 7月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}> 8月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}> 9月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}>10月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}>11月</th>
+            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'3%'}}>12月</th>
+            <th style={{'width':'5%'}}>金額</th>
           </tr>
         </thead>
         <tbody>
         {
           newItems.map((item, index)=>{
+            console.log(item.price);
             return(
               <tr key={index}>
                 <td>
                   {item.name}
                 </td>
                 <td>{ itemMonth(item, '01') }</td>
+                <td>{ itemMonth(item, '01')*item.price }</td>
                 <td>{ itemMonth(item, '02') }</td>
+                <td>{ itemMonth(item, '02')*item.price }</td>
                 <td>{ itemMonth(item, '03') }</td>
+                <td>{ itemMonth(item, '03')*item.price }</td>
                 <td>{ itemMonth(item, '04') }</td>
+                <td>{ itemMonth(item, '04')*item.price }</td>
                 <td>{ itemMonth(item, '05') }</td>
+                <td>{ itemMonth(item, '05')*item.price }</td>
                 <td>{ itemMonth(item, '06') }</td>
+                <td>{ itemMonth(item, '06')*item.price  }</td>
                 <td>{ itemMonth(item, '07') }</td>
+                <td>{ itemMonth(item, '07')*item.price  }</td>
                 <td>{ itemMonth(item, '08') }</td>
+                <td>{ itemMonth(item, '08')*item.price  }</td>
                 <td>{ itemMonth(item, '09') }</td>
+                <td>{ itemMonth(item, '09')*item.price  }</td>
                 <td>{ itemMonth(item, '10') }</td>
+                <td>{ itemMonth(item, '10')*item.price  }</td>
                 <td>{ itemMonth(item, '11') }</td>
+                <td>{ itemMonth(item, '11')*item.price  }</td>
                 <td>{ itemMonth(item, '12') }</td>
+                <td>{ itemMonth(item, '12')*item.price  }</td>
               </tr>
             )
           }) 
@@ -101,7 +133,7 @@ const Statistics = React.createClass({
       }),
     })
     .done((res)=>{
-     
+      console.log(res);
       var items = res.orders_item;
       var obj = [];
 

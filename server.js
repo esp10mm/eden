@@ -442,7 +442,7 @@ method.statistics = (obj, body, res)=>{
 
     pgquery(query, (result)=>{
       obj.unit = result.rows;
-      var query = `select d.id, d.name from warehouse d;`
+      var query = `select d.id, d.name, d.price from warehouse d;`
 
       pgquery(query, (result)=>{
         obj.warehouse = result.rows;
