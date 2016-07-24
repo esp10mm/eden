@@ -4,11 +4,18 @@ import Stationery from './Stationery'
 import Setting from './Setting'
 import Orders from './Orders'
 import { browserHistory } from 'react-router'
+import * as Cookies from 'js-cookie'
 
 const Service = React.createClass({
   componentDidMount() {
     $('.ui.accordion').accordion();
     // $('.main').transition('fade');
+    //
+    if(Cookies.get('service_accor') === undefined)
+      Cookies.set('service_accor', 0);
+
+    var accori = parseInt(Cookies.get('service_accor'));
+    $('.ui.accordion').accordion('open', accori); 
   },
 
   componentWillMount() {
@@ -17,6 +24,10 @@ const Service = React.createClass({
   toPage(path) {
     $('.main').transition('fade');
     browserHistory.push(path);
+  },
+
+  accorClick(num) {
+    Cookies.set('service_accor', num);
   },
 
   componentWillReceiveProps(newProps) {
@@ -49,13 +60,13 @@ const Service = React.createClass({
           <div style={ style.mainSegment }>
             <div className="ui compact styled accordion">
 
-              <div className="active title">
+              <div className="title" onClick={()=>{this.accorClick(0)}}>
                 <i className="dropdown icon"></i>
                 耗材申請 
               </div>
               <Consumable func={this.props.func} manage={this.props.manage} service={ this.props.service } auth={this.props.auth}/>
 
-              <div className="title">
+              <div className="title" onClick={()=>{this.accorClick(1)}}>
                 <i className="dropdown icon"></i>
                 文具申請  
               </div>
@@ -63,7 +74,7 @@ const Service = React.createClass({
                 <Stationery func={this.props.func} manage={this.props.manage} service={ this.props.service} auth={this.props.auth}/>
               </div>
 
-              <div className="title">
+              <div className="title" onClick={()=>{this.accorClick(2)}}>
                 <i className="dropdown icon"></i>
                 申請單查詢  
               </div>
@@ -71,7 +82,7 @@ const Service = React.createClass({
                 <Orders func={this.props.func} manage={this.props.manage} service={this.props.service} auth={this.props.auth}/> 
               </div>
 
-              <div className="title">
+              <div className="title" onClick={()=>{this.accorClick(3)}}>
                 <i className="dropdown icon"></i>
                 設定 
               </div>
