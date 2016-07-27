@@ -89,7 +89,7 @@ const Order = React.createClass({
       let status = this.state.order.status;
       let finishBTNClass = 'ui button green';
       let finishBTNText = '完成訂單';
-      if(status !== 'PENDING'){
+      if(status == 'FINISH'){
         finishBTNClass = 'ui button red';
         finishBTNText = '取消完成訂單';
       }
@@ -158,9 +158,15 @@ const Order = React.createClass({
     let list = [];
 
     status = this.state.order.status;
-    status = status=='PENDING'?'未出貨':'已出貨'; 
     type = this.state.order.order_type=='stationery'?'文具':'耗材';
     typeNum = this.state.order.order_type=='stationery'?1:0;
+
+    if(status == 'PENDING')
+      status = '未完成';
+    else if(status == 'PROCESSING')
+      status = '出貨中';
+    else if(status == 'FINISH')
+      status = '已完成';
 
     if(manage.items[0] !== undefined){
       for(var k in manage.items) {

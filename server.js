@@ -343,12 +343,10 @@ method.finishOrder = (obj, body, res)=>{
   var query = ``;
   var op = '-';
 
-  if(body.status == 'FINISH') {
+  if(body.status !== 'PENDING') {
     status = 'PENDING';
     op = '+';
   }
-
-  
 
   for(var k in body.items) {
     var itemexport = body.items[k].export;
@@ -407,10 +405,19 @@ method.getTable = (obj, body, res)=>{
   if(ids_str.length > 0) {
     ids_str = ids_str.slice(0, -1);
     query = `select a.customer, d.name, d.item_order, c.name as unit, b.msg, b.amount, a.id, a.order_type, a.order_time from orders a, orders_item b, unit c, warehouse d where d.id=b.item and b.id=a.id and a.status='PENDING' and c.id=a.unit and a.id in (${ids_str}) ORDER BY a.unit, a.order_type ASC;`;
+
+    for(var k in body.ids){
+      if(body.ids[k] != '') {
+        query += `UPDATE orders SET status='PROCESSING' WHERE id=${body.ids[k]};`
+      }
+    }
   }
 
-  else
+  else{
     query = `select a.customer, d.name, d.item_order, c.name as unit, b.msg, b.amount, a.id, a.order_type, a.order_time from orders a, orders_item b, unit c, warehouse d where d.id=b.item and b.id=a.id and a.status='PENDING' and c.id=a.unit ORDER BY a.unit, order_type ASC;`;
+
+    query += `UPDATE orders SET status='PROCESSING' WHERE status='PENDING';`
+  }
 
   pgquery(query, (result)=>{
     obj.result = result.rows;

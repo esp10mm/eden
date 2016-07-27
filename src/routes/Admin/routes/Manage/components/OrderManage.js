@@ -26,9 +26,23 @@ const OrderRow = React.createClass({
 
   render() {
     var pareseTime = this.pareseTime;
-    var status = this.props.data.status=='FINISH'?'完成':'未完成';
-    var statusStyle = this.props.data.status=='FINISH'?{color:'green'}:{color:'red'};
     var type = this.props.data.order_type=='consumable'?'耗材':'文具';
+
+    var status = '';
+    var statusStyle = {};
+
+    if(this.props.data.status == 'PENDING'){
+      status = '未完成';
+      statusStyle = {color: 'red'}
+    }
+    else if(this.props.data.status == 'PROCESSING'){
+      status = '出貨中';
+      statusStyle = {color: 'orange'}
+    }
+    else if(this.props.data.status == 'FINISH'){
+      status = '已完成';
+      statusStyle = {color: 'green'}
+    }
 
     return(
       <tr>
