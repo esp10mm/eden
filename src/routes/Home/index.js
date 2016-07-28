@@ -82,7 +82,7 @@ const Home = React.createClass({
         <div className='row'>
 
           <div className='ui main center inverted green aligned segment' onClick={ ()=>this.toPage('/service') } style={ style.button }>
-            物品申請
+            倉庫服務 
           </div>
           
         </div>

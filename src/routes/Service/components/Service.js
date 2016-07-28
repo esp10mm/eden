@@ -8,7 +8,6 @@ import * as Cookies from 'js-cookie'
 
 const Service = React.createClass({
   componentDidMount() {
-    $('.ui.accordion').accordion();
     // $('.main').transition('fade');
     //
     if(Cookies.get('service_accor') === undefined)
@@ -58,13 +57,15 @@ const Service = React.createClass({
         <div className='row'/>
         <div className='row'>
           <div style={ style.mainSegment }>
-            <div className="ui compact styled accordion">
+            <div className="ui styled accordion">
 
               <div className="title" onClick={()=>{this.accorClick(0)}}>
                 <i className="dropdown icon"></i>
                 耗材申請 
               </div>
-              <Consumable func={this.props.func} manage={this.props.manage} service={ this.props.service } auth={this.props.auth}/>
+              <div className='content'>
+                <Consumable func={this.props.func} manage={this.props.manage} service={ this.props.service } auth={this.props.auth}/>
+              </div>
 
               <div className="title" onClick={()=>{this.accorClick(1)}}>
                 <i className="dropdown icon"></i>
