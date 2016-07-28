@@ -99,6 +99,9 @@ const OrderManage = React.createClass({
   tableGen() {
     var win = window.open('/table/_', '_blank'); 
     win.focus();
+    setTimeout(()=>{
+      this.props.func.orderList(0);
+    }, 2000);
   },
 
   partTable() {
@@ -114,6 +117,9 @@ const OrderManage = React.createClass({
 
     var win = window.open(`/table/${gen}`, '_blank'); 
     win.focus();
+    setTimeout(()=>{
+      this.props.func.orderList(0);
+    }, 2000);
   },
 
   finishSel() {
