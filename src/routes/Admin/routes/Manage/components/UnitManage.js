@@ -4,47 +4,20 @@ import { browserHistory } from 'react-router'
 
 const UnitRow = React.createClass({
   componentDidMount(){
-    $(`.utd.dropdown.${this.props.user.id}`).dropdown({
-      onChange:(val, text)=>{this.updateType(val)}
-    });
-    $(`.uud.dropdown.${this.props.user.id}`).dropdown({
-      onChange:(val, text)=>{this.updateUnit(val)}
-    });
   },
 
-  removeUser(){
-    this.props.removeUser(this.props.user.id);
+  removeUnit(){
+    this.props.removeUnit(this.props.unit.id);
   },
 
-  updateUsername(e){
-    this.props.updateState(this.props.user.id, `username`, e.target.value);
-  },
-
-  updateName(e){
-    this.props.updateState(this.props.user.id, `name`, e.target.value);
-  },
-
-  updateUnit(value){
-    this.props.updateState(this.props.user.id, `unit`, value);
-  },
-
-  updateType(value){
-    this.props.updateState(this.props.user.id, `user_type`, value);
+  updateUnitName(e){
+    this.props.updateState(this.props.unit.id, `name`, e.target.value);
   },
 
   render(){
-    let user_type = this.props.user.user_type===undefined?'':this.props.user.user_type.trim();
-
-    if(user_type == 'admin')
-      user_type = '管理者';
-    else if(user_type == 'super')
-      user_type = '監督';
-    else if(user_type == 'user')
-      user_type = '使用者';
 
     let style = {
       input: {
-        maxWidth: '120px',
       }     
     }
 
@@ -52,44 +25,11 @@ const UnitRow = React.createClass({
       <tr>
         <td>
           <div className='ui input' style={style.input}>
-            <input type='text' defaultValue={this.props.user.username.trim()} onBlur={this.updateUsername}/>
+            <input type='text' defaultValue={this.props.unit.name.trim()} onBlur={this.updateUnitName}/>
           </div>
         </td>
         <td>
-          <div className='ui input' style={style.input}>
-            <input type='text' defaultValue={this.props.user.name.trim()} onBlur={this.updateName}/>
-          </div>
-        </td>
-        <td>
-          <div className={`ui selection dropdown ${this.props.user.id} uud`}>
-            <input type='hidden' value={this.props.user.unit}/>
-            <i className='dropdown icon'/>
-            <div className='default text'>{this.props.user.unit_name}</div>
-            <div className='menu' style={style.input}>
-            {
-              this.props.unit.map((unit)=>{
-                return(
-                    <div className='item' data-value={unit.id} key={unit.id}>{unit.name}</div>
-                  )
-              })
-            }
-            </div>
-          </div>
-        </td>
-        <td>
-          <div className={`ui selection dropdown ${this.props.user.id} utd`}>
-            <input type='hidden' value={this.props.user.user_type}/>
-            <i className='dropdown icon'/>
-            <div className='default text'>{user_type}</div>
-            <div className='menu' style={style.input}>
-              <div className='item' data-value='admin' key='1'>管理者</div>
-              <div className='item' data-value='super' key='2'>監督</div>
-              <div className='item' data-value='user' key='3'>使用者</div>
-            </div>
-          </div>
-        </td>
-        <td>
-          <i className='ui remove red icon' onClick={this.removeUser}/>
+          <i className='ui remove red icon' onClick={this.removeUnit}/>
         </td>
       </tr>
     )
@@ -102,18 +42,15 @@ const UnitList = React.createClass({
       <table className='ui striped table'>
         <thead>
           <tr>
-            <th>帳號</th>
-            <th>名稱</th>
-            <th>組別</th>
-            <th>權限</th>
+            <th>組別名稱</th>
             <th>刪除</th>
           </tr>
         </thead>
         <tbody>
         {
-          this.props.users.map((user)=>{
+          this.props.unit.map((unit)=>{
             return(
-              <UserRow user={user} key={user.id} unit={this.props.unit} removeUser={this.props.removeUser} updateState={this.props.updateState}/>
+              <UnitRow key={unit.id} unit={unit} removeUnit={this.props.removeUnit} updateState={this.props.updateState}/>
               )
           })
         }
@@ -126,31 +63,21 @@ const UnitList = React.createClass({
 
 const UnitManage = React.createClass({
   getInitialState(){
-    return({users:[]});
+    return({unit:[]});
   },
 
   componentDidMount(){
-    this.userList();
   },
 
-  userList(){
-    $.ajax({
-      url: '/api/userList',
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify({
-        token: Cookies.get('token'), 
-        uid: Cookies.get('uid')
-      }),
-    })
-    .done((res)=>{
-      this.setState({users:res.result});
-    })
+  componentWillReceiveProps(newProps){
+    if(newProps.manage.get('type') == 'UNIT_LIST_SUCCESSED'){
+      this.setState({unit:newProps.manage.get('unit')});
+    }
   },
 
-  addUser(){
+  addUnit(){
     $.ajax({
-      url: '/api/addUser',
+      url: '/api/addUnit',
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({
@@ -158,22 +85,23 @@ const UnitManage = React.createClass({
       }),
     })
     .done((res)=>{
-      this.userList();
+      this.props.func.unitList();
     })
   },
 
   updateState(id, prop, value){
     let state = this.state;
-    let index = state.users.findIndex((c)=>{
+    let index = state.unit.findIndex((c)=>{
       return c.id == id;
     });
-    state.users[index][prop] = value;
+    state.unit[index][prop] = value;
     this.setState(state);
   },
 
-  removeUser(id){
+  removeUnit(id){
+    console.log(id);
     $.ajax({
-      url: '/api/removeUser',
+      url: '/api/removeUnit',
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({
@@ -182,7 +110,7 @@ const UnitManage = React.createClass({
       }),
     })
     .done((res)=>{
-      this.userList();
+      this.props.func.unitList();
     })
   },
 
@@ -198,19 +126,16 @@ const UnitManage = React.createClass({
     })
     .done((res)=>{
       alert('儲存變更成功!');
-      this.func.unitList();
+      this.props.func.unitList();
     })
   },
 
   render() {
     let unit = [];
 
-    if(this.props.manage.get('unit') !== undefined)
-      unit = this.props.manage.get('unit');
-
     return(
       <div className='content'>
-        <UnitList unit={unit} removeUnit={this.removeUnit} updateState={this.updateState}/>
+        <UnitList unit={this.state.unit} removeUnit={this.removeUnit} updateState={this.updateState}/>
         <div className='ui button' onClick={this.addUnit}>新增單位</div>
         <div className='ui button' onClick={this.saveChange}>儲存變更</div>
       </div>

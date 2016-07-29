@@ -4,7 +4,7 @@ import ItemList from './ItemList'
 import OrderManage from './OrderManage'
 import Statistics from './Statistics'
 import UserManage from './UserManage'
-// import UnitManage from './UnitManage'
+import UnitManage from './UnitManage'
 import * as Cookies from 'js-cookie'
 import { browserHistory } from 'react-router'
 
@@ -62,6 +62,7 @@ const Manage = React.createClass({
             <i className="dropdown icon"></i>
             組別管理 
           </div>
+          <UnitManage manage={ this.props.manage } func={this.props.func}/>
         </div>
       )
     }

@@ -104,6 +104,9 @@ app.post('/api/:name', function(req, res){
     'addUser',
     'removeUser',
     'editUser',
+    'addUnit',
+    'removeUnit',
+    'editUnit',
   ];
 
   var apiSuper = [
@@ -551,6 +554,39 @@ method.editUser = (obj, body, res)=>{
 
   pgquery(query, (result)=>{
     obj.type = 'EDIT_USER_SUCCESS';
+    res.send(obj);
+  })
+}
+
+method.addUnit = (obj, body, res)=>{
+  var query = `INSERT INTO unit (name) VALUES('新組別');`
+
+  pgquery(query, (result)=>{
+    obj.type = 'ADD_UNIT_SUCCESS';
+    obj.result = result.rows;
+    res.send(obj);
+  })
+}
+
+method.removeUnit = (obj, body, res)=>{
+  var query = `DELETE FROM unit WHERE id=${body.id}`;
+
+  pgquery(query, (result)=>{
+    obj.type = 'REMOVE_UNIT_SUCCESS';
+    res.send(obj);
+  })
+}
+
+method.editUnit = (obj, body, res)=>{
+  var query = ``; 
+
+  for(var k in body.unit){
+    var unit = body.unit[k];
+    query += `update unit set name='${unit.name}' where id=${unit.id};`;
+  }
+
+  pgquery(query, (result)=>{
+    obj.type = 'EDIT_UNIT_SUCCESS';
     res.send(obj);
   })
 }
