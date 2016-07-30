@@ -6,12 +6,13 @@ const AddItem = React.createClass({
       $('.addItem.icon').removeClass('green checkmark');
       $('.addItem input').attr('placeholder', '');
     })
+    $('.addItem.dropdown').dropdown();
   },
 
   addItem() {
     var obj = {
       name: $('.addItem input').val(),
-      isStationery: $('.stationery.checkbox input').is(':checked'),
+      type: $('.addItem.dropdown').dropdown('get value'),
     } 
     $('.addItem.input').addClass('loading');
     this.props.func.addItem(obj);
@@ -52,9 +53,15 @@ const AddItem = React.createClass({
           <i className='addItem icon'/> 
         </div>&nbsp;
 
-        <div className='ui stationery checkbox'>
-          <input type='checkbox'/>
-          <label>文具</label>
+        <div className='ui selection addItem dropdown'>
+          <input type='hidden' value='0'/>
+          <i className='dropdown icon'/>
+          <div className='default text'>耗材</div>
+          <div className='menu'>
+            <div className='item' data-value='0'>耗材</div>
+            <div className='item' data-value='1'>文具</div>
+            <div className='item' data-value='2'>借物</div>
+          </div>
         </div>&nbsp;
 
         <div className='ui button' style={ style.sectionBtn } onClick={ this.addItem }>送出</div>

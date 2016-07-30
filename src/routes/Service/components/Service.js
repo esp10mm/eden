@@ -3,6 +3,7 @@ import Consumable from './Consumable'
 import Stationery from './Stationery'
 import Setting from './Setting'
 import Orders from './Orders'
+import Rent from './Rent'
 import { browserHistory } from 'react-router'
 import * as Cookies from 'js-cookie'
 
@@ -77,13 +78,20 @@ const Service = React.createClass({
 
               <div className="title" onClick={()=>{this.accorClick(2)}}>
                 <i className="dropdown icon"></i>
+                借物申請  
+              </div>
+              <div className='content'>
+              </div>
+
+              <div className="title" onClick={()=>{this.accorClick(3)}}>
+                <i className="dropdown icon"></i>
                 申請單查詢  
               </div>
               <div className='content'>
                 <Orders func={this.props.func} manage={this.props.manage} service={this.props.service} auth={this.props.auth}/> 
               </div>
 
-              <div className="title" onClick={()=>{this.accorClick(3)}}>
+              <div className="title" onClick={()=>{this.accorClick(4)}}>
                 <i className="dropdown icon"></i>
                 設定 
               </div>

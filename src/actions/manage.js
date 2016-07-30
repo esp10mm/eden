@@ -4,7 +4,7 @@ export const addItem = (obj)=>{
   return dispatch => {
     var req = {
       name: obj.name,
-      isStationery: obj.isStationery,
+      type: obj.type,
       token: Cookies.get('token'),
       uid: Cookies.get('uid'),
     };

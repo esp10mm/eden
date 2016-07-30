@@ -158,10 +158,8 @@ method.checkToken = (obj, body, res)=>{
 method.addItem = (obj, body, res)=> {
   var query = '';
 
-  if(body.isStationery)
-    query = `INSERT INTO warehouse (name, amount, item_type) VALUES ('${body.name}', '0', '1');`
-  else
-    query = `INSERT INTO warehouse (name, amount, item_type) VALUES ('${body.name}', '0', '0');`
+  console.log(body.type);
+  query = `INSERT INTO warehouse (name, amount, item_type) VALUES ('${body.name}', '0', '${body.type}');`
 
   pgquery(query, (result)=>{
     obj.type = 'ADDITEM_SUCCESSED';
