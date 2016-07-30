@@ -64,8 +64,15 @@ const OrderRow = React.createClass({
 
 const OrderManage = React.createClass({
   componentDidMount() {
-    this.props.func.orderList(0);
-    $('.order.page').val('1');
+    var initPage = 0;
+    if(Cookies.get('aop') !== undefined)
+      initPage = Cookies.get('aop');
+    else
+      Cookies.set('aop', 0);
+
+    this.props.func.orderList(initPage);
+    $('.order.page').val(parseInt(initPage)+1);
+
     $('.order.page').change(()=>{
       var page = parseInt($('.order.page').val());
       if(isNaN(page)) {
@@ -80,6 +87,7 @@ const OrderManage = React.createClass({
         $('.order.checkbox').checkbox('toggle');
       } 
     })
+
   },
 
   componentWillReceiveProps(newProps) {
@@ -174,6 +182,7 @@ const OrderManage = React.createClass({
 
     $('.order.page').val(''+page);
     this.props.func.orderList(page-1);
+    Cookies.set('aop', page-1);
   },
 
   adminRender(num){
