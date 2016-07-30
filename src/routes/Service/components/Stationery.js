@@ -88,6 +88,7 @@ const Stationery = React.createClass({
       unit: unit,
       order: obj,
       customer: customer,
+      type: 'stationery',
     };
 
     $.ajax({

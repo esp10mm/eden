@@ -81,6 +81,7 @@ const Service = React.createClass({
                 借物申請  
               </div>
               <div className='content'>
+                <Rent func={this.props.func} manage={this.props.manage} service={ this.props.service} auth={this.props.auth}/>
               </div>
 
               <div className="title" onClick={()=>{this.accorClick(3)}}>

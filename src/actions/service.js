@@ -16,12 +16,13 @@ export const clearSelected = ()=>{
   }
 }
 
-export const consumeableOrder = (unit, order, customer)=>{
+export const consumeableOrder = (unit, order, customer, type)=>{
   return dispatch => {
     var req = {
       unit: unit,
       order: order,
       customer: customer,
+      type: type,
     };
     $.ajax({
       url: '/api/consumeableOrder',

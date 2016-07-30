@@ -1,6 +1,4 @@
 import React from 'react'
-import ItemTable from './ItemtTable'
-import ItemSelect from './ItemSelect'
 
 const Rent = React.createClass({
   componentDidMount() {
@@ -15,13 +13,13 @@ const Rent = React.createClass({
       var results = newProps.manage.get('results');
       var stationery = [];
       for(var k in results) {
-        if(results[k].item_type==1)
+        if(results[k].item_type==2)
           stationery.push(results[k]);
       }
       this.setState({stationery:stationery});
     }
     if(newProps.manage.get('type') === 'UNIT_LIST_SUCCESSED') {
-      $('.sunit.dropdown').dropdown();
+      $('.runit.dropdown').dropdown();
     }
     if(newProps.service.get('type') === 'CONSUME_ORDER_SUCCESSED') {
     }
@@ -65,7 +63,7 @@ const Rent = React.createClass({
 
   sunbmitOrder() {
     var unit = this.props.auth.user.unit;
-    var customer = $('.scustomer.input input').val();
+    var customer = $('.rcustomer.input input').val();
     var buffer = this.state.buffer;
     var obj = {};
 
@@ -88,6 +86,7 @@ const Rent = React.createClass({
       unit: unit,
       order: obj,
       customer: customer,
+      type: 'rent',
     };
 
     $.ajax({
@@ -97,7 +96,7 @@ const Rent = React.createClass({
       data: JSON.stringify(req),
     }) 
     .done((res)=>{
-      alert('文具申請成功!');
+      alert('借物申請成功!');
 
       var stationery = this.state.stationery;
       var key = this.state.key;
@@ -132,7 +131,7 @@ const Rent = React.createClass({
           <div style={style.title}>{this.props.auth.user.unitName}</div><br/><br/>
 
           <div style={ style.title }>申請人姓名&nbsp;:</div>&nbsp;<br/>
-          <div className='ui scustomer input'>
+          <div className='ui rcustomer input'>
             <input type='text' />
           </div><br/><br/>
 
@@ -164,7 +163,7 @@ const Rent = React.createClass({
 
 const BRow = React.createClass({
   componentDidMount() {
-    $(`.dropdown.s${this.props.index}`).dropdown({
+    $(`.dropdown.r${this.props.index}`).dropdown({
       onChange: ()=>{this.updateData(false)}
     });
   },
@@ -175,13 +174,13 @@ const BRow = React.createClass({
   },
 
   updateData(source) {
-    var stationery = $(`.dropdown.s${this.props.index}`).dropdown('get value');
-    var amount = $(`.samount.input.s${this.props.index} input`).val();
-    var note = $(`.snote.input.s${this.props.index} input`).val();
+    var stationery = $(`.dropdown.r${this.props.index}`).dropdown('get value');
+    var amount = $(`.ramount.input.r${this.props.index} input`).val();
+    var note = $(`.rnote.input.r${this.props.index} input`).val();
 
     if(isNaN(parseInt(amount)) && source) {
       alert('數量請填寫數字!');
-      $(`.samount.input.s${this.props.index} input`).val('');
+      $(`.ramount.input.s${this.props.index} input`).val('');
       return;
     }
 
@@ -192,7 +191,7 @@ const BRow = React.createClass({
     return(
       <tr>
         <td>
-          <select className={`ui stationery dropdown s${this.props.index}`}>
+          <select className={`ui rent dropdown r${this.props.index}`}>
           {
             this.props.stationery.map((s, i)=>{
               return <option value={s.id} key={i}>{s.name}</option>
@@ -201,12 +200,12 @@ const BRow = React.createClass({
           </select>
         </td>
         <td>
-          <div className={`ui fluid samount input s${this.props.index}`} onBlur={()=>{this.updateData(true)}}>
+          <div className={`ui fluid ramount input r${this.props.index}`} onBlur={()=>{this.updateData(true)}}>
             <input type='text' />
           </div>
         </td>
         <td>
-          <div className={`ui fluid snote input s${this.props.index}`} onBlur={()=>{this.updateData(false)}}>
+          <div className={`ui fluid rnote input r${this.props.index}`} onBlur={()=>{this.updateData(false)}}>
             <input type='text' />
           </div>
         </td>

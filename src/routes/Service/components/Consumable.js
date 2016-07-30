@@ -71,7 +71,7 @@ const Consumable = React.createClass({
         obj[items[k]] = SelectedItems[items[k]];
     }
 
-    this.props.func.consumeableOrder(unit, obj, customer);
+    this.props.func.consumeableOrder(unit, obj, customer, 'consumable');
   },
 
   render() {

@@ -158,7 +158,6 @@ method.checkToken = (obj, body, res)=>{
 method.addItem = (obj, body, res)=> {
   var query = '';
 
-  console.log(body.type);
   query = `INSERT INTO warehouse (name, amount, item_type) VALUES ('${body.name}', '0', '${body.type}');`
 
   pgquery(query, (result)=>{
@@ -290,13 +289,7 @@ method.orderInfo = (obj, body, res)=>{
 }
 
 method.consumeableOrder = (obj, body, res)=>{
-  var order_type = 'consumable';
-
-  for(var k in body.order){
-    if(body.order[k].note !== undefined)
-      order_type = 'stationery'; 
-    break;
-  }
+  var order_type = body.type;
 
   var query = `INSERT INTO orders (unit, order_time, status, customer, order_type) VALUES ('${body.unit}', now(), 'PENDING', '${body.customer}', '${order_type}');`;
 
