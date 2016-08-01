@@ -3,8 +3,12 @@ import ItemRow from './ItemRow'
 
 const ItemTable = React.createClass({
   itemAmount(item) {
-    var obj = this.props.service.get('SelectedAmount');
-    var obj = this.props.service.get('SelectedAmount').toObject();
+    var obj = {};
+    if(this.props.classPrefix == '.s')
+      obj = this.props.service.get('SelectedSAmount').toObject();
+    else if(this.props.classPrefix == '.c')
+      obj = this.props.service.get('SelectedAmount').toObject();
+
     if(obj[item] === undefined)
       return 1;
     return obj[item];
@@ -22,10 +26,18 @@ const ItemTable = React.createClass({
     const getItemData = this.getItemData;
     const updateSelectedAmount = this.props.func.updateSelectedAmount;
 
+    let list = this.props.service.get('SelectedItems');
+    let orderType = 0;
+    if(this.props.classPrefix == '.s'){
+      list = this.props.service.get('SelectedSItems')
+      orderType = 1;
+    }
+
+
     return(
       <tbody>
-      {this.props.service.get('SelectedItems').map(function(item){
-        return <ItemRow key={item} data={{item:getItemData(item), num: itemAmount(item)}} updateSelectedAmount={updateSelectedAmount}/>
+      {list.map(function(item){
+        return <ItemRow key={item} data={{item:getItemData(item), num: itemAmount(item)}} updateSelectedAmount={updateSelectedAmount} orderType={orderType}/>
       })}
       </tbody>
     )

@@ -304,9 +304,11 @@ method.consumeableOrder = (obj, body, res)=>{
     query += `INSERT INTO orders_item (id, item, amount, export, msg) SELECT max(id), '${item}', '${amount}', '${amount}', '${msg}' from orders;`
   }  
 
-  obj = {
-    type: 'CONSUME_ORDER_SUCCESSED',
-  }
+  var obj = {type: 'CONSUME_ORDER_SUCCESSED'};
+  if(order_type == 'consumeable')
+    obj.type = 'CONSUME_ORDER_SUCCESSED';
+  else if(order_type == 'stationery')
+    obj.type = 'STATIONERY_ORDER_SUCCESSED';
 
   pgquery(query, (result)=>{
     res.send(obj);

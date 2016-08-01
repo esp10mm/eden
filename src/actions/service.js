@@ -1,12 +1,18 @@
-export const updateSelected = (items)=>{
+export const updateSelected = (items, type)=>{
+  var actionType = 'UPDATE_SELECTED';
+  if(type == 1)
+    actionType = 'UPDATE_S_SELECTED';
   return dispatch => {
-    dispatch({type: 'UPDATE_SELECTED', items: items});
+    dispatch({type: actionType, items: items});
   }
 } 
 
-export const updateSelectedAmount = (item, num)=>{
+export const updateSelectedAmount = (item, num, type)=>{
+  var actionType = 'UPDATE_SELECTED_AMOUNT';
+  if(type == 1)
+    actionType = 'UPDATE_S_SELECTED_AMOUNT';
   return dispatch => {
-    dispatch({type: 'UPDATE_SELECTED_AMOUNT', item: item, num: num});
+    dispatch({type: actionType, item: item, num: num});
   }
 }
 
@@ -24,6 +30,7 @@ export const consumeableOrder = (unit, order, customer, type)=>{
       customer: customer,
       type: type,
     };
+    console.log(req);
     $.ajax({
       url: '/api/consumeableOrder',
       type: 'POST',

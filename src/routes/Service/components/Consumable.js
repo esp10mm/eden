@@ -103,7 +103,7 @@ const Consumable = React.createClass({
           </div><br/><br/>
 
           <div style={ style.title }>選擇品項(多選)&nbsp;:</div>&nbsp;<br/>
-          <ItemSelect itemlist={ this.props.manage.get('items') } func={this.props.func}/>
+          <ItemSelect itemlist={ this.props.manage.get('items') } func={this.props.func} classPrefix='.c'/>
           <br/> 
 
           <div style={ style.title }>數量填寫&nbsp;:</div>&nbsp;<br/>
@@ -115,7 +115,7 @@ const Consumable = React.createClass({
               <th>數量</th>
             </tr>
             </thead>
-              <ItemTable itemlist={ this.props.manage.get('items') } service={ this.props.service } func={this.props.func}/>
+              <ItemTable itemlist={ this.props.manage.get('items') } service={ this.props.service } func={this.props.func} classPrefix='.c'/>
             </table>
           </div>
 

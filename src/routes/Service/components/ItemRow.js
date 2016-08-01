@@ -2,7 +2,8 @@ import React from 'react'
 
 const ItemRow = React.createClass({
   componentDidMount() {
-    this.props.updateSelectedAmount(this.props.data.item.id, 1);
+    console.log(this.props.orderType);
+    this.props.updateSelectedAmount(this.props.data.item.id, 1, this.props.orderType);
   },
 
   onBlur(e) {
@@ -10,7 +11,7 @@ const ItemRow = React.createClass({
       alert('請輸入數字');
     }
     else if(e.target.value.length > 0)
-      this.props.updateSelectedAmount(this.props.data.item.id, parseInt(e.target.value));
+      this.props.updateSelectedAmount(this.props.data.item.id, parseInt(e.target.value), this.props.orderType);
   },
 
   render() {

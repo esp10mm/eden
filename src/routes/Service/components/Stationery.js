@@ -4,75 +4,25 @@ import ItemSelect from './ItemSelect'
 
 const Stationery = React.createClass({
   componentDidMount() {
-  },
-
-  getInitialState() {
-    return {stationery: [], key:0, buffer:[{key:0}]};
+    this.props.func.itemList();
+    this.props.func.unitList();
   },
 
   componentWillReceiveProps(newProps) {
-    if(newProps.manage.get('type') === 'ITEM_LIST_SUCCESSED') {
-      var results = newProps.manage.get('results');
-      var stationery = [];
-      for(var k in results) {
-        if(results[k].item_type==1)
-          stationery.push(results[k]);
-      }
-      this.setState({stationery:stationery});
-    }
-    if(newProps.manage.get('type') === 'UNIT_LIST_SUCCESSED') {
-      $('.sunit.dropdown').dropdown();
-    }
-    if(newProps.service.get('type') === 'CONSUME_ORDER_SUCCESSED') {
+    if(newProps.service.get('type') === 'STATIONERY_ORDER_SUCCESSED') {
+      $('.s.itemSelect.dropdown').dropdown('clear');
+      $('.scustomer.input input').val('');
+      this.props.func.clearSelected();
+      alert('文具申請成功!');
+      this.props.func.orderList(0, 1);
     }
   },
 
-  addRow() {
-    var stationery = this.state.stationery;
-    var buffer = this.state.buffer;
-    var key = this.state.key+1;
-
-    buffer.push({key:key});
-
-    this.setState({key:key, stationery:stationery, buffer:buffer});
-  },
-
-  delRow(i) {
-    var stationery = this.state.stationery;
-    var buffer = this.state.buffer;
-    var key = this.state.key;
-
-    for(var k in buffer) {
-      if(buffer[k].key == i)
-        buffer.splice(k, 1);
-    }
-
-    this.setState({stationery:stationery, buffer:buffer, key:key});
-  },
-
-  setRowState(key, data) {
-    var stationery = this.state.stationery;
-    var buffer = this.state.buffer;
-    var key = this.state.key;
-
-    for(var k in buffer) {
-      if(buffer[k].key == key)
-        buffer[k].data = data;
-    }
-
-    this.setState({stationery:stationery, buffer:buffer, key:key});
-  },
-
-  sunbmitOrder() {
+  submitOrder() {
     var unit = this.props.auth.user.unit;
+    var items = $('.s.itemSelect.dropdown').dropdown('get value');
     var customer = $('.scustomer.input input').val();
-    var buffer = this.state.buffer;
-    var obj = {};
-
-    for(var k in buffer) {
-      if(buffer[k].data != undefined)
-        obj[buffer[k].data.stationery] = {amount:buffer[k].data.amount, note:buffer[k].data.note};
-    }
+    var order = {};
 
     if(unit.length == 0) {
       alert('請選擇組別!');
@@ -83,30 +33,15 @@ const Stationery = React.createClass({
       alert('請填寫申請人!');
       return;
     }
-
-    var req = {
-      unit: unit,
-      order: obj,
-      customer: customer,
-      type: 'stationery',
-    };
-
-    $.ajax({
-      url: '/api/consumeableOrder',
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify(req),
-    }) 
-    .done((res)=>{
-      alert('文具申請成功!');
-
-      var stationery = this.state.stationery;
-      var key = this.state.key;
-
-      this.setState({stationery:stationery, buffer:[{key:key+1}], key:key+1});
-      this.props.func.orderList(0, 1);
-    })
-
+    for(var k in items) {
+      var SelectedItems = this.props.service.get('SelectedSAmount').toObject(); 
+      console.log(SelectedItems);
+      if(SelectedItems[items[k]] === undefined)
+        order[items[k]] = 1;
+      else
+        order[items[k]] = SelectedItems[items[k]];
+    }
+    this.props.func.consumeableOrder(unit, order, customer, 'stationery');
   },
 
   render() {
@@ -137,84 +72,28 @@ const Stationery = React.createClass({
             <input type='text' />
           </div><br/><br/>
 
-          <table className='ui table'>
-          <thead>
-          <tr>
-            <th>品項</th>
-            <th style={{width: '100px'}}>數量</th>
-            <th style={{width: '25%'}}>備註(說明)</th>
-            <th>刪除</th>
-          </tr>
-          </thead>
-          <tbody>
-          {
-            this.state.buffer.map((r, i)=>{
-              return <BRow key={r.key} index={r.key} data={this.state.buffer[i]} stationery={this.state.stationery} delRow={ this.delRow } setRowState={this.setRowState}/>
-            }) 
-          }
-          </tbody>
-          </table>
-          <div className='ui button' style={ style.sectionBtn } onClick={ this.addRow }>增加一項</div>
+          <div style={ style.title }>選擇品項(多選)&nbsp;:</div>&nbsp;<br/>
+          <ItemSelect itemlist={ this.props.manage.get('items') } func={this.props.func} classPrefix='.s'/>
+          <br/> 
 
-          <br/><div className='ui button' style={ style.sectionBtn } onClick={ this.sunbmitOrder }>送出</div>
+          <div style={ style.title }>數量填寫&nbsp;:</div>&nbsp;<br/>
+          <div className='amount display'>
+            <table className='ui table'>
+            <thead>
+            <tr>
+              <th>品項</th>
+              <th>數量</th>
+            </tr>
+            </thead>
+              <ItemTable itemlist={ this.props.manage.get('items') } service={ this.props.service } func={this.props.func} type='stationery' classPrefix='.s'/>
+            </table>
+          </div>
+
+          <br/><div className='ui button' style={ style.sectionBtn } onClick={ this.submitOrder }>送出</div>
         </div>
       </div>
     )
   }
-})
-
-const BRow = React.createClass({
-  componentDidMount() {
-    $(`.dropdown.s${this.props.index}`).dropdown({
-      onChange: ()=>{this.updateData(false)}
-    });
-  },
-
-  delRow() {
-    var key = this.props.index;
-    this.props.delRow(key);
-  },
-
-  updateData(source) {
-    var stationery = $(`.dropdown.s${this.props.index}`).dropdown('get value');
-    var amount = $(`.samount.input.s${this.props.index} input`).val();
-    var note = $(`.snote.input.s${this.props.index} input`).val();
-
-    if(isNaN(parseInt(amount)) && source) {
-      alert('數量請填寫數字!');
-      $(`.samount.input.s${this.props.index} input`).val('');
-      return;
-    }
-
-    this.props.setRowState(this.props.index, {stationery:stationery, amount:amount, note:note});
-  },
-
-  render() {
-    return(
-      <tr>
-        <td>
-          <select className={`ui stationery dropdown s${this.props.index}`}>
-          {
-            this.props.stationery.map((s, i)=>{
-              return <option value={s.id} key={i}>{s.name}</option>
-            })
-          }
-          </select>
-        </td>
-        <td>
-          <div className={`ui fluid samount input s${this.props.index}`} onBlur={()=>{this.updateData(true)}}>
-            <input type='text' />
-          </div>
-        </td>
-        <td>
-          <div className={`ui fluid snote input s${this.props.index}`} onBlur={()=>{this.updateData(false)}}>
-            <input type='text' />
-          </div>
-        </td>
-        <td><i className='ui red icon remove' onClick={this.delRow}/></td>
-      </tr>
-    )
-  } 
 })
 
 module.exports = Stationery;
