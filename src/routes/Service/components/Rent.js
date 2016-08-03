@@ -67,6 +67,16 @@ const Rent = React.createClass({
     var buffer = this.state.buffer;
     var obj = {};
 
+    var orders = this.props.manage.get('orders');
+    for(var k in orders){
+      if(orders[k].unit.trim() == this.props.auth.user.unitName.trim()){
+        if(orders[k].order_type.trim() == 'rent' && orders[k].status.trim() == 'PENDING'){
+          alert(`${this.props.auth.user.unitName.trim()}有未出貨的借物訂單，請利用修改訂單的功能集中填寫!`);
+          return;
+        }
+      }
+    }
+
     for(var k in buffer) {
       if(buffer[k].data != undefined)
         obj[buffer[k].data.stationery] = {amount:buffer[k].data.amount, note:buffer[k].data.note};

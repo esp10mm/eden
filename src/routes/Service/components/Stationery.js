@@ -24,6 +24,16 @@ const Stationery = React.createClass({
     var customer = $('.scustomer.input input').val();
     var order = {};
 
+    var orders = this.props.manage.get('orders');
+    for(var k in orders){
+      if(orders[k].unit.trim() == this.props.auth.user.unitName.trim()){
+        if(orders[k].order_type.trim() == 'stationery' && orders[k].status.trim() == 'PENDING'){
+          alert(`${this.props.auth.user.unitName.trim()}有未出貨的文具訂單，請利用修改訂單的功能集中填寫!`);
+          return;
+        }
+      }
+    }
+
     if(unit.length == 0) {
       alert('請選擇組別!');
       return;

@@ -63,6 +63,16 @@ const Consumable = React.createClass({
       return;
     }
 
+    var orders = this.props.manage.get('orders');
+    for(var k in orders){
+      if(orders[k].unit.trim() == this.props.auth.user.unitName.trim()){
+        if(orders[k].order_type.trim() == 'consumable' && orders[k].status.trim() == 'PENDING'){
+          alert(`${this.props.auth.user.unitName.trim()}有未出貨的耗材訂單，請利用修改訂單的功能集中填寫!`);
+          return;
+        }
+      }
+    }
+
     for(var k in items) {
       var SelectedItems = this.props.service.get('SelectedAmount').toObject(); 
       if(SelectedItems[items[k]] === undefined)
@@ -70,6 +80,7 @@ const Consumable = React.createClass({
       else
         obj[items[k]] = SelectedItems[items[k]];
     }
+
 
     this.props.func.consumeableOrder(unit, obj, customer, 'consumable');
   },
