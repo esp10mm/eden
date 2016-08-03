@@ -88,7 +88,7 @@ const Home = React.createClass({
         </div>
         <div className='row'>
           <div className='ui main center segment' onClick={()=>this.toPage('/admin')} style={ style.buttonSmall }> 
-            管理者 
+            總務管理 
           </div>
           <div className='ui main center segment' onClick={this.logout} style={ style.buttonSmall }> 
             登出 
