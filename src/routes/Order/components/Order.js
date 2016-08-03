@@ -51,6 +51,10 @@ const Order = React.createClass({
   },
 
   updateOrder() {
+    if(this.state.order.status == 'PROCESSING' && Cookies.get('type') !== 'admin'){
+      alert('出貨中之訂單無法修改!');
+      return;
+    }
     this.props.func.updateOrder(this.state.items, this.props.params.id);
   },
 
