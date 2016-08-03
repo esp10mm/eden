@@ -32,6 +32,17 @@ const OrderRow = React.createClass({
     var pareseTime = this.pareseTime;
     let order_type = this.props.data.order_type.trim();
 
+    let status = this.props.data.status.trim();
+    let statusColor = {color:'red'};
+
+    if(status == 'PENDING'){
+      status = '未處理'; 
+    }
+    else if(status == 'PROCESSING'){
+      status = '出貨中'; 
+      statusColor = {color:'orange'};
+    }
+
     if(order_type == 'stationery'){
       order_type = '文具'; 
     }
@@ -47,6 +58,7 @@ const OrderRow = React.createClass({
       <tr>
         <td><a onClick={ ()=>this.toPage('/order/'+this.props.data.id)}>{pareseTime(this.props.data.order_time)}</a></td>
         <td>{order_type}</td>
+        <td style={statusColor}>{status}</td>
         <td>{this.props.data.unit}</td>
         <td>{this.props.data.customer}</td>
       </tr>
@@ -81,6 +93,7 @@ const Orders = React.createClass({
             <tr>
               <th>時間</th>
               <th>類別</th>
+              <th>狀態</th>
               <th>單位</th>
               <th>申請人</th>
             </tr>

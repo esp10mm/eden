@@ -212,7 +212,7 @@ method.orderList = (obj, body, res)=> {
   var unit = '';
 
   if(body.limit == 1){
-    limit = `AND orders.status='PENDING' `
+    limit = `AND (orders.status='PENDING' OR orders.status='PROCESSING') `
     limit2 = '';
   }
   if(body.unit !== undefined)
