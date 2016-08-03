@@ -30,16 +30,16 @@ const OrderRow = React.createClass({
 
   render() {
     var pareseTime = this.pareseTime;
-    let order_type = this.props.data.order_type=='consumable'?'耗材':'文具';
+    let order_type = this.props.data.order_type.trim();
 
-    if(this.props.data.order_type == 'stationery'){
+    if(order_type == 'stationery'){
       order_type = '文具'; 
     }
-    else if(this.props.data.order_type == 'consumable'){
+    else if(order_type == 'consumable'){
       order_type = '耗材'; 
       
     }
-    else if(this.props.data.order_type == 'rent'){
+    else if(order_type == 'rent'){
       order_type = '借物'; 
     }
 

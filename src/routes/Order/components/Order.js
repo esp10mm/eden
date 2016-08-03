@@ -158,6 +158,8 @@ const Order = React.createClass({
     let list = [];
 
     status = this.state.order.status;
+    if(this.state.order.order_type !== undefined)
+      type = this.state.order.order_type.trim();
 
     if(type == 'stationery'){
       type = '文具'; 

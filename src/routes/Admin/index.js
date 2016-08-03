@@ -11,7 +11,6 @@ module.exports = {
     require.ensure([], (require)=>{
       cb(null, [
         require('./routes/Item'),
-        require('./routes/Order'),
       ])
     })
   },
