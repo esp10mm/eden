@@ -158,8 +158,19 @@ const Order = React.createClass({
     let list = [];
 
     status = this.state.order.status;
-    type = this.state.order.order_type=='stationery'?'文具':'耗材';
-    typeNum = this.state.order.order_type=='stationery'?1:0;
+
+    if(type == 'stationery'){
+      type = '文具'; 
+      typeNum = 1;
+    }
+    else if(type == 'consumable'){
+      type = '耗材'; 
+      typeNum = 0;
+    }
+    if(type == 'rent'){
+      type = '借物'; 
+      typeNum = 2;
+    }
 
     if(status == 'PENDING')
       status = '未完成';

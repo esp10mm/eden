@@ -31,6 +31,18 @@ const OrderRow = React.createClass({
   render() {
     var pareseTime = this.pareseTime;
     let order_type = this.props.data.order_type=='consumable'?'耗材':'文具';
+
+    if(this.props.data.order_type == 'stationery'){
+      order_type = '文具'; 
+    }
+    else if(this.props.data.order_type == 'consumable'){
+      order_type = '耗材'; 
+      
+    }
+    else if(this.props.data.order_type == 'rent'){
+      order_type = '借物'; 
+    }
+
     return(
       <tr>
         <td><a onClick={ ()=>this.toPage('/order/'+this.props.data.id)}>{pareseTime(this.props.data.order_time)}</a></td>

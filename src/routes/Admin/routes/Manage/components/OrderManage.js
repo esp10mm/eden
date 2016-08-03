@@ -26,7 +26,17 @@ const OrderRow = React.createClass({
 
   render() {
     var pareseTime = this.pareseTime;
-    var type = this.props.data.order_type=='consumable'?'耗材':'文具';
+    var type = '';
+
+    if(this.props.order_type == 'stationery'){
+      type = '文具'; 
+    }
+    else if(this.props.order_type == 'consumable'){
+      type = '耗材'; 
+    }
+    else if(this.props.order_type == 'rent'){
+      type = '借物'; 
+    }
 
     var status = '';
     var statusStyle = {};
