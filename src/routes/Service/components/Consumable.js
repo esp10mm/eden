@@ -38,9 +38,8 @@ const Consumable = React.createClass({
       });
     }
     if(newProps.service.get('type') === 'CONSUME_ORDER_SUCCESSED') {
-      $('.unit.dropdown').dropdown('clear');
-      $('.itemSelect.dropdown').dropdown('clear');
-      $('.customer.input input').val('');
+      $('.c.itemSelect.dropdown').dropdown('clear');
+      $('.c.customer.input input').val('');
       this.props.func.clearSelected();
       alert('耗材申請成功!');
       this.props.func.orderList(0, 1);
@@ -49,8 +48,8 @@ const Consumable = React.createClass({
 
   sunbmitOrder() {
     var unit = this.props.auth.user.unit;
-    var items = $('.itemSelect.dropdown').dropdown('get value');
-    var customer = $('.customer.input input').val();
+    var items = $('.c.itemSelect.dropdown').dropdown('get value');
+    var customer = $('.c.customer.input input').val();
     var obj = {};
 
     if(unit.length == 0) {
@@ -75,12 +74,8 @@ const Consumable = React.createClass({
 
     for(var k in items) {
       var SelectedItems = this.props.service.get('SelectedAmount').toObject(); 
-      if(SelectedItems[items[k]] === undefined)
-        obj[items[k]] = 1;
-      else
-        obj[items[k]] = SelectedItems[items[k]];
+      obj[items[k]] = SelectedItems[items[k]];
     }
-
 
     this.props.func.consumeableOrder(unit, obj, customer, 'consumable');
   },
@@ -109,7 +104,7 @@ const Consumable = React.createClass({
           <div style={style.title}>{this.props.auth.user.unitName}</div><br/><br/>
 
           <div style={ style.title }>申請人姓名&nbsp;:</div>&nbsp;<br/>
-          <div className='ui customer input'>
+          <div className='ui c customer input'>
             <input type='text' />
           </div><br/><br/>
 

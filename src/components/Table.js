@@ -3,42 +3,16 @@ import * as Cookies from 'js-cookie'
 
 const ItemRow = React.createClass({
   render() {
-    if(this.props.type == 'stationery') {
-      return(
-        <tr>
-          <td>{this.props.data.name}</td>
-          <td>{this.props.data.amount}</td>
-          <td>{this.props.data.msg}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      )
-    }
-    else if(this.props.data2 !== undefined){
-      return(
-        <tr>
-          <td>{this.props.data.name}</td>
-          <td>{this.props.data.amount}</td>
-          <td></td>
-          <td>{this.props.data2.name}</td>
-          <td>{this.props.data2.amount}</td>
-          <td></td>
-        </tr>
-      )
-    }
-    else {
-      return(
-        <tr>
-          <td>{this.props.data.name}</td>
-          <td>{this.props.data.amount}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      )
-    }
+    return(
+      <tr>
+        <td>{this.props.data.name}</td>
+        <td>{this.props.data.amount}</td>
+        <td>{this.props.data.msg}</td>
+        <td>{this.props.data2.name}</td>
+        <td>{this.props.data2.amount}</td>
+        <td>{this.props.data2.msg}</td>
+      </tr>
+    )
   }
 })
 
@@ -65,84 +39,45 @@ const Table = React.createClass({
     var unit = this.props.data[0].unit.trim();
     var customer = '申請人:'+this.props.data[0].customer;
 
-    if(this.props.data[0].order_type == 'stationery') {
-      return(
-        <tr>
-          <th style={{'width':'23%'}}>{parseTime}</th>
-          <th style={{'width':'10%'}}>{unit}</th>
-          <th style={{'width':'16%'}}>{customer}</th>
-          <th style={{'width':'23%'}}/>
-          <th style={{'width':'10%'}}>簽收:</th>
-          <th style={{'width':'16%'}}/>
-        </tr>
-      )
-    }
-    else {
-      return(
-        <tr>
-          <th style={{'width':'23%'}}>{parseTime}</th>
-          <th style={{'width':'10%'}}>{unit}</th>
-          <th style={{'width':'16%'}}>{customer}</th>
-          <th style={{'width':'23%'}}/>
-          <th style={{'width':'10%'}}>簽收:</th>
-          <th style={{'width':'16%'}}/>
-        </tr>
-      )
-    }
-
+    return(
+      <tr>
+        <th style={{'width':'23%'}}>{parseTime}</th>
+        <th style={{'width':'10%'}}>{unit}</th>
+        <th style={{'width':'16%'}}>{customer}</th>
+        <th style={{'width':'23%'}}/>
+        <th style={{'width':'10%'}}>簽收:</th>
+        <th style={{'width':'16%'}}/>
+      </tr>
+    )
   },
 
   tableHead2() {
-    if(this.props.data[0].order_type == 'stationery') {
-      return(
-        <tr>
-          <th>品項</th>
-          <th>數量</th>
-          <th>備註(說明)</th>
-          <th>確認</th>
-          <th/>
-          <th/>
-        </tr>
-      )
-    }
-    else {
-      return(
-        <tr>
-          <th>品項</th>
-          <th>數量</th>
-          <th>確認</th>
-          <th>品項</th>
-          <th>數量</th>
-          <th>確認</th>
-        </tr>
-      )
-    }
-
+    return(
+      <tr>
+        <th>品項</th>
+        <th>數量</th>
+        <th>備註(說明)</th>
+        <th>品項</th>
+        <th>數量</th>
+        <th>備註(說明)</th>
+      </tr>
+    )
   },
 
   tableBody() {
-    if(this.props.data[0].order_type == 'stationery') {
-      return(
-        this.props.data.map((item, i)=>{
-          return <ItemRow key={i} data={item} type='stationery'/>
-        })
-      )
-    }
-    else {
-      var prev = null;
-      return(
-        this.props.data.map((item, i)=>{
-          if(i%2 == 0 && i != this.props.data.length-1) {
-            prev = item;
-            return 
-          }
-          else if(i%2==1)
-            return <ItemRow key={i} data={prev} data2={item} type='consumable'/>
-          else if(i == this.props.data.length-1)
-            return <ItemRow key={i} data={item} type='cousumable'/>
-        })
-      )
-    }
+    var prev = null;
+    return(
+      this.props.data.map((item, i)=>{
+        if(i%2 == 0 && i != this.props.data.length-1) {
+          prev = item;
+          return 
+        }
+        else if(i%2==1)
+          return <ItemRow key={i} data={prev} data2={item} />
+        else if(i == this.props.data.length-1)
+          return <ItemRow key={i} data={item} />
+      })
+    )
   },
 
   render() {
