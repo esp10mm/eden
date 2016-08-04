@@ -12,8 +12,6 @@ const ItemEdit = React.createClass({
 
         <AddItem func={this.props.func} manage={ this.props.manage } />
 
-        <DelItem func={this.props.func} manage={ this.props.manage } />
-
         <ImportExport func={this.props.func} manage={ this.props.manage } />
 
       </div>

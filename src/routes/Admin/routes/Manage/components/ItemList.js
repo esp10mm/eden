@@ -43,17 +43,26 @@ const ItemRow = React.createClass({
     })
   },
 
-  adminRender() {
+  adminRender(num) {
     if(Cookies.get('type') != 'admin') 
       return;
     else{
-      return(
-        <td>
-          <div className='ui item_order input' style={{width:'100px'}} >
-            <input type='text' value={this.state.order} onChange={this.orderChange} onBlur={this.submitChange}/>
-          </div>
-        </td>
-      )
+      if(num == 0){
+        return(
+          <td>
+            <div className='ui item_order input' style={{width:'100px'}} >
+              <input type='text' value={this.state.order} onChange={this.orderChange} onBlur={this.submitChange}/>
+            </div>
+          </td>
+        )
+      }
+      else if(num == 1){
+        return(
+          <td>
+            <i className='remove red icon' onClick={()=>{this.props.func.delItem({name:this.props.data.name})}}/>
+          </td>
+        )
+      }
     }
   },
 
@@ -63,7 +72,8 @@ const ItemRow = React.createClass({
         <td><a className='tdname' onClick={this.toPage}>{this.props.data.name}</a></td>
         <td>{this.props.data.amount}</td>
         <td>{this.props.data.donation}</td>
-        {this.adminRender()}
+        {this.adminRender(0)}
+        {this.adminRender(1)}
       </tr>
     )
   }
@@ -96,13 +106,20 @@ const ItemList = React.createClass({
     this.setState({list:list});
   },
 
-  adminRender(){
+  adminRender(num){
     if(Cookies.get('type') != 'admin') 
       return;
     else{
-      return(
-        <th>順序</th>
-      )
+      if(num == 0){
+        return(
+          <th>順序</th>
+        )
+      }
+      else if(num == 1){
+        return(
+          <th>刪除</th>
+        )
+      }
     }
   },
 
@@ -136,13 +153,14 @@ const ItemList = React.createClass({
               <th>項目名稱</th>
               <th>自購數量</th>
               <th>捐贈數量</th>
-              {this.adminRender()}
+              {this.adminRender(0)}
+              {this.adminRender(1)}
             </tr>
           </thead>
           <tbody className='itemList tbody'>
           {
             target.map((item, i)=>{
-              return <ItemRow data={item} key={item.id} toPage={this.toPage}/>
+              return <ItemRow data={item} key={item.id} toPage={this.toPage} func={this.props.func}/>
             })
           }
           </tbody>
