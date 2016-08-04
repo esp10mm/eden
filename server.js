@@ -98,7 +98,7 @@ app.post('/api/:name', function(req, res){
     'finishOrder',
     'finishSel',
     'setPrice',
-    'setOrder',
+    'setItem',
     'delSel',
     'userList',
     'addUser',
@@ -262,6 +262,17 @@ method.itemInfo = (obj, body, res)=>{
   var query = `SELECT * FROM warehouse WHERE name='${body.name}'`;
   obj = {
     type: 'ITEM_INFO_SUCCESSED',
+  }
+  pgquery(query, (result)=>{
+    obj.results = result.rows;
+    res.send(obj); 
+  })
+}
+
+method.setItem = (obj, body, res)=>{
+  var query = `UPDATE warehouse SET item_order=${body.state.order}, donation=${body.state.donation}, amount=${body.state.amount}, price=${body.state.price} WHERE id=${body.item};`
+  obj = {
+    type: 'SET_ITEM_SUCCESSED',
   }
   pgquery(query, (result)=>{
     obj.results = result.rows;
@@ -504,15 +515,6 @@ method.delSel =(obj, body, res)=>{
 
   pgquery(query, (result)=>{
     obj.type = 'ORDER_DELETE_SUCCESS';
-    res.send(obj);
-  })
-}
-
-method.setOrder =(obj, body, res)=>{
-  var query = `UPDATE warehouse set item_order = ${body.order} where id= ${body.item};`;
-
-  pgquery(query, (result)=>{
-    obj.type = 'SET_ORDER_SUCCESS';
     res.send(obj);
   })
 }

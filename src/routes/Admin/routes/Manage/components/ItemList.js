@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router'
 
 const ItemRow = React.createClass({
   getInitialState() {
-    return {order: this.props.data.item_order};
+    return {order: this.props.data.item_order, amount: this.props.data.amount, donation: this.props.data.donation, price: this.props.data.price};
   },
 
   toPage() {
@@ -13,28 +13,72 @@ const ItemRow = React.createClass({
 
   orderChange(event) {
     var newOrder = event.target.value; 
+    var state = this.state; 
 
     if(isNaN(parseInt(newOrder))){
       alert('請輸入數字!');
-      this.setState({order: this.props.data.item_order});
       return;
     }
+    else
+      state.order = newOrder;
 
-    this.setState({order: newOrder});
+    this.setState(state);
+  },
+
+  amountChange(event) {
+    var newOrder = event.target.value; 
+    var state = this.state; 
+
+    if(isNaN(parseInt(newOrder))){
+      alert('請輸入數字!');
+      return;
+    }
+    else
+      state.amount = newOrder;
+
+    this.setState(state);
+  },
+
+  donationChange(event) {
+    var newOrder = event.target.value; 
+    var state = this.state; 
+
+    if(isNaN(parseInt(newOrder))){
+      alert('請輸入數字!');
+      return;
+    }
+    else
+      state.donation = newOrder;
+
+    this.setState(state);
+  },
+
+  priceChange(event) {
+    var newOrder = event.target.value; 
+    var state = this.state; 
+
+    if(isNaN(parseInt(newOrder))){
+      alert('請輸入數字!');
+      return;
+    }
+    else
+      state.price = newOrder;
+
+    this.setState(state);
   },
 
   submitChange() {
-    var newOrder = this.state.order;
     var item = this.props.data.id;
+    console.log(this.state);
 
     $.ajax({
-      url: '/api/setOrder',
+      url: '/api/setItem',
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({
         token: Cookies.get('token'), 
         item: item,
-        order: newOrder,
+        state: this.state,
         uid: Cookies.get('uid')
       }),
     })
@@ -45,7 +89,21 @@ const ItemRow = React.createClass({
 
   adminRender(num) {
     if(Cookies.get('type') != 'admin'){
-      return;
+      if(num == 2){
+        return(
+          <td>{this.props.data.amount}</td>
+        )
+      }
+      else if(num == 3){
+        return(
+          <td>{this.props.data.donation}</td>
+        )
+      }
+      else if(num == 4){
+        return(
+          <td>{this.props.data.price}</td>
+        )
+      }
     }
     else{
       if(num == 0){
@@ -64,6 +122,33 @@ const ItemRow = React.createClass({
           </td>
         )
       }
+      else if(num == 2){
+        return(
+          <td>
+            <div className='ui item_amount input' style={{width:'100px'}} >
+              <input type='text' value={this.state.amount} onChange={this.amountChange} onBlur={this.submitChange}/>
+            </div>
+          </td>
+        )
+      }
+      else if(num == 3){
+        return(
+          <td>
+            <div className='ui item_donation input' style={{width:'100px'}} >
+              <input type='text' value={this.state.donation} onChange={this.donationChange} onBlur={this.submitChange}/>
+            </div>
+          </td>
+        )
+      }
+      else if(num == 4){
+        return(
+          <td>
+            <div className='ui item_donation input' style={{width:'100px'}} >
+              <input type='text' value={this.state.price} onChange={this.priceChange} onBlur={this.submitChange}/>
+            </div>
+          </td>
+        )
+      }
     }
   },
 
@@ -71,8 +156,9 @@ const ItemRow = React.createClass({
     return(
       <tr>
         <td><a className='tdname' onClick={this.toPage}>{this.props.data.name}</a></td>
-        <td>{this.props.data.amount}</td>
-        <td>{this.props.data.donation}</td>
+        {this.adminRender(2)}
+        {this.adminRender(3)}
+        {this.adminRender(4)}
         {this.adminRender(0)}
         {this.adminRender(1)}
       </tr>
@@ -154,6 +240,7 @@ const ItemList = React.createClass({
               <th>項目名稱</th>
               <th>自購數量</th>
               <th>捐贈數量</th>
+              <th>單價</th>
               {this.adminRender(0)}
               {this.adminRender(1)}
             </tr>

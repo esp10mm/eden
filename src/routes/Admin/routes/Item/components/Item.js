@@ -51,7 +51,6 @@ const Item = React.createClass({
   },
 
   editItemName(event){
-    console.log(event.target.value);
     $.ajax({
       url: '/api/editItemName',
       type: 'POST',
