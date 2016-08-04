@@ -4,7 +4,13 @@ import { browserHistory } from 'react-router'
 
 const ItemRow = React.createClass({
   getInitialState() {
-    return {order: this.props.data.item_order, amount: this.props.data.amount, donation: this.props.data.donation, price: this.props.data.price};
+    return {
+      order: this.props.data.item_order, 
+      amount: this.props.data.amount, 
+      donation: this.props.data.donation, 
+      price: this.props.data.price,
+      safety: this.props.data.safety,
+    };
   },
 
   toPage() {
@@ -67,6 +73,20 @@ const ItemRow = React.createClass({
     this.setState(state);
   },
 
+  safetyChange(event) {
+    var newOrder = event.target.value; 
+    var state = this.state; 
+
+    if(isNaN(parseInt(newOrder))){
+      alert('請輸入數字!');
+      return;
+    }
+    else
+      state.safety = newOrder;
+
+    this.setState(state);
+  },
+
   submitChange() {
     var item = this.props.data.id;
     console.log(this.state);
@@ -102,6 +122,11 @@ const ItemRow = React.createClass({
       else if(num == 4){
         return(
           <td>{this.props.data.price}</td>
+        )
+      }
+      else if(num == 5){
+        return(
+          <td>{this.props.data.safety}</td>
         )
       }
     }
@@ -143,8 +168,17 @@ const ItemRow = React.createClass({
       else if(num == 4){
         return(
           <td>
-            <div className='ui item_donation input' style={{width:'100px'}} >
+            <div className='ui item_price input' style={{width:'100px'}} >
               <input type='text' value={this.state.price} onChange={this.priceChange} onBlur={this.submitChange}/>
+            </div>
+          </td>
+        )
+      }
+      else if(num == 5){
+        return(
+          <td>
+            <div className='ui item_safety input' style={{width:'100px'}} >
+              <input type='text' value={this.state.safety} onChange={this.safetyChange} onBlur={this.submitChange}/>
             </div>
           </td>
         )
@@ -153,12 +187,16 @@ const ItemRow = React.createClass({
   },
 
   render() {
+    var status = '';
+    if((this.props.data.amount+this.props.data.donation) < this.props.data.safety)
+      status = 'negative';
     return(
-      <tr>
+      <tr className={status}>
         <td><a className='tdname' onClick={this.toPage}>{this.props.data.name}</a></td>
         {this.adminRender(2)}
         {this.adminRender(3)}
         {this.adminRender(4)}
+        {this.adminRender(5)}
         {this.adminRender(0)}
         {this.adminRender(1)}
       </tr>
@@ -241,6 +279,7 @@ const ItemList = React.createClass({
               <th>自購數量</th>
               <th>捐贈數量</th>
               <th>單價</th>
+              <th>安全量</th>
               {this.adminRender(0)}
               {this.adminRender(1)}
             </tr>

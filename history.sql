@@ -9,7 +9,8 @@
 /* alter table warehouse add item_type int default 0; */
 /* ALTER TABLE warehouse ADD item_order int NOT NULL DEFAULT (0); */
 /* Update warehouse SET item_order = id Where item_order = 0; */
-alter table users add name char(10); 
-update users set name='' where id=1;
-alter table users add unit int; 
-update users set unit=2 where id=1;
+/* alter table users add name char(10); */ 
+/* update users set name='' where id=1; */
+/* alter table users add unit int; */ 
+/* update users set unit=2 where id=1; */
+ALTER TABLE warehouse ADD safety INT default 100;

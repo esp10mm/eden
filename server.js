@@ -270,7 +270,7 @@ method.itemInfo = (obj, body, res)=>{
 }
 
 method.setItem = (obj, body, res)=>{
-  var query = `UPDATE warehouse SET item_order=${body.state.order}, donation=${body.state.donation}, amount=${body.state.amount}, price=${body.state.price} WHERE id=${body.item};`
+  var query = `UPDATE warehouse SET item_order=${body.state.order}, donation=${body.state.donation}, amount=${body.state.amount}, price=${body.state.price}, safety=${body.state.safety} WHERE id=${body.item};`
   obj = {
     type: 'SET_ITEM_SUCCESSED',
   }
