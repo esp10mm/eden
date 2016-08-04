@@ -3,16 +3,30 @@ import * as Cookies from 'js-cookie'
 
 const ItemRow = React.createClass({
   render() {
-    return(
-      <tr>
-        <td>{this.props.data.name}</td>
-        <td>{this.props.data.amount}</td>
-        <td>{this.props.data.msg}</td>
-        <td>{this.props.data2.name}</td>
-        <td>{this.props.data2.amount}</td>
-        <td>{this.props.data2.msg}</td>
-      </tr>
-    )
+    if(this.props.data2 !== undefined){
+      return(
+        <tr>
+          <td>{this.props.data.name}</td>
+          <td>{this.props.data.amount}</td>
+          <td>{this.props.data.msg}</td>
+          <td>{this.props.data2.name}</td>
+          <td>{this.props.data2.amount}</td>
+          <td>{this.props.data2.msg}</td>
+        </tr>
+      )
+    }
+    else{
+      return(
+        <tr>
+          <td>{this.props.data.name}</td>
+          <td>{this.props.data.amount}</td>
+          <td>{this.props.data.msg}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      )
+    }
   }
 })
 
@@ -65,17 +79,19 @@ const Table = React.createClass({
   },
 
   tableBody() {
-    var prev = null;
+    var bias = 0;
+    if(this.props.data.length%2 == 0)
+      bias = this.props.data.length/2;
+    else
+      bias = (this.props.data.length+1)/2;
     return(
       this.props.data.map((item, i)=>{
-        if(i%2 == 0 && i != this.props.data.length-1) {
-          prev = item;
-          return 
-        }
-        else if(i%2==1)
-          return <ItemRow key={i} data={prev} data2={item} />
-        else if(i == this.props.data.length-1)
+        if(i >= bias)
+          return
+        else if(this.props.data[i+bias] == undefined)
           return <ItemRow key={i} data={item} />
+        else
+          return <ItemRow key={i} data={item} data2={this.props.data[i+bias]} />
       })
     )
   },
