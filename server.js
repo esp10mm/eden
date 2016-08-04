@@ -107,6 +107,7 @@ app.post('/api/:name', function(req, res){
     'addUnit',
     'removeUnit',
     'editUnit',
+    'editItemName',
   ];
 
   var apiSuper = [
@@ -265,6 +266,15 @@ method.itemInfo = (obj, body, res)=>{
   pgquery(query, (result)=>{
     obj.results = result.rows;
     res.send(obj); 
+  })
+}
+
+method.editItemName = (obj, body, res)=>{
+  var query = `UPDATE warehouse SET name='${body.newName}' WHERE name='${body.oldName}';`
+
+  pgquery(query, (result)=>{
+    obj.type = 'EDIT_ITEMNAME_SUCCESSED',
+    res.send(obj);
   })
 }
 

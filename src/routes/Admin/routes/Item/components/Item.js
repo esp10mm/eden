@@ -5,6 +5,12 @@ import { browserHistory } from 'react-router'
 import * as Cookies from 'js-cookie'
 
 const Item = React.createClass({
+  getInitialState(){
+    return({
+      name: this.props.params.name,
+    })
+  },
+
   componentDidMount() {
     this.props.func.itemInfo({name:this.props.params.name});
   },
@@ -38,10 +44,28 @@ const Item = React.createClass({
       return(
         <div>
           <div style={style.title2}>項目進出:&nbsp;</div><br/>
-          <ImportExport manage={ this.props.manage } func={this.props.func} name={ this.props.params.name }/>
+          <ImportExport manage={ this.props.manage } func={this.props.func} name={ this.state.name }/>
         </div>
       )
     }
+  },
+
+  editItemName(event){
+    console.log(event.target.value);
+    $.ajax({
+      url: '/api/editItemName',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        token: Cookies.get('token'), 
+        oldName: this.state.name,
+        newName: event.target.value,
+      }),
+    })
+    .done((res)=>{
+      this.setState({name: event.target.value});
+      alert('變更項目名稱成功!');
+    })
   },
 
   render() {
@@ -81,7 +105,10 @@ const Item = React.createClass({
           <div style={style.mainSegment}>
             <div className='ui segment'>
 
-              <div style={style.title}>{ this.props.params.name }</div>
+              <div className='ui input' style={{width:'300px'}} >
+                <input type='text' defaultValue={this.state.name} onBlur={this.editItemName}/>
+              </div>
+
               <div className='ui divider'/>
 
               <div style={style.title2}>自購數量:&nbsp;</div>

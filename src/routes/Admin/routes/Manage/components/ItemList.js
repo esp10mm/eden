@@ -44,8 +44,9 @@ const ItemRow = React.createClass({
   },
 
   adminRender(num) {
-    if(Cookies.get('type') != 'admin') 
+    if(Cookies.get('type') != 'admin'){
       return;
+    }
     else{
       if(num == 0){
         return(
