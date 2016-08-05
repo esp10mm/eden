@@ -36,6 +36,8 @@ const ItemRow = React.createClass({
       var newOrder = target.item_order;
 
       target.order = oldOrder;
+      console.log(target);
+      console.log(this.state);
 
       $.ajax({
         url: '/api/setItem',
@@ -49,12 +51,25 @@ const ItemRow = React.createClass({
         }),
       })
       .done((res)=>{
+        state.order = newOrder;
+        this.setState(state);
+        this.submitChange();
       })
-      state.order = newOrder;
-      this.setState(state);
-      this.submitChange();
-
     }
+  },
+
+  orderValChange(event) {
+    var newOrder = event.target.value; 
+    var state = this.state; 
+
+    if(isNaN(parseInt(newOrder))){
+      alert('請輸入數字!');
+      return;
+    }
+    else
+      state.order = newOrder;
+
+    this.setState(state);
   },
 
   amountChange(event) {
@@ -162,7 +177,16 @@ const ItemRow = React.createClass({
       }
     }
     else{
-      if(num == 0){
+      if(num == -1){
+        return(
+          <td>
+            <div className='ui item_order input' style={{width:'100px'}} >
+              <input type='text' value={this.state.order} onChange={this.orderValChange} onBlur={this.submitChange}/>
+            </div>
+          </td>
+        )
+      }
+      else if(num == 0){
         return(
           <td>
             <i className='big caret up icon' onClick={()=>{this.orderChange(-1)}}/>
@@ -237,6 +261,7 @@ const ItemRow = React.createClass({
         {this.adminRender(4)}
         {this.adminRender(5)}
         {this.adminRender(0)}
+        {this.adminRender(-1)}
         {this.adminRender(1)}
       </tr>
     )
@@ -270,6 +295,11 @@ const ItemList = React.createClass({
       if(num == 0){
         return(
           <th>順序</th>
+        )
+      }
+      else if(num == -1){
+        return(
+          <th>順序(值)</th>
         )
       }
       else if(num == 1){
@@ -328,6 +358,7 @@ const ItemList = React.createClass({
               <th>單價</th>
               <th>安全量</th>
               {this.adminRender(0)}
+              {this.adminRender(-1)}
               {this.adminRender(1)}
             </tr>
           </thead>
