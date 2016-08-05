@@ -257,17 +257,10 @@ const ItemList = React.createClass({
     browserHistory.push(path);
   },
 
-  toggleList() {
+  switchList(listName) {
     this.props.func.itemList();
 
-    var list = this.state.list;
-
-    if(list == 'stationery')
-      list = 'consumable';
-    else
-      list = 'stationery';
-
-    this.setState({list:list});
+    this.setState({list:listName});
   },
 
   adminRender(num){
@@ -290,6 +283,7 @@ const ItemList = React.createClass({
   render() {
     var consumeableList = [];
     var stationeryList = [];
+    var rentList = [];
     var target = consumeableList;
     
     var items = this.props.manage.get('items');
@@ -298,22 +292,33 @@ const ItemList = React.createClass({
       for(var k in items) {
         if(items[k].item_type == 0)
           consumeableList.push(items[k]);
-        else 
+        else if(items[k].item_type == 1) 
           stationeryList.push(items[k]);
+        else 
+          rentList.push(items[k]);
       }
     }
 
     if(this.state.list == 'stationery')
       target = stationeryList;
+    else if(this.state.list == 'rent')
+      target = rentList;
 
     return(
       <div className='content'>
 
         <AddItem func={this.props.func} manage={ this.props.manage } />
 
-        <div className='ui button' onClick={this.toggleList}>
-          耗材/文具
+        <div className='ui button' onClick={()=>{this.switchList('consumeable')}}>
+          耗材
         </div>
+        <div className='ui button' onClick={()=>{this.switchList('stationery')}}>
+          文具
+        </div>
+        <div className='ui button' onClick={()=>{this.switchList('rent')}}>
+          借物 
+        </div>
+
         <table className='ui striped table'>
           <thead>
             <tr>
