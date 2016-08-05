@@ -28,18 +28,33 @@ const ItemRow = React.createClass({
     this.setState(state);
   },
 
-  orderChange(event) {
-    var newOrder = event.target.value; 
-    var state = this.state; 
+  orderChange(value) {
+    var target = this.props.items[this.props.index + value];
+    if(target !== undefined){
+      var state = this.state;
+      var oldOrder = state.order;
+      var newOrder = target.item_order;
 
-    if(isNaN(parseInt(newOrder))){
-      alert('請輸入數字!');
-      return;
-    }
-    else
+      target.order = oldOrder;
+
+      $.ajax({
+        url: '/api/setItem',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          token: Cookies.get('token'), 
+          item: target.id,
+          state: target,
+          uid: Cookies.get('uid')
+        }),
+      })
+      .done((res)=>{
+      })
       state.order = newOrder;
+      this.setState(state);
+      this.submitChange();
 
-    this.setState(state);
+    }
   },
 
   amountChange(event) {
@@ -114,6 +129,7 @@ const ItemRow = React.createClass({
     })
     .done((res)=>{
       // alert('變更順序成功!');
+      this.props.func.itemList();
     })
   },
 
@@ -149,9 +165,8 @@ const ItemRow = React.createClass({
       if(num == 0){
         return(
           <td>
-            <div className='ui item_order input' style={{width:'100px'}} >
-              <input type='text' value={this.state.order} onChange={this.orderChange} onBlur={this.submitChange}/>
-            </div>
+            <i className='big caret up icon' onClick={()=>{this.orderChange(-1)}}/>
+            <i className='big caret down icon' onClick={()=>{this.orderChange(1)}}/>
           </td>
         )
       }
@@ -314,7 +329,7 @@ const ItemList = React.createClass({
           <tbody className='itemList tbody'>
           {
             target.map((item, i)=>{
-              return <ItemRow data={item} key={item.id} toPage={this.toPage} func={this.props.func}/>
+              return <ItemRow data={item} key={item.id} items={target} index={i} toPage={this.toPage} func={this.props.func}/>
             })
           }
           </tbody>

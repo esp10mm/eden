@@ -159,7 +159,7 @@ method.checkToken = (obj, body, res)=>{
 method.addItem = (obj, body, res)=> {
   var query = '';
 
-  query = `INSERT INTO warehouse (name, amount, item_type) VALUES ('${body.name}', '0', '${body.type}');`
+  query = `INSERT INTO warehouse (name, amount, item_type, item_order) SELECT '${body.name}', '0', '${body.type}', MIN(item_order)-1 FROM warehouse;`
 
   pgquery(query, (result)=>{
     obj.type = 'ADDITEM_SUCCESSED';
