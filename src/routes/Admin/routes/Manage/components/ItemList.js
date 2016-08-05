@@ -1,6 +1,7 @@
 import React from 'react'
 import * as Cookies from 'js-cookie'
 import { browserHistory } from 'react-router'
+import AddItem from './AddItem'
 
 const ItemRow = React.createClass({
   getInitialState() {
@@ -292,6 +293,9 @@ const ItemList = React.createClass({
 
     return(
       <div className='content'>
+
+        <AddItem func={this.props.func} manage={ this.props.manage } />
+
         <div className='ui button' onClick={this.toggleList}>
           耗材/文具
         </div>
