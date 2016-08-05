@@ -10,11 +10,21 @@ const ItemRow = React.createClass({
       donation: this.props.data.donation, 
       price: this.props.data.price,
       safety: this.props.data.safety,
+      name: this.props.data.name,
     };
   },
 
   toPage() {
     this.props.toPage(`/admin/item/${this.props.data.name}`);
+  },
+
+  nameChange(event) {
+    var newOrder = event.target.value; 
+    var state = this.state; 
+
+    state.name = newOrder;
+
+    this.setState(state);
   },
 
   orderChange(event) {
@@ -89,7 +99,6 @@ const ItemRow = React.createClass({
 
   submitChange() {
     var item = this.props.data.id;
-    console.log(this.state);
 
     $.ajax({
       url: '/api/setItem',
@@ -127,6 +136,11 @@ const ItemRow = React.createClass({
       else if(num == 5){
         return(
           <td>{this.props.data.safety}</td>
+        )
+      }
+      else if(num == 6){
+        return(
+          <td>{this.props.data.name}</td>
         )
       }
     }
@@ -183,6 +197,15 @@ const ItemRow = React.createClass({
           </td>
         )
       }
+      else if(num == 6){
+        return(
+          <td>
+            <div className='ui item_name input' style={{width:'100px'}} >
+              <input type='text' value={this.state.name} onChange={this.nameChange} onBlur={this.submitChange}/>
+            </div>
+          </td>
+        )
+      }
     }
   },
 
@@ -192,7 +215,7 @@ const ItemRow = React.createClass({
       status = 'negative';
     return(
       <tr className={status}>
-        <td><a className='tdname' onClick={this.toPage}>{this.props.data.name}</a></td>
+        {this.adminRender(6)}
         {this.adminRender(2)}
         {this.adminRender(3)}
         {this.adminRender(4)}
