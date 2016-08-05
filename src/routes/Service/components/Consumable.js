@@ -28,9 +28,9 @@ const Consumable = React.createClass({
               items.push(''+res.items[k].item);
             }
 
-            $('.itemSelect.dropdown').dropdown('clear');
+            $('.c.itemSelect.dropdown').dropdown('clear');
             this.props.func.clearSelected();
-            $('.ItemSelect.dropdown').dropdown('set selected', items);
+            $('.c.itemSelect.dropdown').dropdown('set selected', items);
 
           })
 

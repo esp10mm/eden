@@ -157,9 +157,6 @@ const Tables = React.createClass({
   },
 
   render() {
-    var groupStyle = {
-      'pageBreakBefore': 'always',
-    }
     var previousUnit = null;
 
     return(
@@ -173,7 +170,7 @@ const Tables = React.createClass({
           else {
             previousUnit = order[0].unit;
             return(
-              <div style={groupStyle}>
+              <div>
                 <Table key={index} data={order} index={index}/> 
               </div>
             )
