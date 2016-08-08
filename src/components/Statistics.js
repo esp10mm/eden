@@ -70,7 +70,8 @@ const Statistic = React.createClass({
         <tbody>
         {
           newItems.map((item, index)=>{
-            console.log(item.price);
+            if(item.name === undefined)
+              return;
             return(
               <tr key={index}>
                 <td>
