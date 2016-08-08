@@ -181,7 +181,7 @@ const ItemRow = React.createClass({
         return(
           <td>
             <div className='ui item_order input' style={{width:'100px'}} >
-              <input type='text' value={this.state.order} onChange={this.orderValChange} onBlur={this.submitChange}/>
+              <input type='text' value={this.props.data.item_order} onChange={this.orderValChange} onBlur={this.submitChange}/>
             </div>
           </td>
         )
@@ -270,7 +270,15 @@ const ItemRow = React.createClass({
 
 const ItemList = React.createClass({
   getInitialState() {
-    return {list: 'consumable'};
+    return {list: 'consumable', items:[]};
+  },
+
+  componentWillReceiveProps(newProps){
+    if(newProps.manage.get('type')=='ITEM_LIST_SUCCESSED'){
+      var old = this.state;
+      old.items = newProps.manage.get('items');
+      this.setState(old);
+    }
   },
 
   toPage(path) {
@@ -316,7 +324,7 @@ const ItemList = React.createClass({
     var rentList = [];
     var target = consumeableList;
     
-    var items = this.props.manage.get('items');
+    var items = this.state.items;
 
     if(items[0] !== undefined) {
       for(var k in items) {
