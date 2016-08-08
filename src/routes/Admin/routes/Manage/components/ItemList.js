@@ -19,6 +19,14 @@ const ItemRow = React.createClass({
     this.props.toPage(`/admin/item/${this.props.data.name}`);
   },
 
+  componentWillReceiveProps(newProps){
+    if(newProps.data.item_order !== this.state.order){
+      var state = this.state;
+      state.order = newProps.data.item_order;
+      this.setState(state);
+    } 
+  },
+
   nameChange(event) {
     var newOrder = event.target.value; 
     var state = this.state; 
@@ -36,8 +44,7 @@ const ItemRow = React.createClass({
       var newOrder = target.item_order;
 
       target.order = oldOrder;
-      console.log(target);
-      console.log(this.state);
+      this.props.changeOrder(this.props.index+value, oldOrder);
 
       $.ajax({
         url: '/api/setItem',
@@ -62,12 +69,7 @@ const ItemRow = React.createClass({
     var newOrder = event.target.value; 
     var state = this.state; 
 
-    if(isNaN(parseInt(newOrder))){
-      alert('請輸入數字!');
-      return;
-    }
-    else
-      state.order = newOrder;
+    state.order = newOrder;
 
     this.setState(state);
   },
@@ -181,7 +183,7 @@ const ItemRow = React.createClass({
         return(
           <td>
             <div className='ui item_order input' style={{width:'100px'}} >
-              <input type='text' value={this.props.data.item_order} onChange={this.orderValChange} onBlur={this.submitChange}/>
+              <input type='text' value={this.state.order} onChange={this.orderValChange} onBlur={this.submitChange}/>
             </div>
           </td>
         )
@@ -318,6 +320,11 @@ const ItemList = React.createClass({
     }
   },
 
+  changeOrder(index, value){
+    var state = this.state;
+    state.items[index].item_order = value;
+  },
+
   render() {
     var consumeableList = [];
     var stationeryList = [];
@@ -373,7 +380,7 @@ const ItemList = React.createClass({
           <tbody className='itemList tbody'>
           {
             target.map((item, i)=>{
-              return <ItemRow data={item} key={item.id} items={target} index={i} toPage={this.toPage} func={this.props.func}/>
+              return <ItemRow data={item} key={item.id} items={target} index={i} toPage={this.toPage} func={this.props.func} changeOrder={this.changeOrder}/>
             })
           }
           </tbody>
