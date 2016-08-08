@@ -495,7 +495,6 @@ method.getRecent =(obj, body, res)=>{
 method.ureset =(obj, body, res)=>{
   var query = `update users set psw='${body.pwd}' where id=${body.uid};`;
 
-  console.log(query);
   pgquery(query, (result)=>{
     obj.type = 'USER_SET_SUCCESS';
     res.send(obj);

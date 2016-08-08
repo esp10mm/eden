@@ -2,34 +2,38 @@ import React from 'react'
 
 const AddItem = React.createClass({
   componentDidMount() {
-    $('.addItem input').focus(()=>{
+    console.log('mount');
+    $('.addItem.input input').focus(()=>{
       $('.addItem.icon').removeClass('green checkmark');
-      $('.addItem input').attr('placeholder', '');
+      $('.addItem.input input').attr('placeholder', '');
     })
     $('.addItem.dropdown').dropdown();
   },
 
   addItem() {
     var obj = {
-      name: $('.addItem input').val(),
+      name: $('.addItem.input input').val(),
       type: $('.addItem.dropdown').dropdown('get value'),
     } 
     $('.addItem.input').addClass('loading');
     this.props.func.addItem(obj);
+    console.log($('.addItem.dropdown').dropdown('get value'));
   },
 
   componentWillReceiveProps(newProps) {
-    $('.addItem input').val('');
+    $('.addItem.input input').val('');
     $('.addItem.input').removeClass('loading');
+    console.log($('.addItem.dropdown').dropdown('get value'));
 
     if(newProps.manage.get('type') === 'ADDITEM_SUCCESSED') {
-      $('.addItem input').attr('placeholder', '操作成功');
+      $('.addItem.input input').attr('placeholder', '操作成功');
       $('.addItem.icon').addClass('green checkmark');
       this.props.func.itemList();
     }
   },
 
   render() {
+    console.log('render');
     var style = {
       title: {
         fontSize: '20px',
@@ -54,7 +58,7 @@ const AddItem = React.createClass({
         </div>&nbsp;
 
         <div className='ui selection addItem dropdown'>
-          <input type='hidden' value='0'/>
+          <input type='hidden' defaultValue='0'/>
           <i className='dropdown icon'/>
           <div className='default text'>耗材</div>
           <div className='menu'>
