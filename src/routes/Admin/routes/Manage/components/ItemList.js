@@ -12,6 +12,7 @@ const ItemRow = React.createClass({
       price: this.props.data.price,
       safety: this.props.data.safety,
       name: this.props.data.name,
+      item_limit: this.props.data.item_limit,
     };
   },
 
@@ -130,6 +131,15 @@ const ItemRow = React.createClass({
     this.setState(state);
   },
 
+  limitChange(event) {
+    var newOrder = event.target.value; 
+    var state = this.state; 
+
+    state.item_limit = newOrder;
+
+    this.setState(state);
+  },
+
   submitChange() {
     var item = this.props.data.id;
 
@@ -177,12 +187,17 @@ const ItemRow = React.createClass({
           <td>{this.props.data.name}</td>
         )
       }
+      else if(num == 7){
+        return(
+          <td>{this.props.data.item_limit}</td>
+        )
+      }
     }
     else{
       if(num == -1){
         return(
           <td>
-            <div className='ui item_order input' style={{width:'100px'}} >
+            <div className='ui item_order input' style={{width:'80px'}} >
               <input type='text' value={this.state.order} onChange={this.orderValChange} onBlur={this.submitChange}/>
             </div>
           </td>
@@ -206,7 +221,7 @@ const ItemRow = React.createClass({
       else if(num == 2){
         return(
           <td>
-            <div className='ui item_amount input' style={{width:'100px'}} >
+            <div className='ui item_amount input' style={{width:'80px'}} >
               <input type='text' value={this.state.amount} onChange={this.amountChange} onBlur={this.submitChange}/>
             </div>
           </td>
@@ -215,7 +230,7 @@ const ItemRow = React.createClass({
       else if(num == 3){
         return(
           <td>
-            <div className='ui item_donation input' style={{width:'100px'}} >
+            <div className='ui item_donation input' style={{width:'80px'}} >
               <input type='text' value={this.state.donation} onChange={this.donationChange} onBlur={this.submitChange}/>
             </div>
           </td>
@@ -224,7 +239,7 @@ const ItemRow = React.createClass({
       else if(num == 4){
         return(
           <td>
-            <div className='ui item_price input' style={{width:'100px'}} >
+            <div className='ui item_price input' style={{width:'80px'}} >
               <input type='text' value={this.state.price} onChange={this.priceChange} onBlur={this.submitChange}/>
             </div>
           </td>
@@ -233,7 +248,7 @@ const ItemRow = React.createClass({
       else if(num == 5){
         return(
           <td>
-            <div className='ui item_safety input' style={{width:'100px'}} >
+            <div className='ui item_safety input' style={{width:'80px'}} >
               <input type='text' value={this.state.safety} onChange={this.safetyChange} onBlur={this.submitChange}/>
             </div>
           </td>
@@ -244,6 +259,15 @@ const ItemRow = React.createClass({
           <td>
             <div className='ui item_name input' style={{width:'100px'}} >
               <input type='text' value={this.state.name} onChange={this.nameChange} onBlur={this.submitChange}/>
+            </div>
+          </td>
+        )
+      }
+      else if(num == 7){
+        return(
+          <td>
+            <div className='ui item_limit input' style={{width:'80px'}} >
+              <input type='text' value={this.state.item_limit} onChange={this.limitChange} onBlur={this.submitChange}/>
             </div>
           </td>
         )
@@ -262,6 +286,7 @@ const ItemRow = React.createClass({
         {this.adminRender(3)}
         {this.adminRender(4)}
         {this.adminRender(5)}
+        {this.adminRender(7)}
         {this.adminRender(0)}
         {this.adminRender(-1)}
         {this.adminRender(1)}
@@ -372,6 +397,7 @@ const ItemList = React.createClass({
               <th>捐贈數量</th>
               <th>單價</th>
               <th>安全量</th>
+              <th>管制量</th>
               {this.adminRender(0)}
               {this.adminRender(-1)}
               {this.adminRender(1)}
