@@ -2,7 +2,6 @@ import React from 'react'
 
 const AddItem = React.createClass({
   componentDidMount() {
-    console.log('mount');
     $('.addItem.input input').focus(()=>{
       $('.addItem.icon').removeClass('green checkmark');
       $('.addItem.input input').attr('placeholder', '');
@@ -17,13 +16,11 @@ const AddItem = React.createClass({
     } 
     $('.addItem.input').addClass('loading');
     this.props.func.addItem(obj);
-    console.log($('.addItem.dropdown').dropdown('get value'));
   },
 
   componentWillReceiveProps(newProps) {
     $('.addItem.input input').val('');
     $('.addItem.input').removeClass('loading');
-    console.log($('.addItem.dropdown').dropdown('get value'));
 
     if(newProps.manage.get('type') === 'ADDITEM_SUCCESSED') {
       $('.addItem.input input').attr('placeholder', '操作成功');
@@ -33,7 +30,6 @@ const AddItem = React.createClass({
   },
 
   render() {
-    console.log('render');
     var style = {
       title: {
         fontSize: '20px',

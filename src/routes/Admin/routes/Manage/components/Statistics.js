@@ -14,6 +14,7 @@ const Statistics = React.createClass({
       this.setState({units:newProps.manage.get('unit')});
       $('.unit.dropdown').dropdown();
       $('.years.dropdown').dropdown();
+      $('.item_type.dropdown').dropdown();
     }
   },
 
@@ -41,6 +42,7 @@ const Statistics = React.createClass({
   queryStat() {
     var year = $('.years.dropdown').dropdown('get value');
     var unit = $('.unit.dropdown').dropdown('get value');
+    var item_type = $('.item_type.dropdown').dropdown('get value');
 
     if(year.length == 0) {
       alert('請選擇年分!');
@@ -52,7 +54,12 @@ const Statistics = React.createClass({
       return;
     }
 
-    var win = window.open(`/statistics/${year}_${unit}`, '_blank'); 
+    if(item_type.length == 0) {
+      alert('請選擇類別!');
+      return;
+    }
+
+    var win = window.open(`/statistics/${year}_${unit}_${item_type}`, '_blank'); 
     win.focus();
 
   },
@@ -88,6 +95,17 @@ const Statistics = React.createClass({
               return <div className='item' key={u.id} data-value={u.id}>{u.name}</div> 
             })
           } 
+          </div>
+        </div>&nbsp;
+
+        <div className="ui item_type selection dropdown">
+          <input type="hidden" name="item"/>
+          <i className="dropdown icon"/>
+          <div className="default text">選擇類別</div>
+          <div className="menu">
+            <div className='item' key={0} data-value='0'>耗材</div>
+            <div className='item' key={1} data-value='1'>文具</div>
+            <div className='item' key={2} data-value='2'>借物</div>
           </div>
         </div>&nbsp;
 

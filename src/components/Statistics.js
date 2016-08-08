@@ -121,6 +121,7 @@ const Statistics = React.createClass({
 
     var year = this.props.params.year.split('_')[0];
     var unit = this.props.params.year.split('_')[1];
+    var item_type = this.props.params.year.split('_')[2];
 
     $.ajax({
       url: '/api/statistics',
@@ -130,6 +131,7 @@ const Statistics = React.createClass({
         token: Cookies.get('token'), 
         year:year, 
         unit:unit, 
+        item_type:item_type, 
         uid: Cookies.get('uid')
       }),
     })

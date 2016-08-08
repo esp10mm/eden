@@ -458,7 +458,7 @@ method.statistics = (obj, body, res)=>{
   if(body.unit == 'all' || body.unit == 'sum')
     unit = ';'
 
-  var query = `select a.id, a.unit, b.item, b.export, b.export_dona, to_char(a.order_time, 'MM') as month, c.id from orders a, orders_item b, unit c where to_char(a.order_time, 'YYYY')='${body.year}' and a.id=b.id and a.unit=c.id ${unit}`;
+  var query = `select a.id, a.unit, b.item, b.export, b.export_dona, to_char(a.order_time, 'MM') as month, c.id from orders a, orders_item b, unit c, warehouse d where to_char(a.order_time, 'YYYY')='${body.year}' and a.id=b.id and a.unit=c.id  ${unit}`;
 
   pgquery(query, (result)=>{
     obj.orders_item = result.rows;  
@@ -466,7 +466,7 @@ method.statistics = (obj, body, res)=>{
 
     pgquery(query, (result)=>{
       obj.unit = result.rows;
-      var query = `select d.id, d.name, d.price from warehouse d;`
+      var query = `select d.id, d.name, d.price from warehouse d WHERE d.item_type=${body.item_type} ;`
 
       pgquery(query, (result)=>{
         obj.warehouse = result.rows;
