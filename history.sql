@@ -13,5 +13,5 @@
 /* update users set name='' where id=1; */
 /* alter table users add unit int; */ 
 /* update users set unit=2 where id=1; */
-/* ALTER TABLE warehouse ADD safety INT default 100; */
-ALTER TABLE warehouse ADD limit INT default 100;
+/* ALTER TABLE warehouse ADD safety INT defaul11t 100; */
+ALTER TABLE warehouse ADD item_limit INT default 100;
