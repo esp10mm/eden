@@ -4,6 +4,7 @@ import { connect  } from 'react-redux'
 import { Link, IndexLink } from 'react-router'
 import { browserHistory } from 'react-router'
 
+import * as Cookies from 'js-cookie'
 import * as Actions from '../actions/index'
 import LoadingPage from './LoadingPage'
 
@@ -17,7 +18,39 @@ function mapDispatchToProps(dispatch) {
 
 
 const App = React.createClass({
+  logout() {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i];
+      var eqPos = cookie.indexOf("=");
+      var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    } 
+    this.props.checkToken();
+  },
+
   componentDidMount() {
+    var timer1, timer2;
+    document.onkeypress=resetTimer;
+    document.onmousemove=resetTimer;
+    var logout = this.logout;
+    function resetTimer()
+    {
+       clearTimeout(timer1);
+       clearTimeout(timer2);
+            // waiting time in minutes
+        var wait=10;
+
+       // alert user one minute before
+        // timer1=setTimeout(alertUser, 5000);
+
+        // logout user
+        timer2=setTimeout(logout, 60000*30);
+    }
+    function alertUser(){
+      alert('系統將於一分鐘後自動登出!');
+    }
   },
 
   componentWillMount(){
