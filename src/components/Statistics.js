@@ -136,7 +136,6 @@ const Statistics = React.createClass({
       }),
     })
     .done((res)=>{
-      console.log(res);
       var items = res.orders_item;
       var obj = [];
 
@@ -172,7 +171,7 @@ const Statistics = React.createClass({
 
         for(var j in obj) {
           if(obj[j].id == items[i].unit) {
-
+            console.log(items[i]);
             if(obj[j]['items'][items[i].item]===undefined)
               obj[j]['items'][items[i].item] = {};
 
@@ -185,6 +184,7 @@ const Statistics = React.createClass({
         }
       }
 
+      console.log(obj);
       this.setState({statistics:obj});
       this.setState({list:res.warehouse});
     })

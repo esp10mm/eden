@@ -459,7 +459,7 @@ method.statistics = (obj, body, res)=>{
   if(body.unit == 'all' || body.unit == 'sum')
     unit = ';'
 
-  var query = `select a.id, a.unit, b.item, b.export, b.export_dona, to_char(a.order_time, 'MM') as month, c.id from orders a, orders_item b, unit c, warehouse d where to_char(a.order_time, 'YYYY')='${body.year}' and a.id=b.id and a.unit=c.id  ${unit}`;
+  var query = `select a.id, a.unit, b.item, b.export, b.export_dona, to_char(a.order_time, 'MM') as month from orders a, orders_item b where to_char(a.order_time, 'YYYY')='${body.year}' and a.id=b.id ${unit}`;
 
   pgquery(query, (result)=>{
     obj.orders_item = result.rows;  
