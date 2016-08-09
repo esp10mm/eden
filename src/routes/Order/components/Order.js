@@ -193,6 +193,10 @@ const Order = React.createClass({
       type = '活動'; 
       typeNum = 3;
     }
+    else if(type == 'repair'){
+      type = '維修'; 
+      typeNum = 4;
+    }
 
     if(status == 'PENDING')
       status = '未完成';

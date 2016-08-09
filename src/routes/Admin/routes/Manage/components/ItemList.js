@@ -355,6 +355,7 @@ const ItemList = React.createClass({
     var stationeryList = [];
     var activityList = [];
     var rentList = [];
+    var repairList = [];
 
     var target = consumeableList;
     
@@ -370,6 +371,8 @@ const ItemList = React.createClass({
           rentList.push(items[k]);
         else if(items[k].item_type == 3) 
           activityList.push(items[k]);
+        else if(items[k].item_type == 4) 
+          repairList.push(items[k]);
       }
     }
 
@@ -379,6 +382,8 @@ const ItemList = React.createClass({
       target = rentList;
     else if(this.state.list == 'activity')
       target = activityList;
+    else if(this.state.list == 'repair')
+      target = repairList;
 
     return(
       <div className='content'>
@@ -396,6 +401,9 @@ const ItemList = React.createClass({
         </div>
         <div className='ui button' onClick={()=>{this.switchList('activity')}}>
           活動 
+        </div>
+        <div className='ui button' onClick={()=>{this.switchList('repair')}}>
+          維修 
         </div>
 
         <table className='ui striped table'>
