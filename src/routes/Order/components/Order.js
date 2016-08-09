@@ -185,9 +185,13 @@ const Order = React.createClass({
       type = '耗材'; 
       typeNum = 0;
     }
-    if(type == 'rent'){
+    else if(type == 'rent'){
       type = '借物'; 
       typeNum = 2;
+    }
+    else if(type == 'activity'){
+      type = '活動'; 
+      typeNum = 3;
     }
 
     if(status == 'PENDING')

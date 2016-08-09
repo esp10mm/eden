@@ -4,6 +4,7 @@ import Stationery from './Stationery'
 import Setting from './Setting'
 import Orders from './Orders'
 import Rent from './Rent'
+import Activity from './Activity'
 import { browserHistory } from 'react-router'
 import * as Cookies from 'js-cookie'
 
@@ -82,6 +83,14 @@ const Service = React.createClass({
               </div>
               <div className='content'>
                 <Rent func={this.props.func} manage={this.props.manage} service={ this.props.service} auth={this.props.auth}/>
+              </div>
+
+              <div className="title" onClick={()=>{this.accorClick(5)}}>
+                <i className="dropdown icon"></i>
+                活動物品申請  
+              </div>
+              <div className='content'>
+                <Activity func={this.props.func} manage={this.props.manage} service={ this.props.service} auth={this.props.auth}/>
               </div>
 
               <div className="title" onClick={()=>{this.accorClick(3)}}>

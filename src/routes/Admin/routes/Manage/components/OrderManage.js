@@ -37,6 +37,9 @@ const OrderRow = React.createClass({
     else if(this.props.data.order_type.trim() == 'rent'){
       type = '借物'; 
     }
+    else if(this.props.data.order_type.trim() == 'activity'){
+      type = '活動'; 
+    }
 
     var status = '';
     var statusStyle = {};
