@@ -46,10 +46,7 @@ const App = React.createClass({
         // timer1=setTimeout(alertUser, 5000);
 
         // logout user
-        timer2=setTimeout(logout, 60000*30);
-    }
-    function alertUser(){
-      alert('系統將於一分鐘後自動登出!');
+        timer2=setTimeout(logout, 60000*10);
     }
   },
 

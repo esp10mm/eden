@@ -55,6 +55,18 @@ const Order = React.createClass({
       alert('出貨中之訂單無法修改!');
       return;
     }
+
+    var itemList = this.props.manage.get('items');
+    for(var k in this.state.items) {
+      var index = itemList.findIndex((c)=>{
+        return c.id == this.state.items[k].id;
+      })
+      if(parseInt(this.state.items[k].desired) > itemList[index].item_limit){
+        alert(`${this.state.items[k].name}超出限額，請重新填寫!`);
+        return;
+      }
+    }
+
     this.props.func.updateOrder(this.state.items, this.props.params.id);
   },
 

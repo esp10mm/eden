@@ -43,9 +43,21 @@ const Stationery = React.createClass({
       alert('請填寫申請人!');
       return;
     }
+
+    var itemList = this.props.manage.get('items');
     for(var k in items) {
       var SelectedItems = this.props.service.get('SelectedSAmount').toObject(); 
-      console.log(SelectedItems);
+      var index = itemList.findIndex((c)=>{
+        return c.id == items[k];
+      })
+      if(SelectedItems[items[k]] > itemList[index].item_limit){
+        alert(`${itemList[index].name}超出限額，請重新填寫!`);
+        return;
+      }
+    }
+
+    for(var k in items) {
+      var SelectedItems = this.props.service.get('SelectedSAmount').toObject(); 
       if(SelectedItems[items[k]] === undefined)
         order[items[k]] = 1;
       else

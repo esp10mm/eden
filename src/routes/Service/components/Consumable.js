@@ -72,8 +72,16 @@ const Consumable = React.createClass({
       }
     }
 
+    var itemList = this.props.manage.get('items');
     for(var k in items) {
       var SelectedItems = this.props.service.get('SelectedAmount').toObject(); 
+      var index = itemList.findIndex((c)=>{
+        return c.id == items[k];
+      })
+      if(SelectedItems[items[k]] > itemList[index].item_limit){
+        alert(`${itemList[index].name}超出限額，請重新填寫!`);
+        return;
+      }
       obj[items[k]] = SelectedItems[items[k]];
     }
 
