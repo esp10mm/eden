@@ -28,7 +28,7 @@ const ItemRow = React.createClass({
   },
 
   noteTd() {
-    if(this.props.type == '文具' || this.props.type=='借物') {
+    if(this.props.type == '文具' || this.props.type=='借物' || this.props.type=='活動') {
       return(
         <td>
           <div className='ui mini input'>
@@ -105,7 +105,7 @@ const ItemList = React.createClass({
         </tr>
       )
     }
-    else if(this.props.type == '借物'){
+    else {
       return(
         <tr>
           <th>項目名稱</th>
