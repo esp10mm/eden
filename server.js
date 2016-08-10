@@ -84,6 +84,7 @@ app.post('/api/:name', function(req, res){
     'consumeableOrder',
     'updateOrder',
     'getRecent',
+    'finishOrder',
   ]
 
   var apiUser = [
@@ -95,7 +96,6 @@ app.post('/api/:name', function(req, res){
     'addItem', 
     'delItem', 
     'inout', 
-    'finishOrder',
     'finishSel',
     'setPrice',
     'setItem',

@@ -113,6 +113,19 @@ const Order = React.createClass({
         <div className={finishBTNClass} onClick={ ()=>this.finishOrder(status) }>{finishBTNText}</div>
       )
     }  
+    else{
+      let status = this.state.order.status;
+      let finishBTNText = '簽收訂單';
+      let finishBTNClass = 'ui button green';
+      if(status !== 'FINISH'){
+        return(
+          <div className={finishBTNClass} onClick={ ()=>this.finishOrder(status) }>{finishBTNText}</div>
+        )
+      }
+      else
+        return
+
+    }
   },
 
   itemAdd() {
