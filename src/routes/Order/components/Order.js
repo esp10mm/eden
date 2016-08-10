@@ -101,6 +101,12 @@ const Order = React.createClass({
   },
 
   finishBtn() {
+    if(this.state.order.order_type !== undefined){
+      var type = this.state.order.order_type.trim();
+      if(type == 'rent')
+        return
+    }
+
     if(Cookies.get('type') == 'admin') {
       let status = this.state.order.status;
       let finishBTNClass = 'ui button green';
