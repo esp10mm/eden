@@ -59,7 +59,7 @@ const Order = React.createClass({
     var itemList = this.props.manage.get('items');
     for(var k in this.state.items) {
       var index = itemList.findIndex((c)=>{
-        return c.id == this.state.items[k].id;
+        return c.id == this.state.items[k].item;
       })
       if(parseInt(this.state.items[k].desired) > itemList[index].item_limit){
         alert(`${this.state.items[k].name}超出限額，請重新填寫!`);
