@@ -183,8 +183,6 @@ const Statistics = React.createClass({
           }
         }
       }
-
-      console.log(obj);
       this.setState({statistics:obj});
       this.setState({list:res.warehouse});
     })
