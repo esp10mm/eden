@@ -59,6 +59,9 @@ const OrderRow = React.createClass({
     else if(order_type == 'repair'){
       order_type = '維修'; 
     }
+    else if(order_type == 'receive'){
+      order_type = '領物'; 
+    }
 
     return(
       <tr>

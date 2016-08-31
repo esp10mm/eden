@@ -63,6 +63,7 @@ const AddItem = React.createClass({
             <div className='item' data-value='2'>借物</div>
             <div className='item' data-value='3'>活動</div>
             <div className='item' data-value='4'>維修</div>
+            <div className='item' data-value='5'>領物</div>
           </div>
         </div>&nbsp;
 

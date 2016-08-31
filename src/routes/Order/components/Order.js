@@ -216,6 +216,10 @@ const Order = React.createClass({
       type = '維修'; 
       typeNum = 4;
     }
+    else if(type == 'receive'){
+      type = '領物'; 
+      typeNum = 5;
+    }
 
     if(status == 'PENDING')
       status = '未完成';
