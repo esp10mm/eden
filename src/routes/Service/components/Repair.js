@@ -63,6 +63,14 @@ const Repair = React.createClass({
     var obj = {};
 
     var orders = this.props.manage.get('orders');
+    for(var k in orders){
+      if(orders[k].unit.trim() == this.props.auth.user.unitName.trim()){
+        if(orders[k].order_type.trim() == 'repair' && orders[k].status.trim() == 'PENDING'){
+          alert(`${this.props.auth.user.unitName.trim()}有未出貨的維修單，請利用修改訂單的功能集中填寫!`);
+          return;
+        }
+      }
+    }
 
     for(var k in buffer) {
       if(buffer[k].data != undefined)

@@ -43,6 +43,9 @@ const OrderRow = React.createClass({
     else if(this.props.data.order_type.trim() == 'repair'){
       type = '維修'; 
     }
+    else if(this.props.data.order_type.trim() == 'receive'){
+      type = '領物'; 
+    }
 
     var status = '';
     var statusStyle = {};
