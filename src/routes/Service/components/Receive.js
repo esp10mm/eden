@@ -94,7 +94,7 @@ const Receive = React.createClass({
       var key = this.state.key;
 
       this.setState({stationery:stationery, buffer:[{key:key+1}], key:key+1});
-      this.props.func.orderList(0, 1);
+      this.props.func.orderList(0, 1, this.props.auth.user.unit);
     })
 
   },

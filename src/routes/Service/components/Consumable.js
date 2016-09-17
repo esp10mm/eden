@@ -42,7 +42,7 @@ const Consumable = React.createClass({
       $('.c.customer.input input').val('');
       this.props.func.clearSelected();
       alert('耗材申請成功!');
-      this.props.func.orderList(0, 1);
+      this.props.func.orderList(0, 1, this.props.auth.user.unit);
     }
   },
 

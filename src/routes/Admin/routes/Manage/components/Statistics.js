@@ -108,6 +108,7 @@ const Statistics = React.createClass({
             <div className='item' key={2} data-value='2'>借物</div>
             <div className='item' key={3} data-value='3'>活動</div>
             <div className='item' key={4} data-value='4'>維修</div>
+            <div className='item' key={5} data-value='5'>領物</div>
           </div>
         </div>&nbsp;
 

@@ -14,7 +14,7 @@ const Stationery = React.createClass({
       $('.scustomer.input input').val('');
       this.props.func.clearSelected();
       alert('文具申請成功!');
-      this.props.func.orderList(0, 1);
+      this.props.func.orderList(0, 1, this.props.auth.user.unit);
     }
   },
 
