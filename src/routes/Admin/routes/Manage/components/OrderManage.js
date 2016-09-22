@@ -24,6 +24,11 @@ const OrderRow = React.createClass({
     return date+' '+this.convertTimezone(time);
   },
 
+  checkChange() {
+    console.log('change');
+    this.props.updateSelectedClick(this.props.data.id);
+  },
+
   render() {
     var pareseTime = this.pareseTime;
     var type = ''; 
@@ -72,7 +77,7 @@ const OrderRow = React.createClass({
         <td><span style={statusStyle}>{status}</span></td>
         <td>
           <div className='ui order checkbox'>
-            <input type='checkbox' />
+            <input type='checkbox' defaultChecked={this.props.checked} onChange={this.checkChange}/>
             <label />
           </div>
         </td>
@@ -82,6 +87,50 @@ const OrderRow = React.createClass({
 })
 
 const OrderManage = React.createClass({
+  getInitialState() {
+    return {selected: {}};
+  },
+
+  updateSelectedClick(id) {
+    var selected = this.state.selected;
+    if(selected[id] == undefined) {
+      selected[id] = true;
+    }
+    else {
+      selected[id] = !selected[id];
+    }
+    this.setState({selected:selected});
+  },
+
+  updateSelected() {
+    var checked = $('.order.checkbox').checkbox('is checked');
+    var orders = this.props.manage.get('orders');
+    var selected = this.state.selected;
+
+    for(var k in orders) {
+      if(checked[k]) {
+        selected[orders[k].id] = true;
+      }
+      else {
+        selected[orders[k].id] = false;
+      }
+    }
+
+    this.setState({selected:selected});
+
+  },
+
+  getSelectedIds() {
+    var ids = [];
+    var selected = this.state.selected;
+    for(var k in selected) {
+      if(selected[k]) {
+        ids.push(k);
+      }
+    }
+    return ids;
+  },
+
   componentDidMount() {
     var initPage = 0;
     if(Cookies.get('aop') !== undefined)
@@ -102,8 +151,13 @@ const OrderManage = React.createClass({
         this.props.func.orderList(page-1);
     })
     $('.selectAll.checkbox').checkbox().first().checkbox({
-      onChange: ()=>{
-        $('.order.checkbox').checkbox('toggle');
+      onChecked: ()=>{
+        $('.order.checkbox').checkbox('check');
+        this.updateSelected();
+      }, 
+      onUnchecked: ()=>{
+        $('.order.checkbox').checkbox('uncheck');
+        this.updateSelected();
       } 
     })
 
@@ -132,14 +186,12 @@ const OrderManage = React.createClass({
   },
 
   partTable() {
-    var checked = $('.order.checkbox').checkbox('is checked');
-    var orders = this.props.manage.get('orders');
+    var selected = this.getSelectedIds();
 
     var gen = '_';
 
-    for(var k in checked) {
-      if(checked[k])
-        gen += orders[k].id + '_';
+    for(var k in selected) {
+      gen += selected[k] + '_';
     }
 
     var win = window.open(`/table/${gen}`, '_blank'); 
@@ -150,29 +202,13 @@ const OrderManage = React.createClass({
   },
 
   finishSel() {
-    var checked = $('.order.checkbox').checkbox('is checked');
-    var orders = this.props.manage.get('orders');
+    var gen = this.getSelectedIds();
 
-    var gen = [];
-
-    for(var k in checked) {
-      if(checked[k])
-        gen.push(orders[k].id);
-    }
-    
     this.props.func.finishSel(gen);
   },
 
   delSel() {
-    var checked = $('.order.checkbox').checkbox('is checked');
-    var orders = this.props.manage.get('orders');
-
-    var gen = [];
-
-    for(var k in checked) {
-      if(checked[k])
-        gen.push(orders[k].id);
-    }
+    var gen = this.getSelectedIds();
 
     $.ajax({
       url: '/api/delSel',
@@ -238,6 +274,9 @@ const OrderManage = React.createClass({
         marginTop: '5px',
       }
     }
+    var selected = this.state.selected;
+    var updateSelectedClick = this.updateSelectedClick;
+
     return(
       <div className='content'>
         <div className='ui button' style={style.button} onClick={()=>this.nextPage(-1)}>前一頁</div>
@@ -272,7 +311,7 @@ const OrderManage = React.createClass({
           <tbody>
           {
             this.props.manage.get('orders').map(function(order){
-              return <OrderRow key={order.id} data={order}/>
+              return <OrderRow key={order.id} data={order} checked={selected[order.id]} updateSelectedClick={updateSelectedClick}/>
             })
           }
           </tbody>
