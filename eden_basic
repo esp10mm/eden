@@ -88,7 +88,8 @@ CREATE TABLE orders (
     order_time timestamp without time zone NOT NULL,
     status character varying(50) NOT NULL,
     unit integer NOT NULL,
-    customer character varying(50)
+    customer character varying(50),
+    order_type character(10) DEFAULT 'consumable'::bpchar
 );
 
 
@@ -124,7 +125,8 @@ CREATE TABLE orders_item (
     item integer NOT NULL,
     amount integer NOT NULL,
     export integer DEFAULT 0 NOT NULL,
-    export_dona integer DEFAULT 0 NOT NULL
+    export_dona integer DEFAULT 0 NOT NULL,
+    msg character(50) DEFAULT ''::bpchar
 );
 
 
@@ -171,7 +173,9 @@ CREATE TABLE users (
     username character(50) NOT NULL,
     psw character(50) NOT NULL,
     user_type character(20) NOT NULL,
-    id integer NOT NULL
+    id integer NOT NULL,
+    name character(10),
+    unit integer
 );
 
 
@@ -207,7 +211,11 @@ CREATE TABLE warehouse (
     name character varying(50) NOT NULL,
     amount smallint NOT NULL,
     donation integer DEFAULT 0,
-    price integer DEFAULT 0 NOT NULL
+    price integer DEFAULT 0 NOT NULL,
+    item_type integer DEFAULT 0,
+    item_order integer DEFAULT 0 NOT NULL,
+    safety integer DEFAULT 100,
+    item_limit integer DEFAULT 100
 );
 
 
@@ -266,7 +274,17 @@ ALTER TABLE ONLY warehouse ALTER COLUMN id SET DEFAULT nextval('warehouse_id_seq
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: eden
 --
 
-COPY orders (id, order_time, status, unit, customer) FROM stdin;
+COPY orders (id, order_time, status, unit, customer, order_type) FROM stdin;
+170	2016-08-10 09:32:23.874363	FINISH	2	aaaa	rent      
+166	2016-08-09 15:42:30.812454	FINISH	2	gaga	repair    
+164	2016-08-09 14:48:29.452003	FINISH	2	acc	activity  
+162	2016-08-09 11:33:34.217637	FINISH	2	aaaa	stationery
+171	2016-08-16 23:20:34.686658	PENDING	2	fdasf	consumable
+173	2016-09-01 00:14:07.503491	PENDING	2	55534	receive   
+172	2016-09-01 00:09:16.246806	FINISH	2	qqq	receive   
+174	2016-09-13 23:22:47.974802	FINISH	2	fadsdfsa	rent      
+175	2016-09-17 21:47:40.958867	PENDING	3	fasd	consumable
+176	2016-09-17 21:56:37.077336	PENDING	3	fdas	stationery
 \.
 
 
@@ -274,14 +292,29 @@ COPY orders (id, order_time, status, unit, customer) FROM stdin;
 -- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: eden
 --
 
-SELECT pg_catalog.setval('orders_id_seq', 81, true);
+SELECT pg_catalog.setval('orders_id_seq', 176, true);
 
 
 --
 -- Data for Name: orders_item; Type: TABLE DATA; Schema: public; Owner: eden
 --
 
-COPY orders_item (id, item, amount, export, export_dona) FROM stdin;
+COPY orders_item (id, item, amount, export, export_dona, msg) FROM stdin;
+162	146	50	50	0	                                                  
+164	181	6	6	0	3334                                              
+166	182	5	5	0	2fdsa                                             
+170	156	4	4	0	3                                                 
+170	156	15	15	0	                                                  
+171	169	1	1	0	                                                  
+171	155	1	1	0	                                                  
+171	155	5	5	0	                                                  
+171	177	1	1	0	                                                  
+173	189	88	88	0	                                                  
+174	188	5	5	0	fdsafds                                           
+175	158	1	1	0	                                                  
+175	172	1	1	0	                                                  
+176	166	1	1	0	                                                  
+176	178	1	1	0	                                                  
 \.
 
 
@@ -299,6 +332,8 @@ COPY unit (name, id) FROM stdin;
 4樓                                                	8
 5樓                                                	9
 區長室                                               	10
+新組別555                                            	12
+新組別                                               	13
 \.
 
 
@@ -306,15 +341,20 @@ COPY unit (name, id) FROM stdin;
 -- Name: unit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: eden
 --
 
-SELECT pg_catalog.setval('unit_id_seq', 10, true);
+SELECT pg_catalog.setval('unit_id_seq', 13, true);
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: eden
 --
 
-COPY users (username, psw, user_type, id) FROM stdin;
-admin                                             	1234                                              	admin               	1
+COPY users (username, psw, user_type, id, name, unit) FROM stdin;
+test                                              	1234                                              	user                	3	fuckme    	2
+new_3451                                          	0000                                              	user                	7	新用戶       	2
+admin                                             	555                                               	admin               	1	          	3
+new_3156                                          	0000                                              	user                	10	新用戶       	2
+new_3616                                          	0000                                              	user                	9	新用戶       	2
+new_3816                                          	0000                                              	user                	8	新用戶       	2
 \.
 
 
@@ -322,93 +362,127 @@ admin                                             	1234                         
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: eden
 --
 
-SELECT pg_catalog.setval('users_id_seq', 1, true);
+SELECT pg_catalog.setval('users_id_seq', 10, true);
 
 
 --
 -- Data for Name: warehouse; Type: TABLE DATA; Schema: public; Owner: eden
 --
 
-COPY warehouse (id, name, amount, donation, price) FROM stdin;
-82	脫酯棉球	-50	0	0
-67	3x3紗布	-42	12	0
-80	食鹽水0.9%	-71	0	0
-66	2x2紗布	-58	0	0
-89	優碘	-51	0	0
-76	棉花棒	-51	0	0
-78	檢診手套M	-51	0	0
-79	檢診手套L	-51	0	0
-90	酒精75%	-51	0	0
-77	手扒雞手套	-51	0	0
-81	外科口罩	-51	0	0
-83	酒精棉片	-51	0	0
-84	沙威隆	-51	0	0
-85	餵食器	-51	0	0
-86	曼秀雷敦	-51	0	0
-87	凡士林	-51	0	0
-88	硫磺精	-51	0	0
-92	刮鬍刀	-51	0	0
-93	抽取式衛生紙	-51	0	0
-94	濕紙巾	-51	0	0
-95	餐巾紙	-51	0	0
-96	廚房紙巾	-51	0	0
-98	通樂	-51	0	0
-99	玻璃清潔劑	-51	0	0
-100	浴廁清潔劑	-51	0	0
-101	地板清潔劑	-51	0	0
-102	除油劑	-51	0	0
-103	洗碗精	-51	0	0
-104	洗寶	-51	0	0
-105	漂白水	-51	0	0
-106	50斤垃圾袋	-51	0	0
-107	垃圾袋大	-51	0	0
-108	垃圾袋中	-51	0	0
-109	垃圾袋小	-51	0	0
-110	洗髮精	-51	0	0
-68	4x4紗布	-43	0	0
-71	口腔棉棒	-42	0	0
-72	沖洗棉棒	-51	0	0
-75	尿袋	-51	0	0
-91	OK繃	-51	0	0
-111	沐浴乳	-51	0	0
-112	香皂	-51	0	0
-113	紙杯	-51	0	0
-114	衛生棉	-51	0	0
-115	牙膏	-51	0	0
-70	紙膠布	-49	0	0
-74	尿袋束帶	-49	0	0
-69	Y紗布	-47	0	0
-73	甘油球	-42	0	0
-116	尿布M	-95	-17	0
-117	尿片	-57	-9	0
-143	洗澡衣	-51	0	0
-144	菜瓜布	-51	0	0
-141	毛巾	-50	0	0
-142	牙刷	-50	0	0
-145	鐵刷	-50	0	0
-128	畚箕	-51	0	0
-129	拖把桶組	-51	0	0
-130	地刷	-51	0	0
-131	拖把棍	-51	0	0
-132	拖把頭圓	-51	0	0
-133	藍棉拖把	-51	0	0
-134	棉紗手套	-51	0	0
-135	電子手套	-51	0	0
-136	橡皮手套大	-51	0	0
-137	橡皮手套小	-51	0	0
-138	食物剪	-51	0	0
-120	洗衣粉	-51	0	0
-121	雨衣大	-51	0	0
-122	雨衣小	-51	0	0
-123	鋁箔紙	-51	0	0
-124	保鮮膜	-51	0	0
-125	殺蟲劑	-51	0	0
-126	舒體康	-51	0	0
-127	掃把	-51	0	0
-119	尿布L	-103	-18	0
-118	看護墊	-86	-8	0
-139	抹布大	-50	0	0
-140	衣架	-32	5	25
+COPY warehouse (id, name, amount, donation, price, item_type, item_order, safety, item_limit) FROM stdin;
+189	tttt	0	0	0	5	-32	100	100
+188	avxzvq	-316	0	0	2	-31	100	100
+182	sssf	-555	0	0	4	-26	100	100
+185	vcxawe	-311	0	0	4	-28	100	100
+86	曼秀雷敦	-1782	0	0	0	86	100	100
+88	硫磺精	-1782	0	0	0	88	100	100
+94	濕紙巾	-1782	0	0	0	94	100	100
+95	餐巾紙	-1782	0	0	0	95	100	100
+181	ac	-311	0	0	3	-25	100	100
+184	gdaf	-311	0	0	3	-27	100	100
+186	fdsaf	-311	0	0	2	-29	100	100
+157	aaadf	-1262	0	0	0	2	100	100
+158	ggcc	-1161	0	0	0	-9	100	100
+164	123	-1262	0	0	1	-10	100	100
+165	344	-1262	0	0	0	-11	100	100
+159	bbbd	-1262	0	0	0	9	100	100
+166	455	-1262	0	0	1	-12	100	100
+168	hjh	-1262	0	0	0	-13	100	100
+169	4562	-1262	0	0	0	-14	100	100
+170	56723	-1262	0	0	1	-15	100	100
+160	aadf	-1262	0	0	1	-1	100	100
+171	fffd	-1262	0	0	1	-16	100	100
+98	通樂	-1782	0	0	0	98	100	100
+140	衣架	-1763	5	25	0	140	100	100
+117	尿布L	-1834	-18	0	0	117	100	100
+144	菜瓜布	-1782	0	0	0	144	100	100
+141	毛巾	-1781	0	0	0	141	100	100
+142	牙刷	-1781	0	0	0	142	100	100
+115	牙膏	-1782	0	0	0	115	100	100
+156	fffffffff	-1283	0	0	2	0	100	100
+187	fdsaqg	-311	0	0	2	-30	100	100
+99	玻璃清潔劑	-1782	0	0	0	99	100	100
+124	保鮮膜	-1782	0	0	0	124	100	100
+113	紙杯	-1782	0	0	0	113	100	100
+145	鐵刷	-1781	0	0	0	145	100	100
+128	畚箕	-1782	0	0	0	128	100	100
+129	拖把桶組	-1782	0	0	0	129	100	100
+130	地刷	-1782	0	0	0	130	100	100
+131	拖把棍	-1782	0	0	0	131	100	100
+132	拖把頭圓	-1782	0	0	0	132	100	100
+139	抹布大	-1781	0	0	0	139	100	100
+79	檢診手套L	-1782	0	0	0	15	100	100
+80	食鹽水0.9%	-1802	0	0	0	16	100	100
+81	外科口罩	-1782	0	0	0	17	100	100
+83	酒精棉片	-1782	0	0	0	19	100	100
+111	沐浴乳	-1782	0	0	0	111	100	100
+112	香皂	-1782	0	0	0	112	100	100
+136	橡皮手套大	-1782	0	0	0	136	100	100
+137	橡皮手套小	-1782	0	0	0	137	100	100
+138	食物剪	-1782	0	0	0	138	100	100
+122	雨衣小	-1782	0	0	0	122	100	100
+123	鋁箔紙	-1782	0	0	0	123	100	100
+114	衛生棉	-1782	0	0	0	114	100	100
+102	除油劑	-1782	0	0	0	102	100	100
+100	浴廁清潔劑	-1782	0	0	0	100	100	100
+101	地板清潔劑	-1782	0	0	0	101	100	100
+103	洗碗精	-1782	0	0	0	103	100	100
+104	洗寶	-1782	0	0	0	104	100	100
+105	漂白水	-1782	0	0	0	105	100	100
+106	50斤垃圾袋	-1782	0	0	0	106	100	100
+107	垃圾袋大	-1782	0	0	0	107	100	100
+108	垃圾袋中	-1782	0	0	0	108	100	100
+109	垃圾袋小	-1782	0	0	0	109	100	100
+110	洗髮精	-1782	0	0	0	110	100	100
+93	抽取式衛生紙	-1781	0	0	0	93	100	100
+90	酒精75%	-1782	0	0	0	90	100	100
+85	餵食器	-1782	0	0	0	85	100	100
+143	洗澡衣	-1782	0	0	0	143	100	100
+148	A4紙	-1719	0	0	0	148	100	100
+91	OK繃	-1682	0	0	0	91	100	100
+133	藍棉拖把	-1782	0	0	0	133	100	100
+134	棉紗手套	-1782	0	0	0	134	100	100
+135	電子手套	-1782	0	0	0	135	100	100
+68	4x4紗布	-862	0	0	0	4	100	100
+67	3x3紗布	-462	0	6	0	4	100	100
+66	2x2紗布	-862	0	7	0	5	100	100
+73	甘油球	-1773	0	0	0	8	100	100
+74	尿袋束帶	-1780	0	0	0	7	100	100
+120	洗衣粉	-1782	0	0	0	119	100	100
+121	雨衣大	-1782	0	0	0	120	100	100
+119	尿片	-1788	-9	0	0	121	100	100
+155	aaaa	-1276	0	0	0	0	200	100
+84	沙威隆	-1782	0	0	0	74	100	100
+152	aPP	-1718	0	0	1	-2	100	100
+146	筆	-1720	0	0	1	146	100	100
+179	qer145r45t	-1261	0	0	1	-23	100	100
+172	aaadc	-1262	0	0	0	-17	100	100
+173	fdadf	-1262	0	0	1	-18	100	100
+161	fdasf	-1262	0	0	1	152	100	100
+162	asfdas	-1262	0	0	1	-5	100	100
+175	dsaff	-1262	0	0	1	-19	100	100
+163	fdassdf	-1262	0	0	1	-4	100	100
+72	沖洗棉棒	-1782	0	0	0	5	100	100
+176	adfg	-1262	0	0	0	-20	100	100
+178	fdasbrad	-1262	0	0	1	-22	100	100
+76	棉花棒	-1782	0	0	0	11	100	100
+75	尿袋	-1782	0	0	0	10	100	100
+78	檢診手套M	-1782	0	0	0	13	100	100
+125	殺蟲劑	-1782	0	0	0	125	100	100
+126	舒體康	-1782	0	0	0	126	100	100
+127	掃把	-1782	0	0	0	127	100	100
+118	看護墊	-1817	-8	0	0	118	100	100
+71	口腔棉棒	-1770	0	0	0	56	100	100
+92	刮鬍刀	-1782	0	0	0	94	100	100
+82	脫酯棉球	-1262	0	0	0	18	100	100
+89	優碘	-1782	0	0	0	87	100	100
+87	凡士林	-1782	0	0	0	87	100	100
+69	Y紗布	-1777	0	0	0	1	100	100
+70	紙膠布	-1780	0	0	0	79	100	100
+96	廚房紙巾	-1782	0	0	0	79	100	100
+77	手扒雞手套	200	0	0	0	12	100	100
+180	尿布1	200	0	0	0	-24	100	0
+177	尿布2	-1262	0	0	0	-21	100	555
 \.
 
 
@@ -416,7 +490,7 @@ COPY warehouse (id, name, amount, donation, price) FROM stdin;
 -- Name: warehouse_id_seq; Type: SEQUENCE SET; Schema: public; Owner: eden
 --
 
-SELECT pg_catalog.setval('warehouse_id_seq', 141, true);
+SELECT pg_catalog.setval('warehouse_id_seq', 189, true);
 
 
 --
