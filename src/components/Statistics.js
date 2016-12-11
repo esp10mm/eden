@@ -17,6 +17,13 @@ const Statistic = React.createClass({
   },
 
   itemMonth(item, month) {
+    if (month === 'all') {
+      let sum = 0;
+      for (var k in item['months']) {
+        sum += item['months'][k];
+      }
+      return sum;
+    }
     if(item['months'][month] === undefined)
       return 0;
     else
@@ -41,30 +48,32 @@ const Statistic = React.createClass({
             <th style={{'width':'4%'}}>
               {`${index}${this.props.data.statistic.name}`}
             </th>
-            <th style={{'width':'3%'}}> 1月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}> 2月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}> 3月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}> 4月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}> 5月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}> 6月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}> 7月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}> 8月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}> 9月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}>10月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}>11月</th>
-            <th style={{'width':'5%'}}>金額</th>
-            <th style={{'width':'3%'}}>12月</th>
-            <th style={{'width':'5%'}}>金額</th>
+            <th style={{'width':'2%'}}> 1月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}> 2月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}> 3月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}> 4月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}> 5月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}> 6月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}> 7月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}> 8月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}> 9月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}>10月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}>11月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}>12月</th>
+            <th style={{'width':'4.6%'}}>金額</th>
+            <th style={{'width':'2%'}}>總計</th>
+            <th style={{'width':'4.6%'}}>金額</th>
           </tr>
         </thead>
         <tbody>
@@ -101,6 +110,8 @@ const Statistic = React.createClass({
                 <td>{ itemMonth(item, '11')*item.price  }</td>
                 <td>{ itemMonth(item, '12') }</td>
                 <td>{ itemMonth(item, '12')*item.price  }</td>
+                <td>{ itemMonth(item, 'all') }</td>
+                <td>{ itemMonth(item, 'all')*item.price }</td>
               </tr>
             )
           }) 
