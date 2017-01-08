@@ -119,6 +119,9 @@ app.post('/api/:name', function(req, res){
   
   if(apiNormal.indexOf(api) != -1){
     obj.type = 'LOGIN_SUCCESS'; 
+    if (loginList[req.body.token].user_type == 'admin') {
+      obj.isAdmin = true;
+    }
   }
   else if(loginList[req.body.token] !== undefined) {
     if(apiUser.indexOf(api)!=-1){
@@ -180,7 +183,11 @@ method.delItem = (obj, body, res)=> {
 }
 
 method.itemList = (obj, body, res)=>{
-  var query = 'SELECT * FROM warehouse ORDER BY item_order ASC;'; 
+  var limit = '';
+  if (!obj.isAdmin) {
+    limit = 'WHERE available';
+  }
+  var query = `SELECT * FROM warehouse ${limit} ORDER BY item_order ASC;`; 
 
   obj = {
     type: 'ITEM_LIST_SUCCESSED',
@@ -270,7 +277,7 @@ method.itemInfo = (obj, body, res)=>{
 }
 
 method.setItem = (obj, body, res)=>{
-  var query = `UPDATE warehouse SET name='${body.state.name}', item_order=${body.state.order}, donation=${body.state.donation}, amount=${body.state.amount}, price=${body.state.price}, safety=${body.state.safety}, item_limit=${body.state.item_limit} WHERE id=${body.item};`
+  var query = `UPDATE warehouse SET name='${body.state.name}', item_order=${body.state.order}, donation=${body.state.donation}, amount=${body.state.amount}, price=${body.state.price}, safety=${body.state.safety}, item_limit=${body.state.item_limit}, available=${body.state.avail} WHERE id=${body.item};`
 
   obj = {
     type: 'SET_ITEM_SUCCESSED',

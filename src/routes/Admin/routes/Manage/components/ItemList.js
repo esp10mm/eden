@@ -13,6 +13,7 @@ const ItemRow = React.createClass({
       safety: this.props.data.safety,
       name: this.props.data.name,
       item_limit: this.props.data.item_limit,
+      avail: this.props.data.available,
     };
   },
 
@@ -138,6 +139,14 @@ const ItemRow = React.createClass({
     state.item_limit = newOrder;
 
     this.setState(state);
+  },
+
+  availChange(e) {
+    var state = this.state; 
+
+    state.avail = !e.target.checked;
+
+    this.setState(state, this.submitChange);
   },
 
   submitChange() {
@@ -272,6 +281,17 @@ const ItemRow = React.createClass({
           </td>
         )
       }
+      else if(num == 8){
+        const checked = this.state.avail ? '' : 'checked';
+        return(
+          <td>
+            <div className={`ui ${checked} chekbox`}>
+              <label />
+              <input type="checkbox" onChange={this.availChange} checked={checked} />
+            </div>
+          </td>
+        )
+      }
     }
   },
 
@@ -288,6 +308,7 @@ const ItemRow = React.createClass({
         {this.adminRender(5)}
         {this.adminRender(7)}
         {this.adminRender(0)}
+        {this.adminRender(8)}
         {this.adminRender(-1)}
         {this.adminRender(1)}
       </tr>
@@ -340,6 +361,11 @@ const ItemList = React.createClass({
       else if(num == 1){
         return(
           <th>刪除</th>
+        )
+      }
+      else if(num == 2){
+        return(
+          <th>隱藏</th>
         )
       }
     }
@@ -424,6 +450,7 @@ const ItemList = React.createClass({
               <th>安全量</th>
               <th>管制量</th>
               {this.adminRender(0)}
+              {this.adminRender(2)}
               {this.adminRender(-1)}
               {this.adminRender(1)}
             </tr>

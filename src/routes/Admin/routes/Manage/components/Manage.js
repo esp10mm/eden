@@ -71,7 +71,7 @@ const Manage = React.createClass({
   render() {
     var style = {
       container: {
-        maxWidth: '900px',
+        maxWidth: '950px',
         height: '100%',
         margin: '0px auto',
       },
