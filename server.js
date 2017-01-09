@@ -118,9 +118,11 @@ app.post('/api/:name', function(req, res){
   ];
   
   if(apiNormal.indexOf(api) != -1){
-    obj.type = 'LOGIN_SUCCESS'; 
-    if (loginList[req.body.token].user_type == 'admin') {
-      obj.isAdmin = true;
+    obj.type = 'LOGIN_SUCCESS';
+    if (loginList[req.body.token]) {
+      if (loginList[req.body.token].user_type == 'admin') {
+          obj.isAdmin = true;
+      }
     }
   }
   else if(loginList[req.body.token] !== undefined) {
